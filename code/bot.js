@@ -3,6 +3,7 @@ const db = new sqlite3.Database('./my.db');
 const Telegraf = require('telegraf'); //https://telegraf.js.org/#/?id=sendmessage
 //const TelegrafI18n = require('telegraf-i18n') //https://github.com/telegraf/telegraf-i18n
 const bot = new Telegraf(process.env.BOT_TOKEN);
+const shell = require('shelljs');
 const anime = require("./anime");
 const utils = require("./utils");
 const querys = require("./querys");
@@ -65,7 +66,9 @@ bot.command('top', (ctx) => {
         ctx.reply(list, {parse_mode: "HTML"})
     });
 });
-
+bot.command('restart',(ctx)=>{
+    shell.exec('../restart.sh');
+})
 /** Karma Scoreboard Befehl */
 bot.command('ehre', (ctx) => {
     db.all(query.listTopKarma, 10, (err, rows) => {

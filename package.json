@@ -1,14 +1,17 @@
 {
-  "name": "telegram_bot",
+  "name": "ivonabot",
   "version": "1.0.0",
   "description": "",
   "main": "code/bot.js",
-  "scripts": {},
+  "scripts": {
+    "start": "node code/bot.js"
+  },
   "keywords": [],
-  "author": "",
+  "author": "Tim Morgner",
   "license": "ISC",
   "dependencies": {
     "jikan-node": "^1.2.0",
+    "shelljs": "^0.8.3",
     "sqlite3": "^4.1.1",
     "telegraf": "^3.36.0"
   }
