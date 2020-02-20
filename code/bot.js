@@ -66,8 +66,14 @@ bot.command('top', (ctx) => {
         ctx.reply(list, {parse_mode: "HTML"})
     });
 });
+
 bot.command('restart',(ctx)=>{
-    shell.exec('../restart.sh');
+    if(utils.isCreator(ctx.from.id)){
+        ctx.reply("Starte neu...")
+        shell.exec('../restart.sh');
+    }else{
+        ctx.reply("Du hast keine Berechtigung dazu.");
+    }
 })
 /** Karma Scoreboard Befehl */
 bot.command('ehre', (ctx) => {
