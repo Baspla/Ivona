@@ -1,0 +1,4 @@
+*.db
+*.csv
+/resources/temp/
+/node_modules/
