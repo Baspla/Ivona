@@ -7,23 +7,49 @@ process.on('SIGINT', () => process.exit(128 + 2));
 process.on('SIGTERM', () => process.exit(128 + 15));
 
 db.exec("BEGIN TRANSACTION;\n" +
-    "CREATE TABLE IF NOT EXISTS \"code\" (\n" +
-    "\t\"id\"\tINTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,\n" +
-    "\t\"code\"\tTEXT NOT NULL UNIQUE,\n" +
-    "\t\"description\"\tTEXT NOT NULL\n" +
+    "CREATE TABLE IF NOT EXISTS \"group\" (\n" +
+    "\t\"group_id\"\tINTEGER NOT NULL UNIQUE,\n" +
+    "\tPRIMARY KEY(\"group_id\")\n" +
     ");\n" +
-    "CREATE TABLE IF NOT EXISTS \"user\" (\n" +
-    "\t\"id\"\tINTEGER NOT NULL UNIQUE,\n" +
-    "\t\"username\"\tINTEGER NOT NULL UNIQUE,\n" +
-    "\t\"points\"\tINTEGER DEFAULT 0,\n" +
-    "\t\"karma\"\tINTEGER DEFAULT 0,\n" +
-    "\tPRIMARY KEY(\"id\")\n" +
+    "CREATE TABLE IF NOT EXISTS \"user_award\" (\n" +
+    "\t\"user_id\"\tINTEGER NOT NULL,\n" +
+    "\t\"award_id\"\tINTEGER NOT NULL,\n" +
+    "\tPRIMARY KEY(\"user_id\",\"award_id\"),\n" +
+    "\tFOREIGN KEY(\"user_id\") REFERENCES \"user\"(\"user_id\"),\n" +
+    "\tFOREIGN KEY(\"award_id\") REFERENCES \"award\"(\"award_id\")\n" +
+    ");\n" +
+    "CREATE TABLE IF NOT EXISTS \"code\" (\n" +
+    "\t\"code_id\"\tINTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,\n" +
+    "\t\"code_code\"\tTEXT NOT NULL UNIQUE,\n" +
+    "\t\"code_description\"\tTEXT NOT NULL,\n" +
+    "\t\"code_creator\"\tINTEGER NOT NULL\n" +
+    ");\n" +
+    "CREATE TABLE IF NOT EXISTS \"user_role\" (\n" +
+    "\t\"user_id\"\tINTEGER,\n" +
+    "\t\"role_id\"\tINTEGER,\n" +
+    "\tFOREIGN KEY(\"role_id\") REFERENCES \"role\"(\"role_id\"),\n" +
+    "\tFOREIGN KEY(\"user_id\") REFERENCES \"award\"(\"award_id\")\n" +
+    ");\n" +
+    "CREATE TABLE IF NOT EXISTS \"role\" (\n" +
+    "\t\"role_id\"\tINTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,\n" +
+    "\t\"role_name\"\tTEXT\n" +
     ");\n" +
     "CREATE TABLE IF NOT EXISTS \"award\" (\n" +
-    "\t\"id\"\tINTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,\n" +
-    "\t\"title\"\tTEXT NOT NULL,\n" +
-    "\t\"description\"\tINTEGER NOT NULL\n" +
+    "\t\"award_id\"\tINTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,\n" +
+    "\t\"award_title\"\tTEXT NOT NULL,\n" +
+    "\t\"award_description\"\tTEXT\n" +
     ");\n" +
+    "CREATE TABLE IF NOT EXISTS \"user\" (\n" +
+    "\t\"user_id\"\tINTEGER NOT NULL UNIQUE,\n" +
+    "\t\"user_username\"\tTEXT NOT NULL UNIQUE,\n" +
+    "\t\"user_points\"\tINTEGER DEFAULT 0,\n" +
+    "\t\"user_karma\"\tINTEGER DEFAULT 0,\n" +
+    "\tPRIMARY KEY(\"user_id\")\n" +
+    ");\n" +
+    "INSERT INTO \"role\" VALUES (0,'unknown');\n" +
+    "INSERT INTO \"role\" VALUES (1,'user');\n" +
+    "INSERT INTO \"role\" VALUES (2,'moderator');\n" +
+    "INSERT INTO \"role\" VALUES (3,'admin');\n" +
     "COMMIT;\n");
 
 module.exports = {
@@ -67,13 +93,13 @@ module.exports = {
 };
 
 
-const getUserQuery = db.prepare("SELECT * FROM user WHERE id = ?");
-const insertUserQuery = db.prepare("INSERT INTO user (id,username,points,karma) VALUES (?,?,?,?)");
-const getTopPointsQuery = db.prepare("SELECT * FROM user ORDER BY points DESC LIMIT ?");
-const getTopKarmaQuery = db.prepare("SELECT * FROM user ORDER BY karma DESC LIMIT ?");
-const addPointsQuery = db.prepare("UPDATE user SET points = points + ? WHERE id = ?");
-const addKarmaQuery = db.prepare("UPDATE user SET karma = karma + ? WHERE id = ?");
-const removePointsQuery = db.prepare("UPDATE user SET points = points - ? WHERE id = ?");
-const removeKarmaQuery = db.prepare("UPDATE user SET karma = karma - ? WHERE id = ?");
-const setPointsQuery = db.prepare("UPDATE user SET points = ? WHERE id = ?");
-const setKarmaQuery = db.prepare("UPDATE user SET karma = ? WHERE id = ?");
+const getUserQuery = db.prepare("SELECT * FROM user WHERE user_id = ?");
+const insertUserQuery = db.prepare("INSERT INTO user (user_id,user_username,user_points,user_karma) VALUES (?,?,?,?)");
+const getTopPointsQuery = db.prepare("SELECT * FROM user ORDER BY user_points DESC LIMIT ?");
+const getTopKarmaQuery = db.prepare("SELECT * FROM user ORDER BY user_karma DESC LIMIT ?");
+const addPointsQuery = db.prepare("UPDATE user SET user_points = user_points + ? WHERE user_id = ?");
+const addKarmaQuery = db.prepare("UPDATE user SET user_karma = user_karma + ? WHERE user_id = ?");
+const removePointsQuery = db.prepare("UPDATE user SET user_points = user_points - ? WHERE user_id = ?");
+const removeKarmaQuery = db.prepare("UPDATE user SET user_karma = user_karma - ? WHERE user_id = ?");
+const setPointsQuery = db.prepare("UPDATE user SET user_points = ? WHERE user_id = ?");
+const setKarmaQuery = db.prepare("UPDATE user SET user_karma = ? WHERE user_id = ?");

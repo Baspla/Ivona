@@ -124,8 +124,10 @@ bot.command('ehre', (ctx) => {
 
 /** Debug Punkte + Befehl */
 bot.command('cheat', (ctx) => {
-    ctx.reply("Füge 100 Punkte hinzu.")
-    db.addPoints(ctx.from.id, 100);
+    if (utils.isCreator(ctx.from.id)) {
+        ctx.reply("Füge 100 Punkte hinzu.")
+        addPoints(ctx, row, 100);
+    }
 });
 
 /** Befehl zum Anzeigen der Statistik eines Nutzers */

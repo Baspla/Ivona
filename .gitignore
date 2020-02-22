@@ -33,4 +33,5 @@ jspm_packages/
 .env.test
 
 *.db
-*.db.sqbpro
+*.sqbpro
+*.sql
