@@ -1,10 +1,11 @@
 db = require("../../data/db.js");
 
 exports.validTokenNeeded = (req,res,next) => {
+
     if (req.headers['authorization']) {
-        id = db.getUserIdFromToken(req.headers['authorization']);
-        if(id!==undefined){
-            req.user_id=id;
+        user = db.getUserFromToken(req.headers['authorization']);
+        if(user!==undefined){
+            req.user_id=user.user_id;
             return next();
         }else{
             return res.status(403).send({code: "403",message:"Ungültiger Token"});

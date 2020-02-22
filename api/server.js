@@ -4,11 +4,12 @@ db = require("../data/db.js");
 ValidationMiddleware = require("./middlewares/ValidationMiddleware");
 AuthenticationMiddleware = require("./middlewares/AuthenticationMiddleware");
 
-app.get('/admin',ValidationMiddleware.validTokenNeeded,AuthenticationMiddleware.roleRequired("admin"), function (req, res) {
+app.get('/getTop',ValidationMiddleware.validTokenNeeded,AuthenticationMiddleware.roleRequired("user"), function (req, res) {
     res.json( db.getTopPoints(10));
 })
-app.get('/user',ValidationMiddleware.validTokenNeeded,AuthenticationMiddleware.roleRequired("user"), function (req, res) {
-    res.json( db.getTopPoints(10));
+
+app.get('/status', function (req, res) {
+    res.json({status:"ok"});
 })
 
 var server = app.listen(8081, function () {

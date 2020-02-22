@@ -106,8 +106,8 @@ module.exports = {
     insertGroup(id) {
         insertGroupQuery.run(id);
     },
-    getUserIdFromToken(token){
-        return getUserFromTokenQuery.get(token).user_id;
+    getUserFromToken(token){
+        return getUserFromTokenQuery.get(token);
     }
 };
 
