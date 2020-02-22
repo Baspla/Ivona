@@ -34,7 +34,7 @@ bot.use((ctx, next) => {
 });
 
 /** Super Ehren */
-bot.hears(/^(\u2764\ufe0f|\ud83d\udc96|\ud83e\udde1|\ud83d\udc9b|\ud83d\udc9a|\ud83d\udc99|\ud83d\udc9c|\ud83d\udda4).*|.*(\u2764\ufe0f|\ud83d\udc96|\ud83e\udde1|\ud83d\udc9b|\ud83d\udc9a|\ud83d\udc99|\ud83d\udc9c|\ud83d\udda4)$/, (ctx,next) => {
+bot.hears(/^(\u2764\ufe0f|\ud83d\udc96|\ud83e\udde1|\ud83d\udc9b|\ud83d\udc9a|\ud83d\udc99|\ud83d\udc9c|\ud83d\udda4).*|.*(\u2764\ufe0f|\ud83d\udc96|\ud83e\udde1|\ud83d\udc9b|\ud83d\udc9a|\ud83d\udc99|\ud83d\udc9c|\ud83d\udda4)$/, (ctx, next) => {
     if (utils.isReply(ctx) && utils.isGroup(ctx.chat.type)) {
         console.log("Super");
         if (ctx.message.reply_to_message.from !== undefined && !ctx.message.reply_to_message.from.is_bot) {
@@ -42,7 +42,7 @@ bot.hears(/^(\u2764\ufe0f|\ud83d\udc96|\ud83e\udde1|\ud83d\udc9b|\ud83d\udc9a|\u
             let now = new Date();
             if (now.getTime() - userMemMap[ctx.from.id].lastSuper.getTime() > 180000) { //3 Minuten
                 userMemMap[ctx.from.id].lastSuper = now;
-                ctx.reply(ctx.from.id+" super-ehrt "+ctx.message.reply_to_message.from.id);
+                ctx.reply(ctx.from.id + " super-ehrt " + ctx.message.reply_to_message.from.id);
                 db.addKarma(ctx.message.reply_to_message.from.id, 3);
             }
         }
@@ -51,7 +51,7 @@ bot.hears(/^(\u2764\ufe0f|\ud83d\udc96|\ud83e\udde1|\ud83d\udc9b|\ud83d\udc9a|\u
 });
 
 /** Ehren */
-bot.hears(/^(\u002b|\u261d|\ud83d\udc46|\ud83d\udc4f|\ud83d\ude18|\ud83d\ude0d|\ud83d\udc4c|\ud83d\udc4d|\ud83d\ude38).*|.*(\u002b|\u261d|\ud83d\udc46|\ud83d\udc4f|\ud83d\ude18|\ud83d\ude0d|\ud83d\udc4c|\ud83d\udc4d|\ud83d\ude38)$/, (ctx,next) => {
+bot.hears(/^(\u002b|\u261d|\ud83d\udc46|\ud83d\udc4f|\ud83d\ude18|\ud83d\ude0d|\ud83d\udc4c|\ud83d\udc4d|\ud83d\ude38).*|.*(\u002b|\u261d|\ud83d\udc46|\ud83d\udc4f|\ud83d\ude18|\ud83d\ude0d|\ud83d\udc4c|\ud83d\udc4d|\ud83d\ude38)$/, (ctx, next) => {
     if (utils.isReply(ctx) && utils.isGroup(ctx.chat.type)) {
         console.log("Upvote");
         if (ctx.message.reply_to_message.from !== undefined && !ctx.message.reply_to_message.from.is_bot) {
@@ -59,7 +59,7 @@ bot.hears(/^(\u002b|\u261d|\ud83d\udc46|\ud83d\udc4f|\ud83d\ude18|\ud83d\ude0d|\
             let now = new Date();
             if (now.getTime() - userMemMap[ctx.from.id].lastUp.getTime() > 180000) { //3 Minuten
                 userMemMap[ctx.from.id].lastUp = now;
-                ctx.reply(ctx.from.id+" ehrt "+ctx.message.reply_to_message.from.id);
+                ctx.reply(ctx.from.id + " ehrt " + ctx.message.reply_to_message.from.id);
                 db.addKarma(ctx.message.reply_to_message.from.id, 1);
             }
         }
@@ -67,15 +67,15 @@ bot.hears(/^(\u002b|\u261d|\ud83d\udc46|\ud83d\udc4f|\ud83d\ude18|\ud83d\ude0d|\
     next();
 })
 /** Entehren */
-bot.hears(/^(\u2639\ufe0f|\ud83d\ude20|\ud83d\ude21|\ud83e\udd2c|\ud83e\udd2e|\ud83d\udca9|\ud83d\ude3e|\ud83d\udc4e|\ud83d\udc47).*|.*(\u2639\ufe0f|\ud83d\ude20|\ud83d\ude21|\ud83e\udd2c|\ud83e\udd2e|\ud83d\udca9|\ud83d\ude3e|\ud83d\udc4e|\ud83d\udc47)$/, (ctx,next) => {
+bot.hears(/^(\u2639\ufe0f|\ud83d\ude20|\ud83d\ude21|\ud83e\udd2c|\ud83e\udd2e|\ud83d\udca9|\ud83d\ude3e|\ud83d\udc4e|\ud83d\udc47).*|.*(\u2639\ufe0f|\ud83d\ude20|\ud83d\ude21|\ud83e\udd2c|\ud83e\udd2e|\ud83d\udca9|\ud83d\ude3e|\ud83d\udc4e|\ud83d\udc47)$/, (ctx, next) => {
     if (utils.isReply(ctx) && utils.isGroup(ctx.chat.type)) {
         console.log("Downvote");
         if (ctx.message.reply_to_message.from !== undefined && !ctx.message.reply_to_message.from.is_bot) {
             db.insertUserIfNotExists(ctx.message.reply_to_message.from, 0, 0);
             let now = new Date();
             if (now.getTime() - userMemMap[ctx.from.id].lastDown.getTime() > 180000) { //3 Minuten
-                userMemMap[ctx.from.id].lastDown  = now;
-                ctx.reply(ctx.from.id+" entehrt "+ctx.message.reply_to_message.from.id);
+                userMemMap[ctx.from.id].lastDown = now;
+                ctx.reply(ctx.from.id + " entehrt " + ctx.message.reply_to_message.from.id);
                 db.removeKarma(ctx.message.reply_to_message.from.id, 1);
             }
         }
@@ -95,16 +95,12 @@ anime.command(bot);
 
 /** Punkte Scoreboard Befehl */
 bot.command('top', (ctx) => {
-    db.all(querys.listTopPoints, 10, (err, rows) => {
-        if (err) {
-            throw err;
-        }
-        var list = "Top Punkte:\n";
-        rows.forEach(v => {
-            list += "<code>" + levelmanager.getLevel(v.points) + "</code> <b>" + levelmanager.getTitel(levelmanager.getLevel(v.points)) + "</b> <a href=\"tg://user?id=" + v.id + "\">" + v.username + "</a> (" + v.points + "/" + levelmanager.getPointGoal(levelmanager.getLevel(v.points)) + ")\n";
-        });
-        ctx.reply(list, {parse_mode: "HTML"})
+    let rows = db.getTopPoints(10)
+    var list = "Top Punkte:\n";
+    rows.forEach(v => {
+        list += "<code>" + levelmanager.getLevel(v.points) + "</code> <b>" + levelmanager.getTitel(levelmanager.getLevel(v.points)) + "</b> <a href=\"tg://user?id=" + v.id + "\">" + v.username + "</a> (" + v.points + "/" + levelmanager.getPointGoal(levelmanager.getLevel(v.points)) + ")\n";
     });
+    ctx.reply(list, {parse_mode: "HTML"})
 });
 
 bot.command('restart', (ctx) => {
@@ -118,29 +114,18 @@ bot.command('restart', (ctx) => {
 
 /** Karma Scoreboard Befehl */
 bot.command('ehre', (ctx) => {
-    db.all(query.listTopKarma, 10, (err, rows) => {
-        if (err) {
-            throw err;
-        }
-        var list = "Top Ehre:\n";
-        rows.forEach(v => {
-            list += "<code>" + v.karma + " Ehre</code> - <a href=\"tg://user?id=" + v.id + "\">" + v.username + "</a>\n";
-        });
-        ctx.reply(list, {parse_mode: "HTML"})
+    let rows = db.getTopKarma(10)
+    var list = "Top Ehre:\n";
+    rows.forEach(v => {
+        list += "<code>" + v.karma + " Ehre</code> - <a href=\"tg://user?id=" + v.id + "\">" + v.username + "</a>\n";
     });
+    ctx.reply(list, {parse_mode: "HTML"})
 });
 
 /** Debug Punkte + Befehl */
 bot.command('cheat', (ctx) => {
-    db.get(querys.getUser, ctx.from.id, (err, row) => {
-        if (err) {
-            throw err;
-        }
-        if (row !== undefined) {
-            ctx.reply("Füge 100 Punkte hinzu.")
-            addPoints(ctx, row, 100);
-        }
-    });
+    ctx.reply("Füge 100 Punkte hinzu.")
+    db.addPoints(ctx.from.id, 100);
 });
 
 /** Befehl zum Anzeigen der Statistik eines Nutzers */

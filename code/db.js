@@ -34,10 +34,10 @@ module.exports = {
         insertUserQuery.run(id, first_name, points, karma);
     },
     getTopPoints(count){
-        return getTopPointsQuery.get(count);
+        return getTopPointsQuery.all(count);
     },
     getTopKarma(count){
-        return getTopKarmaQuery.get(count);
+        return getTopKarmaQuery.all(count);
     },
     addPoints(id,points){
         addPointsQuery.run(points,id);
