@@ -12,7 +12,7 @@ app.get('/status', function (req, res) {
     res.json({status:"ok"});
 })
 
-var server = app.listen(8081, function () {
+var server = app.listen(6969, function () {
     var host = server.address().address
     var port = server.address().port
     console.log("Example app listening at http://%s:%s", host, port)
