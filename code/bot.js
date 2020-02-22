@@ -1,29 +1,14 @@
-const sqlite3 = require('sqlite3').verbose(); //https://github.com/mapbox/node-sqlite3/wiki/API#databasepreparesql-param--callback
-const db = new sqlite3.Database('./my.db');
 const Telegraf = require('telegraf'); //https://telegraf.js.org/#/?id=sendmessage
 //const TelegrafI18n = require('telegraf-i18n') //https://github.com/telegraf/telegraf-i18n
 const bot = new Telegraf(process.env.BOT_TOKEN);
 const shell = require('shelljs');
 const anime = require("./anime");
 const utils = require("./utils");
-const querys = require("./querys");
 const levelmanager = require("./levels");
 const justThings = require("./justThings");
+db = require("./db.js");
 
 let userMemMap = {};
-
-
-
-//Erstellt Tabellen, falls nicht vorhanden
-
-db.serialize(function () {
-    db.run("CREATE TABLE IF NOT EXISTS award (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,title TEXT NOT NULL,description INTEGER NOT NULL)");
-    db.run("CREATE TABLE IF NOT EXISTS user (id INTEGER NOT NULL PRIMARY KEY UNIQUE,username INTEGER NOT NULL UNIQUE,points INTEGER DEFAULT 0,karma REAL DEFAULT 0)");
-    db.run("CREATE TABLE IF NOT EXISTS code (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,code TEXT NOT NULL UNIQUE,description TEXT NOT NULL)");
-    /*db.each("SELECT * FROM user", function (err, row) {
-        console.log(row.id + ": " + row.username);
-    });*/ //Gibt alle Nutzer mit ID aus
-});
 
 process.on('SIGINT', () => {
     db.close();
@@ -32,17 +17,77 @@ process.on('SIGINT', () => {
 
 // User wird erstellt, falls nicht vorhanden
 bot.use((ctx, next) => {
-    db.get(querys.getUser, ctx.from.id, (err, row) => {
-        if (err) {
-            throw err;
-        }
-        if (row === undefined && !ctx.from.is_bot) {
-            console.log("Nutzer erstellt");
-            db.run(querys.addUser, ctx.from.id, ctx.from.first_name, 0, 0);
-        }
-        next();
-    });
+    db.insertUserIfNotExists(ctx.from, 0, 0);
+    next();
 });
+bot.use((ctx, next) => {
+    const user = db.getUser(ctx.from.id);
+    if (user !== undefined) {
+        if (userMemMap[user.id] === undefined) {
+            epoch = new Date(0);
+            userMemMap[user.id] = {lastUp: epoch, lastDown: epoch, lastSuper: epoch, lastReward: epoch}
+        }
+        if (utils.isGroup(ctx.chat.type)) {
+            let now = new Date();
+            if (now.getTime() - userMemMap[user.id].lastReward.getTime() > 180000) { //3 Minuten
+                userMemMap[user.id].lastReward = now;
+                db.addPoints(user.id, Math.floor(Math.random() * 12) + 1);
+            }
+        }
+    }
+    next();
+});
+
+/** Super Ehren */
+bot.hears(/^(\u2764\ufe0f|\ud83d\udc96|\ud83e\udde1|\ud83d\udc9b|\ud83d\udc9a|\ud83d\udc99|\ud83d\udc9c|\ud83d\udda4).*|.*(\u2764\ufe0f|\ud83d\udc96|\ud83e\udde1|\ud83d\udc9b|\ud83d\udc9a|\ud83d\udc99|\ud83d\udc9c|\ud83d\udda4)$/, (ctx,next) => {
+    if (utils.isReply(ctx) && utils.isGroup(ctx.chat.type)) {
+        console.log("Super");
+        if (ctx.message.reply_to_message.from !== undefined && !ctx.message.reply_to_message.from.is_bot) {
+            db.insertUserIfNotExists(ctx.message.reply_to_message.from, 0, 0);
+            let now = new Date();
+            if (now.getTime() - userMemMap[ctx.from.id].lastSuper.getTime() > 180000) { //3 Minuten
+                userMemMap[ctx.from.id].lastSuper = now;
+                ctx.reply(ctx.from.id+" super-ehrt "+ctx.message.reply_to_message.from.id);
+                db.addKarma(ctx.message.reply_to_message.from.id, 3);
+            }
+        }
+    }
+    next();
+});
+
+/** Ehren */
+bot.hears(/^(\u002b|\u261d|\ud83d\udc46|\ud83d\udc4f|\ud83d\ude18|\ud83d\ude0d|\ud83d\udc4c|\ud83d\udc4d|\ud83d\ude38).*|.*(\u002b|\u261d|\ud83d\udc46|\ud83d\udc4f|\ud83d\ude18|\ud83d\ude0d|\ud83d\udc4c|\ud83d\udc4d|\ud83d\ude38)$/, (ctx,next) => {
+    if (utils.isReply(ctx) && utils.isGroup(ctx.chat.type)) {
+        console.log("Upvote");
+        if (ctx.message.reply_to_message.from !== undefined && !ctx.message.reply_to_message.from.is_bot) {
+            db.insertUserIfNotExists(ctx.message.reply_to_message.from, 0, 0);
+            let now = new Date();
+            if (now.getTime() - userMemMap[ctx.from.id].lastUp.getTime() > 180000) { //3 Minuten
+                userMemMap[ctx.from.id].lastUp = now;
+                ctx.reply(ctx.from.id+" ehrt "+ctx.message.reply_to_message.from.id);
+                db.addKarma(ctx.message.reply_to_message.from.id, 1);
+            }
+        }
+    }
+    next();
+})
+/** Entehren */
+bot.hears(/^(\u2639\ufe0f|\ud83d\ude20|\ud83d\ude21|\ud83e\udd2c|\ud83e\udd2e|\ud83d\udca9|\ud83d\ude3e|\ud83d\udc4e|\ud83d\udc47).*|.*(\u2639\ufe0f|\ud83d\ude20|\ud83d\ude21|\ud83e\udd2c|\ud83e\udd2e|\ud83d\udca9|\ud83d\ude3e|\ud83d\udc4e|\ud83d\udc47)$/, (ctx,next) => {
+    if (utils.isReply(ctx) && utils.isGroup(ctx.chat.type)) {
+        console.log("Downvote");
+        if (ctx.message.reply_to_message.from !== undefined && !ctx.message.reply_to_message.from.is_bot) {
+            db.insertUserIfNotExists(ctx.message.reply_to_message.from, 0, 0);
+            let now = new Date();
+            if (now.getTime() - userMemMap[ctx.from.id].lastDown.getTime() > 180000) { //3 Minuten
+                userMemMap[ctx.from.id].lastDown  = now;
+                ctx.reply(ctx.from.id+" entehrt "+ctx.message.reply_to_message.from.id);
+                db.removeKarma(ctx.message.reply_to_message.from.id, 1);
+            }
+        }
+    }
+    next();
+})
+
 
 /** /start Befehl */
 bot.start((ctx) => ctx.replyWithPhoto({source: 'resources/profile.jpg'}, {caption: "Hi, Ich bin Ivona.\nIch bin hier um dir zu Helfen."}));
@@ -67,14 +112,15 @@ bot.command('top', (ctx) => {
     });
 });
 
-bot.command('restart',(ctx)=>{
-    if(utils.isCreator(ctx.from.id)){
+bot.command('restart', (ctx) => {
+    if (utils.isCreator(ctx.from.id)) {
         ctx.reply("Starte neu...")
         shell.exec('../restart.sh');
-    }else{
+    } else {
         ctx.reply("Du hast keine Berechtigung dazu.");
     }
 })
+
 /** Karma Scoreboard Befehl */
 bot.command('ehre', (ctx) => {
     db.all(query.listTopKarma, 10, (err, rows) => {
@@ -110,37 +156,11 @@ bot.command('stats', (ctx) => {
 /** JustThings Bildgenerator */
 bot.hears(/^((wenn)|(when)) /i, (ctx) => {
     //if (utils.isGroup(ctx.chat.type)){
-        justThings.generateImage(ctx.message.text,ctx.from.first_name);
-        ctx.replyWithPhoto({source:"resources/temp/justThings.png"});
+    justThings.generateImage(ctx.message.text, ctx.from.first_name);
+    ctx.replyWithPhoto({source: "resources/temp/justThings.png"});
 });
 
 bot.launch();
-
-bot.use((ctx, next) => {
-    db.get(querys.getUser, ctx.from.id, (err, row) => {
-        if (err) {
-            throw err;
-        }
-        if (row !== undefined) {
-            var user = row;
-            if (user !== undefined) {
-                if (userMemMap[user.id] === undefined) {
-                    epoch = new Date(0);
-                    userMemMap[user.id] = {lastUp: epoch, lastDown: epoch, lastSuper: epoch, lastReward: epoch}
-                }
-                if (utils.isGroup(ctx.chat.type)) {
-                    let now = new Date();
-                    if (now.getTime() - userMemMap[user.id].lastReward.getTime() > 180000) { //3 Minuten
-                        userMemMap[user.id].lastReward = now;
-                        addPoints(ctx, user, Math.floor(Math.random() * 12) + 1);
-                    }
-                }
-            }
-        }
-        next();
-    });
-});
-
 
 function checkLevelUp(ctx, user, previous) {
     db.get(querys.getUser, user.id, (err, row) => {
@@ -158,9 +178,4 @@ function checkLevelUp(ctx, user, previous) {
             }
         }
     });
-}
-//TEST
-function addPoints(ctx, user, points) {
-    db.run(querys.increasePoints, points, user.id);
-    checkLevelUp(ctx, user, user.points);
 }
