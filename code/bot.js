@@ -10,11 +10,6 @@ db = require("./db.js");
 
 let userMemMap = {};
 
-process.on('SIGINT', () => {
-    db.close();
-    process.exit(0);
-});
-
 // User wird erstellt, falls nicht vorhanden
 bot.use((ctx, next) => {
     db.insertUserIfNotExists(ctx.from, 0, 0);
