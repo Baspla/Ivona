@@ -2,7 +2,7 @@ const Jikan = require('jikan-node');
 const mal = new Jikan();
 const utils = require("./utils");
 
-module.exports.command=command;
+exports.command=command;
 
 function command(bot) {
     bot.hears(/\[\[.+\]\]/, (ctx) => {
