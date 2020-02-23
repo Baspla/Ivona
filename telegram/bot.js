@@ -97,6 +97,7 @@ bot.command('promote', (ctx) => {
 /** Befehl zum Anzeigen der Statistik eines Nutzers */
 bot.command('stats', (ctx) => {
     ctx.reply('ToDo Stats')
+    //TODO
 });
 
 bot.use((ctx, next) => {
@@ -127,9 +128,9 @@ bot.hears(/^(\u2764\ufe0f|\ud83d\udc96|\ud83e\udde1|\ud83d\udc9b|\ud83d\udc9a|\u
         if (ctx.message.reply_to_message.from !== undefined && !ctx.message.reply_to_message.from.is_bot) {
             db.insertUserIfNotExists(ctx.message.reply_to_message.from, 0, 0);
             let now = new Date();
-            if (now.getTime() - userMemMap[ctx.from.id].lastSuper.getTime() > 180000) { //3 Minuten
+            if (now.getTime() - userMemMap[ctx.from.id].lastSuper.getTime() > 7200000) { //2 Stunden
                 userMemMap[ctx.from.id].lastSuper = now;
-                ctx.reply(ctx.from.id + " super-ehrt " + ctx.message.reply_to_message.from.id);
+                ctx.reply(db.getUser(ctx.from.id).user_name + " entehrt " + cdb.getUser(ctx.message.reply_to_message.from.id).user_name +" absolut hart!");
                 db.addKarma(ctx.message.reply_to_message.from.id, 3);
             }
         }
@@ -144,15 +145,16 @@ bot.hears(/^(\u002b|\u261d|\ud83d\udc46|\ud83d\udc4f|\ud83d\ude18|\ud83d\ude0d|\
         if (ctx.message.reply_to_message.from !== undefined && !ctx.message.reply_to_message.from.is_bot) {
             db.insertUserIfNotExists(ctx.message.reply_to_message.from, 0, 0);
             let now = new Date();
-            if (now.getTime() - userMemMap[ctx.from.id].lastUp.getTime() > 180000) { //3 Minuten
+            if (now.getTime() - userMemMap[ctx.from.id].lastUp.getTime() > 300000) { //5 Minuten
                 userMemMap[ctx.from.id].lastUp = now;
-                ctx.reply(ctx.from.id + " ehrt " + ctx.message.reply_to_message.from.id);
+                ctx.reply(db.getUser(ctx.from.id).user_name + " ehrt " + cdb.getUser(ctx.message.reply_to_message.from.id).user_name);
                 db.addKarma(ctx.message.reply_to_message.from.id, 1);
             }
         }
     }
     next();
 })
+
 /** Entehren */
 bot.hears(/^(\u2639\ufe0f|\ud83d\ude20|\ud83d\ude21|\ud83e\udd2c|\ud83e\udd2e|\ud83d\udca9|\ud83d\ude3e|\ud83d\udc4e|\ud83d\udc47).*|.*(\u2639\ufe0f|\ud83d\ude20|\ud83d\ude21|\ud83e\udd2c|\ud83e\udd2e|\ud83d\udca9|\ud83d\ude3e|\ud83d\udc4e|\ud83d\udc47)$/, (ctx, next) => {
     if (utils.isReply(ctx) && utils.isGroup(ctx.chat.type)) {
@@ -160,9 +162,9 @@ bot.hears(/^(\u2639\ufe0f|\ud83d\ude20|\ud83d\ude21|\ud83e\udd2c|\ud83e\udd2e|\u
         if (ctx.message.reply_to_message.from !== undefined && !ctx.message.reply_to_message.from.is_bot) {
             db.insertUserIfNotExists(ctx.message.reply_to_message.from, 0, 0);
             let now = new Date();
-            if (now.getTime() - userMemMap[ctx.from.id].lastDown.getTime() > 180000) { //3 Minuten
+            if (now.getTime() - userMemMap[ctx.from.id].lastDown.getTime() > 600000) { //10 Minuten
                 userMemMap[ctx.from.id].lastDown = now;
-                ctx.reply(ctx.from.id + " entehrt " + ctx.message.reply_to_message.from.id);
+                ctx.reply(db.getUser(ctx.from.id).user_name + " entehrt " + cdb.getUser(ctx.message.reply_to_message.from.id).user_name);
                 db.removeKarma(ctx.message.reply_to_message.from.id, 1);
             }
         }
