@@ -8,4 +8,4 @@ exports.roleRequired = (role) => {
             ctx.reply("Du hast keine Berechtigung dazu.");
         }
     }
-}
+};

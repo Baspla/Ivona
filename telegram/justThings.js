@@ -19,4 +19,4 @@ module.exports.generateImage = function generateImage(text,name) {
     stream.on('data', function(chunk) {
         out.write(chunk);
     });*/
-}
+};

@@ -81,9 +81,9 @@ bot.use((ctx, next) => {
 
 /** COMMAND | ADMIN | restart */
 bot.command('restart', Auth.roleRequired(roles.admin), (ctx) => {
-    ctx.reply("Starte neu...")
+    ctx.reply("Starte neu...");
     shell.exec('../restart.sh');
-})
+});
 
 /** COMMAND | ADMIN | admin */
 bot.command('admin', Command.minimumArgs(1), Auth.roleRequired("admin"), (ctx) => {
@@ -135,14 +135,14 @@ bot.command('userlist', Auth.roleRequired("admin"), (ctx) => {
     let text = "User: \n";
     db.getUsersWithRoles().forEach((row) => {
         text += row.user_name + " - Rollen: " + row.roles + "\n";
-    })
+    });
     ctx.reply(text);
 });
 
 /** COMMAND | top */
 bot.command('top', (ctx) => {
-    let rows = db.getTopPoints(10)
-    var list = "Top Punkte:\n";
+    let rows = db.getTopPoints(10);
+    let list = "Top Punkte:\n";
     rows.forEach(v => {
         list += "<code>" + levelmanager.getLevel(v.user_points) + "</code> <b>" + levelmanager.getTitel(levelmanager.getLevel(v.user_points)) + "</b> <a href=\"tg://user?id=" + v.id + "\">" + v.user_name + "</a> (" + v.user_points + "/" + levelmanager.getPointGoal(levelmanager.getLevel(v.user_points)) + ")\n";
     });
@@ -151,8 +151,8 @@ bot.command('top', (ctx) => {
 
 /** COMMAND | ehre */
 bot.command('ehre', (ctx) => {
-    let rows = db.getTopKarma(10)
-    var list = "Top Ehre:\n";
+    let rows = db.getTopKarma(10);
+    let list = "Top Ehre:\n";
     rows.forEach(v => {
         list += "<code>" + v.user_karma + " Ehre</code> - <a href=\"tg://user?id=" + v.user_id + "\">" + v.user_name + "</a>\n";
     });
@@ -170,7 +170,7 @@ bot.use((ctx, next) => {
     const user = db.getUser(ctx.from.id);
     if (user !== undefined) {
         if (userMemMap[user.user_id] === undefined) {
-            epoch = new Date(0);
+            const epoch = new Date(0);
             userMemMap[user.user_id] = {lastUp: epoch, lastDown: epoch, lastSuper: epoch, lastReward: epoch}
         }
         if (utils.isGroup(ctx.chat.type)) {
@@ -221,7 +221,7 @@ bot.hears(/^(\u002b|\u261d|\ud83d\udc46|\ud83d\udc4f|\ud83d\ude18|\ud83d\ude0d|\
         }
     }
     next();
-})
+});
 
 /** FEATURE | Entehren */
 bot.hears(/^(\u2639\ufe0f|\ud83d\ude20|\ud83d\ude21|\ud83e\udd2c|\ud83e\udd2e|\ud83d\udca9|\ud83d\ude3e|\ud83d\udc4e|\ud83d\udc47).*|.*(\u2639\ufe0f|\ud83d\ude20|\ud83d\ude21|\ud83e\udd2c|\ud83e\udd2e|\ud83d\udca9|\ud83d\ude3e|\ud83d\udc4e|\ud83d\udc47)$/, (ctx, next) => {
@@ -239,7 +239,7 @@ bot.hears(/^(\u2639\ufe0f|\ud83d\ude20|\ud83d\ude21|\ud83e\udd2c|\ud83e\udd2e|\u
         }
     }
     next();
-})
+});
 
 /** FEATURE | JustThings Bildgenerator */
 bot.hears(/^((wenn)|(when)) /i, (ctx) => {

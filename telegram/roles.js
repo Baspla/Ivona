@@ -3,4 +3,4 @@ module.exports = {
     moderator: "moderator",
     admin: "admin",
     coder: "coder",
-}
+};

@@ -6,12 +6,12 @@ exports.command = command;
 function command(bot) {
     bot.hears(/\(\(.+\)\)/, (ctx,next) => {
         if (utils.isGroup(ctx.chat.type)) {
-            var names = ctx.message.text.match(/\(\((.*?)\)\)/g);
+            const names = ctx.message.text.match(/\(\((.*?)\)\)/g);
             if (names.length >= 4) {
                 ctx.reply("Bitte suche nach weniger als 4 Karten pro Nachricht");
                 return;
             }
-            for (var i = 0; i < names.length; i++) {
+            for (let i = 0; i < names.length; i++) {
                 let name = names[i].split(/[)(]/).join("");
                 scry.Cards.search("include:extras (lang:de or lang:en) !\"" + name + "\"").on("data", card => {
                     if (card.prices.eur != null) {
@@ -26,4 +26,4 @@ function command(bot) {
         }
         next();
     })
-};
+}

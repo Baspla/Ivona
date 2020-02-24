@@ -29,7 +29,7 @@ const titles = [
 ];
 
 function getLevel(points) {
-    for (var i = 0; i < levels.length; i++) {
+    for (let i = 0; i < levels.length; i++) {
         if (points < levels[i]) return i;
     }
     return levels.length - 1;

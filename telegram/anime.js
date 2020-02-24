@@ -5,10 +5,10 @@ const utils = require("./utils");
 exports.command=command;
 
 function command(bot) {
-    bot.hears(/\[\[.+\]\]/, (ctx,next) => {
+    bot.hears(/\[\[.+]]/, (ctx,next) => {
         if (utils.isGroup(ctx.chat.type)) {
-            var names = ctx.message.text.match(/\[\[(.*?)\]\]/g);
-            for (var i = 0; i < names.length; i++) {
+            const names = ctx.message.text.match(/\[\[(.*?)]]/g);
+            for (let i = 0; i < names.length; i++) {
                 let name = names[i].split(/[\[\]]/).join("");
                 mal.search("anime", name, {limit: 1})
                     .then(info => {
@@ -22,4 +22,4 @@ function command(bot) {
         }
         next();
     })
-};
+}

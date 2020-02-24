@@ -8,4 +8,4 @@ exports.roleRequired = (role) => {
             return res.status(403).send({code: "403",message:"Ungültige Rolle"});
         }
     }
-}
+};
