@@ -3,6 +3,7 @@ const Telegraf = require('telegraf'); //https://telegraf.js.org/#/?id=sendmessag
 const bot = new Telegraf(process.env.BOT_TOKEN);
 const shell = require('shelljs');
 const anime = require("./anime");
+const magic = require("./magic");
 const utils = require("./utils");
 const levelmanager = require("./levels");
 const justThings = require("./justThings");
@@ -33,6 +34,9 @@ bot.help((ctx) => ctx.reply('Hilfe'));
 
 /** Kevins Anime Suche */
 anime.command(bot);
+
+/** Kevins Magic Suche */
+magic.command(bot);
 
 bot.command('registerGroup', (ctx) => {
     if (utils.isCreator(ctx.from.id)) {
