@@ -6,7 +6,6 @@ AuthenticationMiddleware = require("./middlewares/AuthenticationMiddleware");
 var router = express.Router();
 router.use('/top',ValidationMiddleware.validTokenNeeded,AuthenticationMiddleware.roleRequired("user"));
 router.use('/users',ValidationMiddleware.validTokenNeeded,AuthenticationMiddleware.roleRequired("user"));
-router.use('/')
 router.get('/top/points', function (req, res) {
     res.json( db.getTopPoints(10));
 })
