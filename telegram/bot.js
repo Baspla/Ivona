@@ -71,6 +71,7 @@ bot.use((ctx, next) => {
         if (utils.isGroup(ctx.chat.type)) {
             if (db.isRegisteredGroup(ctx.chat.id)) {
                 db.insertUserRole(ctx.from.id, roles.user);
+                next();
             }
         } else {
             ctx.reply("Ich habe dich bisher in keiner Gruppe schreiben sehen. Ich kann dir leider noch nicht vertrauen.");
@@ -247,7 +248,7 @@ bot.hears(/^((wenn)|(when)) /i, (ctx) => {
     ctx.replyWithPhoto({source: "resources/wip.jpg"});
 });
 
-bot.launch();
+bot.launch().then(()=>console.log("Bot gestartet"));
 
 function checkLevelUp(ctx, id, previous) {
     let user = db.getUser(id);
