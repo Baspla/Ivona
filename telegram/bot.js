@@ -14,6 +14,17 @@ const Auth = require("./middlewares/AuthenticationMiddleware");
 const Command = require("./middlewares/CommandMiddleware");
 let userMemMap = {};
 
+/** /claim */
+bot.command('claim', (ctx) => {
+    if (utils.isCreator(ctx.from.id)) {
+        if (!db.hasUserRole(ctx.from.id, roles.admin)) {
+            ctx.reply("Du bist jetzt Admin.");
+            db.insertUserRole(ctx.from.id, roles.admin);
+        } else {
+            ctx.reply("Du bist schon Admin.");
+        }
+    }
+});
 
 bot.use((ctx, next) => {
     if (ctx.message !== undefined) {
@@ -123,18 +134,6 @@ bot.command('userlist', Auth.roleRequired("admin"), (ctx) => {
         text += row.user_name + " - Rollen: " + row.roles + "\n";
     })
     ctx.reply(text);
-});
-
-/** /claim */
-bot.command('claim', (ctx) => {
-    if (utils.isCreator(ctx.from.id)) {
-        if (!db.hasUserRole(ctx.from.id, roles.admin)) {
-            ctx.reply("Du bist jetzt Admin.");
-            db.insertUserRole(ctx.from.id, roles.admin);
-        } else {
-            ctx.reply("Du bist schon Admin.");
-        }
-    }
 });
 
 /** Punkte Scoreboard Befehl */
