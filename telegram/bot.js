@@ -8,9 +8,22 @@ const levelmanager = require("./levels");
 const justThings = require("./justThings");
 db = require("../data/db");
 api = require("../api/server");
-
+const roles = require("./roles");
+const Auth = require("./middlewares/AuthenticationMiddleware");
+const Command = require("./middlewares/CommandMiddleware");
 let userMemMap = {};
 
+
+bot.use((ctx, next) => {
+    if (ctx.message !== undefined) {
+        if (ctx.message.text !== undefined) {
+            const args = ctx.message.text.split(" ");
+            args.shift();
+            ctx.args = args;
+        }
+    }
+    next();
+});
 
 /** /start Befehl */
 bot.start((ctx) => ctx.replyWithPhoto({source: 'resources/profile.jpg'}, {caption: "Hi, Ich bin Ivona.\nIch bin hier um dir zu Helfen."}));
@@ -35,15 +48,87 @@ bot.command('registerGroup', (ctx) => {
 // User wird erstellt, falls nicht vorhanden
 bot.use((ctx, next) => {
     db.insertUserIfNotExists(ctx.from, 0, 0);
-    if (db.hasUserRole(ctx.from.id, "user")) {
+    if (db.hasUserRole(ctx.from.id, roles.user)) {
         return next();
     } else {
         if (utils.isGroup(ctx.chat.type)) {
             if (db.isRegisteredGroup(ctx.chat.id)) {
-                db.insertUserRole(ctx.from.id, "user");
+                db.insertUserRole(ctx.from.id, roles.user);
             }
         } else {
             ctx.reply("Ich habe dich bisher in keiner Gruppe schreiben sehen. Ich kann dir leider noch nicht vertrauen.");
+        }
+    }
+});
+
+/** /restart */
+bot.command('restart', Auth.roleRequired(roles.admin), (ctx) => {
+    ctx.reply("Starte neu...")
+    shell.exec('../restart.sh');
+})
+
+/** /admin */
+bot.command('admin',Command.minimumArgs(1), Auth.roleRequired("admin"), (ctx) => {
+    const name = ctx.args.join(" ");
+    const user = db.getUserFromName(name);
+    if (user === undefined) {
+        ctx.reply("Unbekannter Nutzer");
+    } else if (!db.hasUserRole(user.user_id, roles.admin)) {
+        db.insertUserRole(user.user_id, roles.admin);
+        ctx.reply(user.user_name+" wurde der Administrator Status anerkannt.");
+    } else {
+        db.deleteUserRole(user.user_id, roles.admin);
+        ctx.reply(user.user_name+" wurde der Administrator Status aberkannt.");
+    }
+});
+
+/** /mod */
+bot.command('mod',Command.minimumArgs(1), Auth.roleRequired("admin"), (ctx) => {
+    const name = ctx.args.join(" ");
+    const user = db.getUserFromName(name);
+    if (user === undefined) {
+        ctx.reply("Unbekannter Nutzer");
+    } else if (!db.hasUserRole(user.user_id, roles.moderator)) {
+        db.insertUserRole(user.user_id, roles.moderator);
+        ctx.reply(user.user_name+" wurde der Moderator Status anerkannt.");
+    } else {
+        db.deleteUserRole(user.user_id, roles.moderator);
+        ctx.reply(user.user_name+" wurde der Moderator Status aberkannt.");
+    }
+});
+
+/** /coder */
+bot.command('coder',Command.minimumArgs(1), Auth.roleRequired("admin"), (ctx) => {
+    const name = ctx.args.join(" ");
+    const user = db.getUserFromName(name);
+    if (user === undefined) {
+        ctx.reply("Unbekannter Nutzer");
+    } else if (!db.hasUserRole(user.user_id, roles.coder)) {
+        db.insertUserRole(user.user_id, roles.coder);
+        ctx.reply(user.user_name+" wurde der Coder Status anerkannt.");
+    } else {
+        db.deleteUserRole(user.user_id, roles.coder);
+        ctx.reply(user.user_name+" wurde der Coder Status aberkannt.");
+    }
+});
+
+/** /userlist */
+bot.command('userlist', Auth.roleRequired("admin"), (ctx) => {
+    let text = "User: \n";
+    db.getUsersRoles().forEach((row)=>{
+        text+=row.user_name+" - Rollen: "+row.roles+"\n";
+    })
+    ctx.reply(text);
+});
+
+/** /claim */
+bot.command('claim', (ctx) => {
+    if (utils.isCreator(ctx.from.id)) {
+        if (!db.hasUserRole(ctx.from.id, roles.admin)) {
+            ctx.reply("Du bist jetzt Admin.");
+            db.insertUserRole(ctx.from.id, roles.admin);
+        } else {
+            ctx.reply("Du bist schon Admin.");
         }
     }
 });
@@ -58,15 +143,6 @@ bot.command('top', (ctx) => {
     ctx.reply(list, {parse_mode: "HTML"})
 });
 
-bot.command('restart', (ctx) => {
-    if (utils.isCreator(ctx.from.id)) {
-        ctx.reply("Starte neu...")
-        shell.exec('../restart.sh');
-    } else {
-        ctx.reply("Du hast keine Berechtigung dazu.");
-    }
-})
-
 /** Karma Scoreboard Befehl */
 bot.command('ehre', (ctx) => {
     let rows = db.getTopKarma(10)
@@ -77,22 +153,6 @@ bot.command('ehre', (ctx) => {
     ctx.reply(list, {parse_mode: "HTML"})
 });
 
-/** Debug Punkte + Befehl */
-bot.command('cheat', (ctx) => {
-    if (utils.isCreator(ctx.from.id)) {
-        ctx.reply("Füge 100 Punkte hinzu.")
-        const previous = db.getUser(ctx.from.id).user_points;
-        db.addPoints(ctx.from.id, 100);
-        checkLevelUp(ctx, ctx.from.id, previous);
-    }
-});
-/** Promote */
-bot.command('promote', (ctx) => {
-    if (utils.isCreator(ctx.from.id)) {
-        ctx.reply("Du bist jetzt Admin.")
-        db.insertUserRole(ctx.from.id, "admin");
-    }
-});
 
 /** Befehl zum Anzeigen der Statistik eines Nutzers */
 bot.command('stats', (ctx) => {
@@ -130,7 +190,7 @@ bot.hears(/^(\u2764\ufe0f|\ud83d\udc96|\ud83e\udde1|\ud83d\udc9b|\ud83d\udc9a|\u
             let now = new Date();
             if (now.getTime() - userMemMap[ctx.from.id].lastSuper.getTime() > 7200000) { //2 Stunden
                 userMemMap[ctx.from.id].lastSuper = now;
-                ctx.reply(db.getUser(ctx.from.id).user_name + " entehrt " + cdb.getUser(ctx.message.reply_to_message.from.id).user_name +" absolut hart!");
+                ctx.reply(db.getUser(ctx.from.id).user_name + " entehrt " + cdb.getUser(ctx.message.reply_to_message.from.id).user_name + " absolut hart!");
                 db.addKarma(ctx.message.reply_to_message.from.id, 3);
             }
         }

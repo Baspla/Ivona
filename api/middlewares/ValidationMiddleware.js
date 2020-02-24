@@ -3,7 +3,7 @@ db = require("../../data/db.js");
 exports.validTokenNeeded = (req,res,next) => {
 
     if (req.headers['authorization']) {
-        user = db.getUserFromToken(req.headers['authorization']);
+        user = db.getUserByToken(req.headers['authorization']);
         if(user!==undefined){
             req.user_id=user.user_id;
             return next();

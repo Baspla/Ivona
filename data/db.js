@@ -46,12 +46,12 @@ db.exec("BEGIN TRANSACTION;\n" +
     "CREATE TABLE IF NOT EXISTS \"group\" (\n" +
     "\t\"group_id\"\tINTEGER NOT NULL UNIQUE,\n" +
     "\tPRIMARY KEY(\"group_id\")\n" +
-    ");\n" +"CREATE TABLE IF NOT EXISTS \"api_token\" (\n" +
+    ");\n" + "CREATE TABLE IF NOT EXISTS \"api_token\" (\n" +
     "\t\"token_id\"\tINTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,\n" +
     "\t\"user_id\"\tINTEGER NOT NULL,\n" +
     "\t\"token_text\"\tTEXT NOT NULL,\n" +
     "\tFOREIGN KEY(\"user_id\") REFERENCES \"user\"(\"user_id\")\n" +
-    ");"+
+    ");" +
     "COMMIT;\n");
 
 module.exports = {
@@ -88,16 +88,23 @@ module.exports = {
     insertUserIfNotExists(user, points, karma) {
         let result = getUserQuery.get(user.id);
         if (result === undefined && !user.is_bot) {
-            console.log("Nutzer erstellt");
+            let name = user.first_name;
+            let i = 0;
+            while (getUserByNameQuery.get(name) !== undefined) {
+                i++;
+                name = user.first_name + i;
+                if(i>1000){
+                    throw "Keine Nutzernamen frei";
+                }
+            }
             module.exports.insertUser(user.id, user.first_name, points, karma);
+            console.log("Nutzer erstellt");
         }
     },
     insertUserRole(id, role_name) {
         insertUserRoleQuery.run(id, role_name);
     },
     hasUserRole(id, role) {
-        console.log(id);
-        console.log(role);
         return hasUserRoleQuery.get(id, role) !== undefined;
     },
     isRegisteredGroup(id) {
@@ -106,16 +113,31 @@ module.exports = {
     insertGroup(id) {
         insertGroupQuery.run(id);
     },
-    getUserFromToken(token){
-        return getUserFromTokenQuery.get(token);
+    getUserByToken(token) {
+        return getUserByTokenQuery.get(token);
+    },
+    getUserFromName(name) {
+        return getUserByNameQuery.get(name);
+    },
+    deleteUserRole(id, role) {
+        deleteUserRoleQuery.run(id, role);
+    },
+    getUsers() {
+        return getUsersQuery.all();
+    },
+    getUsersRoles() {
+        return getUsersRolesQuery.all();
     }
 };
-
-const getUserFromTokenQuery = db.prepare("SELECT user_id FROM api_token WHERE token_text = ?")
+const getUsersQuery = db.prepare("SELECT * FROM user");
+const getUsersRolesQuery = db.prepare("SELECT user.*,group_concat(role.role_name,\", \") AS \"roles\" FROM user,user_role,role WHERE user.user_id = user_role.user_id AND role.role_id=user_role.role_id GROUP BY user_role.user_id\n");
+const getUserByTokenQuery = db.prepare("SELECT user_id FROM api_token WHERE token_text = ?");
+const getUserByNameQuery = db.prepare("SELECT * FROM user WHERE user_name = ?");
 const getUserQuery = db.prepare("SELECT * FROM user WHERE user_id = ?");
 const insertUserQuery = db.prepare("INSERT INTO user (user_id,user_name,user_points,user_karma) VALUES (?,?,?,?)");
 const insertGroupQuery = db.prepare("INSERT INTO \"group\" (group_id) VALUES (?)");
 const insertUserRoleQuery = db.prepare("INSERT INTO user_role (user_id,role_id) VALUES (?,(SELECT role_id FROM role WHERE role_name = ?))");
+const deleteUserRoleQuery = db.prepare("DELETE FROM user_role WHERE user_id = ? AND role_id=(SELECT role_id FROM role WHERE role_name = ?)");
 const getUserRolesQuery = db.prepare("SELECT * FROM user_role WHERE user_id = ?");
 const hasUserRoleQuery = db.prepare("SELECT * FROM user_role WHERE user_id = ? AND role_id = (SELECT role_id FROM role where role_name = ?)");
 const getTopPointsQuery = db.prepare("SELECT * FROM user ORDER BY user_points DESC LIMIT ?");
