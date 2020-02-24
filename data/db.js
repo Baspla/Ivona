@@ -125,12 +125,16 @@ module.exports = {
     getUsers() {
         return getUsersQuery.all();
     },
-    getUsersRoles() {
-        return getUsersRolesQuery.all();
+    getUsersWithRoles() {
+        return getUsersWithRolesQuery.all();
+    },
+    getUserWithRoles() {
+        return getUsersWithRolesQuery.get();
     }
 };
 const getUsersQuery = db.prepare("SELECT * FROM user");
-const getUsersRolesQuery = db.prepare("SELECT user.*,group_concat(role.role_name,\", \") AS \"roles\" FROM user,user_role,role WHERE user.user_id = user_role.user_id AND role.role_id=user_role.role_id GROUP BY user_role.user_id\n");
+const getUserWithRolesQuery = db.prepare("SELECT user.*,group_concat(role.role_name,\", \") AS \"roles\" FROM user,user_role,role WHERE user.user_id=? AND user_role.user_id=user.user_id AND role.role_id=user_role.role_id GROUP BY user.user_id");
+const getUsersWithRolesQuery = db.prepare("SELECT user.*,group_concat(role.role_name,\", \") AS \"roles\" FROM user,user_role,role WHERE user.user_id = user_role.user_id AND role.role_id=user_role.role_id GROUP BY user_role.user_id\n");
 const getUserByTokenQuery = db.prepare("SELECT user_id FROM api_token WHERE token_text = ?");
 const getUserByNameQuery = db.prepare("SELECT * FROM user WHERE user_name = ?");
 const getUserQuery = db.prepare("SELECT * FROM user WHERE user_id = ?");

@@ -14,18 +14,7 @@ const Auth = require("./middlewares/AuthenticationMiddleware");
 const Command = require("./middlewares/CommandMiddleware");
 let userMemMap = {};
 
-/** /claim */
-bot.command('claim', (ctx) => {
-    if (utils.isCreator(ctx.from.id)) {
-        if (!db.hasUserRole(ctx.from.id, roles.admin)) {
-            ctx.reply("Du bist jetzt Admin.");
-            db.insertUserRole(ctx.from.id, roles.admin);
-        } else {
-            ctx.reply("Du bist schon Admin.");
-        }
-    }
-});
-
+/** PREP | WICHTIG VOR DEN BEFEHLEN | add ctx.args */
 bot.use((ctx, next) => {
     if (ctx.message !== undefined) {
         if (ctx.message.text !== undefined) {
@@ -37,18 +26,19 @@ bot.use((ctx, next) => {
     next();
 });
 
-/** /start Befehl */
-bot.start((ctx) => ctx.replyWithPhoto({source: 'resources/profile.jpg'}, {caption: "Hi, Ich bin Ivona.\nIch bin hier um dir zu Helfen."}));
+/** COMMAND | CREATOR | claim */
+bot.command('claim', (ctx) => {
+    if (utils.isCreator(ctx.from.id)) {
+        if (!db.hasUserRole(ctx.from.id, roles.admin)) {
+            ctx.reply("Du bist jetzt Admin.");
+            db.insertUserRole(ctx.from.id, roles.admin);
+        } else {
+            ctx.reply("Du bist schon Admin.");
+        }
+    }
+});
 
-/** /help Befehl */
-bot.help((ctx) => ctx.reply('Hilfe'));
-
-/** Kevins Anime Suche */
-anime.command(bot);
-
-/** Kevins Magic Suche */
-magic.command(bot);
-
+/**  COMMAND | CREATOR | registerGroup */
 bot.command('registerGroup', (ctx) => {
     if (utils.isCreator(ctx.from.id)) {
         if (utils.isGroup(ctx.chat.type)) {
@@ -60,7 +50,19 @@ bot.command('registerGroup', (ctx) => {
     }
 });
 
-// User wird erstellt, falls nicht vorhanden
+/** COMMAND | start */
+bot.start((ctx) => ctx.replyWithPhoto({source: 'resources/profile.jpg'}, {caption: "Hi, Ich bin Ivona.\nIch bin hier um dir zu Helfen."}));
+
+/** COMMAND | help */
+bot.help((ctx) => ctx.reply('Hilfe'));
+
+/** FEATURE | Kevins Anime Suche */
+anime.command(bot);
+
+/** FEATURE | Kevins Magic Suche */
+magic.command(bot);
+
+/** PREP | WICHTIG VOR NUTZERABFRAGEN | Erstelle user und überprüfe ob sie die Rolle user haben (sind in Gruppe) */
 bot.use((ctx, next) => {
     db.insertUserIfNotExists(ctx.from, 0, 0);
     if (db.hasUserRole(ctx.from.id, roles.user)) {
@@ -76,13 +78,13 @@ bot.use((ctx, next) => {
     }
 });
 
-/** /restart */
+/** COMMAND | ADMIN | restart */
 bot.command('restart', Auth.roleRequired(roles.admin), (ctx) => {
     ctx.reply("Starte neu...")
     shell.exec('../restart.sh');
 })
 
-/** /admin */
+/** COMMAND | ADMIN | admin */
 bot.command('admin', Command.minimumArgs(1), Auth.roleRequired("admin"), (ctx) => {
     const name = ctx.args.join(" ");
     const user = db.getUserFromName(name);
@@ -97,7 +99,7 @@ bot.command('admin', Command.minimumArgs(1), Auth.roleRequired("admin"), (ctx) =
     }
 });
 
-/** /mod */
+/** COMMAND | ADMIN | mod */
 bot.command('mod', Command.minimumArgs(1), Auth.roleRequired("admin"), (ctx) => {
     const name = ctx.args.join(" ");
     const user = db.getUserFromName(name);
@@ -112,7 +114,7 @@ bot.command('mod', Command.minimumArgs(1), Auth.roleRequired("admin"), (ctx) => 
     }
 });
 
-/** /coder */
+/** COMMAND | ADMIN | coder */
 bot.command('coder', Command.minimumArgs(1), Auth.roleRequired("admin"), (ctx) => {
     const name = ctx.args.join(" ");
     const user = db.getUserFromName(name);
@@ -127,16 +129,16 @@ bot.command('coder', Command.minimumArgs(1), Auth.roleRequired("admin"), (ctx) =
     }
 });
 
-/** /userlist */
+/** COMMAND | ADMIN | userlist */
 bot.command('userlist', Auth.roleRequired("admin"), (ctx) => {
     let text = "User: \n";
-    db.getUsersRoles().forEach((row) => {
+    db.getUsersWithRoles().forEach((row) => {
         text += row.user_name + " - Rollen: " + row.roles + "\n";
     })
     ctx.reply(text);
 });
 
-/** Punkte Scoreboard Befehl */
+/** COMMAND | top */
 bot.command('top', (ctx) => {
     let rows = db.getTopPoints(10)
     var list = "Top Punkte:\n";
@@ -146,7 +148,7 @@ bot.command('top', (ctx) => {
     ctx.reply(list, {parse_mode: "HTML"})
 });
 
-/** Karma Scoreboard Befehl */
+/** COMMAND | ehre */
 bot.command('ehre', (ctx) => {
     let rows = db.getTopKarma(10)
     var list = "Top Ehre:\n";
@@ -156,13 +158,13 @@ bot.command('ehre', (ctx) => {
     ctx.reply(list, {parse_mode: "HTML"})
 });
 
-
-/** Befehl zum Anzeigen der Statistik eines Nutzers */
+/** COMMAND | stats */
 bot.command('stats', (ctx) => {
-    ctx.reply('ToDo Stats')
-    //TODO
+    const row = db.getUserWithRoles();
+    ctx.reply(row.user_name + "\nPunkte: " + row.user_points + "\nEhre: " + row.user_karma + "\nRollen: " + row.roles);
 });
 
+/** FEATURE | Punkte für Nachrichten*/
 bot.use((ctx, next) => {
     const user = db.getUser(ctx.from.id);
     if (user !== undefined) {
@@ -184,7 +186,7 @@ bot.use((ctx, next) => {
     next();
 });
 
-/** Super Ehren */
+/** FEATURE | Super Ehren */
 bot.hears(/^(\u2764\ufe0f|\ud83d\udc96|\ud83e\udde1|\ud83d\udc9b|\ud83d\udc9a|\ud83d\udc99|\ud83d\udc9c|\ud83d\udda4).*|.*(\u2764\ufe0f|\ud83d\udc96|\ud83e\udde1|\ud83d\udc9b|\ud83d\udc9a|\ud83d\udc99|\ud83d\udc9c|\ud83d\udda4)$/, (ctx, next) => {
     if (utils.isReply(ctx) && utils.isGroup(ctx.chat.type)) {
         if (ctx.message.reply_to_message.from !== undefined && !ctx.message.reply_to_message.from.is_bot) {
@@ -202,7 +204,7 @@ bot.hears(/^(\u2764\ufe0f|\ud83d\udc96|\ud83e\udde1|\ud83d\udc9b|\ud83d\udc9a|\u
     next();
 });
 
-/** Ehren */
+/** FEATURE | Ehren */
 bot.hears(/^(\u002b|\u261d|\ud83d\udc46|\ud83d\udc4f|\ud83d\ude18|\ud83d\ude0d|\ud83d\udc4c|\ud83d\udc4d|\ud83d\ude38).*|.*(\u002b|\u261d|\ud83d\udc46|\ud83d\udc4f|\ud83d\ude18|\ud83d\ude0d|\ud83d\udc4c|\ud83d\udc4d|\ud83d\ude38)$/, (ctx, next) => {
     if (utils.isReply(ctx) && utils.isGroup(ctx.chat.type)) {
         if (ctx.message.reply_to_message.from !== undefined && !ctx.message.reply_to_message.from.is_bot) {
@@ -220,7 +222,7 @@ bot.hears(/^(\u002b|\u261d|\ud83d\udc46|\ud83d\udc4f|\ud83d\ude18|\ud83d\ude0d|\
     next();
 })
 
-/** Entehren */
+/** FEATURE | Entehren */
 bot.hears(/^(\u2639\ufe0f|\ud83d\ude20|\ud83d\ude21|\ud83e\udd2c|\ud83e\udd2e|\ud83d\udca9|\ud83d\ude3e|\ud83d\udc4e|\ud83d\udc47).*|.*(\u2639\ufe0f|\ud83d\ude20|\ud83d\ude21|\ud83e\udd2c|\ud83e\udd2e|\ud83d\udca9|\ud83d\ude3e|\ud83d\udc4e|\ud83d\udc47)$/, (ctx, next) => {
     if (utils.isReply(ctx) && utils.isGroup(ctx.chat.type)) {
         if (ctx.message.reply_to_message.from !== undefined && !ctx.message.reply_to_message.from.is_bot) {
@@ -238,7 +240,7 @@ bot.hears(/^(\u2639\ufe0f|\ud83d\ude20|\ud83d\ude21|\ud83e\udd2c|\ud83e\udd2e|\u
     next();
 })
 
-/** JustThings Bildgenerator */
+/** FEATURE | JustThings Bildgenerator */
 bot.hears(/^((wenn)|(when)) /i, (ctx) => {
     //if (utils.isGroup(ctx.chat.type)){
     justThings.generateImage(ctx.message.text, ctx.from.first_name);
