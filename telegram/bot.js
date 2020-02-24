@@ -72,55 +72,55 @@ bot.command('restart', Auth.roleRequired(roles.admin), (ctx) => {
 })
 
 /** /admin */
-bot.command('admin',Command.minimumArgs(1), Auth.roleRequired("admin"), (ctx) => {
+bot.command('admin', Command.minimumArgs(1), Auth.roleRequired("admin"), (ctx) => {
     const name = ctx.args.join(" ");
     const user = db.getUserFromName(name);
     if (user === undefined) {
         ctx.reply("Unbekannter Nutzer");
     } else if (!db.hasUserRole(user.user_id, roles.admin)) {
         db.insertUserRole(user.user_id, roles.admin);
-        ctx.reply(user.user_name+" wurde der Administrator Status anerkannt.");
+        ctx.reply(user.user_name + " wurde der Administrator Status anerkannt.");
     } else {
         db.deleteUserRole(user.user_id, roles.admin);
-        ctx.reply(user.user_name+" wurde der Administrator Status aberkannt.");
+        ctx.reply(user.user_name + " wurde der Administrator Status aberkannt.");
     }
 });
 
 /** /mod */
-bot.command('mod',Command.minimumArgs(1), Auth.roleRequired("admin"), (ctx) => {
+bot.command('mod', Command.minimumArgs(1), Auth.roleRequired("admin"), (ctx) => {
     const name = ctx.args.join(" ");
     const user = db.getUserFromName(name);
     if (user === undefined) {
         ctx.reply("Unbekannter Nutzer");
     } else if (!db.hasUserRole(user.user_id, roles.moderator)) {
         db.insertUserRole(user.user_id, roles.moderator);
-        ctx.reply(user.user_name+" wurde der Moderator Status anerkannt.");
+        ctx.reply(user.user_name + " wurde der Moderator Status anerkannt.");
     } else {
         db.deleteUserRole(user.user_id, roles.moderator);
-        ctx.reply(user.user_name+" wurde der Moderator Status aberkannt.");
+        ctx.reply(user.user_name + " wurde der Moderator Status aberkannt.");
     }
 });
 
 /** /coder */
-bot.command('coder',Command.minimumArgs(1), Auth.roleRequired("admin"), (ctx) => {
+bot.command('coder', Command.minimumArgs(1), Auth.roleRequired("admin"), (ctx) => {
     const name = ctx.args.join(" ");
     const user = db.getUserFromName(name);
     if (user === undefined) {
         ctx.reply("Unbekannter Nutzer");
     } else if (!db.hasUserRole(user.user_id, roles.coder)) {
         db.insertUserRole(user.user_id, roles.coder);
-        ctx.reply(user.user_name+" wurde der Coder Status anerkannt.");
+        ctx.reply(user.user_name + " wurde der Coder Status anerkannt.");
     } else {
         db.deleteUserRole(user.user_id, roles.coder);
-        ctx.reply(user.user_name+" wurde der Coder Status aberkannt.");
+        ctx.reply(user.user_name + " wurde der Coder Status aberkannt.");
     }
 });
 
 /** /userlist */
 bot.command('userlist', Auth.roleRequired("admin"), (ctx) => {
     let text = "User: \n";
-    db.getUsersRoles().forEach((row)=>{
-        text+=row.user_name+" - Rollen: "+row.roles+"\n";
+    db.getUsersRoles().forEach((row) => {
+        text += row.user_name + " - Rollen: " + row.roles + "\n";
     })
     ctx.reply(text);
 });
@@ -188,14 +188,15 @@ bot.use((ctx, next) => {
 /** Super Ehren */
 bot.hears(/^(\u2764\ufe0f|\ud83d\udc96|\ud83e\udde1|\ud83d\udc9b|\ud83d\udc9a|\ud83d\udc99|\ud83d\udc9c|\ud83d\udda4).*|.*(\u2764\ufe0f|\ud83d\udc96|\ud83e\udde1|\ud83d\udc9b|\ud83d\udc9a|\ud83d\udc99|\ud83d\udc9c|\ud83d\udda4)$/, (ctx, next) => {
     if (utils.isReply(ctx) && utils.isGroup(ctx.chat.type)) {
-        console.log("Super");
         if (ctx.message.reply_to_message.from !== undefined && !ctx.message.reply_to_message.from.is_bot) {
-            db.insertUserIfNotExists(ctx.message.reply_to_message.from, 0, 0);
-            let now = new Date();
-            if (now.getTime() - userMemMap[ctx.from.id].lastSuper.getTime() > 7200000) { //2 Stunden
-                userMemMap[ctx.from.id].lastSuper = now;
-                ctx.reply(db.getUser(ctx.from.id).user_name + " entehrt " + cdb.getUser(ctx.message.reply_to_message.from.id).user_name + " absolut hart!");
-                db.addKarma(ctx.message.reply_to_message.from.id, 3);
+            if (ctx.message.reply_to_message.from.id !== ctx.from.id) {
+                db.insertUserIfNotExists(ctx.message.reply_to_message.from, 0, 0);
+                let now = new Date();
+                if (now.getTime() - userMemMap[ctx.from.id].lastSuper.getTime() > 7200000) { //2 Stunden
+                    userMemMap[ctx.from.id].lastSuper = now;
+                    ctx.reply(db.getUser(ctx.from.id).user_name + " entehrt " + db.getUser(ctx.message.reply_to_message.from.id).user_name + " absolut hart!");
+                    db.addKarma(ctx.message.reply_to_message.from.id, 3);
+                }
             }
         }
     }
@@ -205,14 +206,15 @@ bot.hears(/^(\u2764\ufe0f|\ud83d\udc96|\ud83e\udde1|\ud83d\udc9b|\ud83d\udc9a|\u
 /** Ehren */
 bot.hears(/^(\u002b|\u261d|\ud83d\udc46|\ud83d\udc4f|\ud83d\ude18|\ud83d\ude0d|\ud83d\udc4c|\ud83d\udc4d|\ud83d\ude38).*|.*(\u002b|\u261d|\ud83d\udc46|\ud83d\udc4f|\ud83d\ude18|\ud83d\ude0d|\ud83d\udc4c|\ud83d\udc4d|\ud83d\ude38)$/, (ctx, next) => {
     if (utils.isReply(ctx) && utils.isGroup(ctx.chat.type)) {
-        console.log("Upvote");
         if (ctx.message.reply_to_message.from !== undefined && !ctx.message.reply_to_message.from.is_bot) {
-            db.insertUserIfNotExists(ctx.message.reply_to_message.from, 0, 0);
-            let now = new Date();
-            if (now.getTime() - userMemMap[ctx.from.id].lastUp.getTime() > 300000) { //5 Minuten
-                userMemMap[ctx.from.id].lastUp = now;
-                ctx.reply(db.getUser(ctx.from.id).user_name + " ehrt " + cdb.getUser(ctx.message.reply_to_message.from.id).user_name);
-                db.addKarma(ctx.message.reply_to_message.from.id, 1);
+            if (ctx.message.reply_to_message.from.id !== ctx.from.id) {
+                db.insertUserIfNotExists(ctx.message.reply_to_message.from, 0, 0);
+                let now = new Date();
+                if (now.getTime() - userMemMap[ctx.from.id].lastUp.getTime() > 300000) { //5 Minuten
+                    userMemMap[ctx.from.id].lastUp = now;
+                    ctx.reply(db.getUser(ctx.from.id).user_name + " ehrt " + db.getUser(ctx.message.reply_to_message.from.id).user_name);
+                    db.addKarma(ctx.message.reply_to_message.from.id, 1);
+                }
             }
         }
     }
@@ -222,14 +224,15 @@ bot.hears(/^(\u002b|\u261d|\ud83d\udc46|\ud83d\udc4f|\ud83d\ude18|\ud83d\ude0d|\
 /** Entehren */
 bot.hears(/^(\u2639\ufe0f|\ud83d\ude20|\ud83d\ude21|\ud83e\udd2c|\ud83e\udd2e|\ud83d\udca9|\ud83d\ude3e|\ud83d\udc4e|\ud83d\udc47).*|.*(\u2639\ufe0f|\ud83d\ude20|\ud83d\ude21|\ud83e\udd2c|\ud83e\udd2e|\ud83d\udca9|\ud83d\ude3e|\ud83d\udc4e|\ud83d\udc47)$/, (ctx, next) => {
     if (utils.isReply(ctx) && utils.isGroup(ctx.chat.type)) {
-        console.log("Downvote");
         if (ctx.message.reply_to_message.from !== undefined && !ctx.message.reply_to_message.from.is_bot) {
-            db.insertUserIfNotExists(ctx.message.reply_to_message.from, 0, 0);
-            let now = new Date();
-            if (now.getTime() - userMemMap[ctx.from.id].lastDown.getTime() > 600000) { //10 Minuten
-                userMemMap[ctx.from.id].lastDown = now;
-                ctx.reply(db.getUser(ctx.from.id).user_name + " entehrt " + cdb.getUser(ctx.message.reply_to_message.from.id).user_name);
-                db.removeKarma(ctx.message.reply_to_message.from.id, 1);
+            if (ctx.message.reply_to_message.from.id !== ctx.from.id) {
+                db.insertUserIfNotExists(ctx.message.reply_to_message.from, 0, 0);
+                let now = new Date();
+                if (now.getTime() - userMemMap[ctx.from.id].lastDown.getTime() > 600000) { //10 Minuten
+                    userMemMap[ctx.from.id].lastDown = now;
+                    ctx.reply(db.getUser(ctx.from.id).user_name + " entehrt " + db.getUser(ctx.message.reply_to_message.from.id).user_name);
+                    db.removeKarma(ctx.message.reply_to_message.from.id, 1);
+                }
             }
         }
     }
@@ -240,7 +243,7 @@ bot.hears(/^(\u2639\ufe0f|\ud83d\ude20|\ud83d\ude21|\ud83e\udd2c|\ud83e\udd2e|\u
 bot.hears(/^((wenn)|(when)) /i, (ctx) => {
     //if (utils.isGroup(ctx.chat.type)){
     justThings.generateImage(ctx.message.text, ctx.from.first_name);
-    ctx.replyWithPhoto({source: "resources/temp/justThings.png"});
+    ctx.replyWithPhoto({source: "resources/wip.jpg"});
 });
 
 bot.launch();
