@@ -5,7 +5,7 @@ const utils = require("./utils");
 exports.command=command;
 
 function command(bot) {
-    bot.hears(/\[\[.+\]\]/, (ctx) => {
+    bot.hears(/\[\[.+\]\]/, (ctx,next) => {
         if (utils.isGroup(ctx.chat.type)) {
             var names = ctx.message.text.match(/\[\[(.*?)\]\]/g);
             for (var i = 0; i < names.length; i++) {
@@ -20,5 +20,6 @@ function command(bot) {
                     .catch(err => console.log(err));
             }
         }
+        next();
     })
 };
