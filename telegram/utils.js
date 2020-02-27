@@ -1,6 +1,8 @@
 module.exports = {
-    isGroup(type) {
+    isGroupChat(type) {
         return type === "group" || type === "supergroup";
+    },isUserChat(type) {
+        return type === "user";
     },
     isCreator(id) {
         return id === 67025299;

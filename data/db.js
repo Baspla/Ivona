@@ -1,5 +1,6 @@
 const Database = require('better-sqlite3');
 const db = new Database('ivona.db', {verbose: console.log});
+const crypto = require("crypto");
 
 process.on('exit', () => db.close());
 process.on('SIGHUP', () => process.exit(128 + 1));
@@ -139,8 +140,24 @@ module.exports = {
     },
     getCodes(limit,offset) {
         return getCodesQuery.all(limit,offset);
+    },
+    getTokens(id) {
+        return getTokenQuery.all(id);
+    },
+    removeAllTokens(id) {
+        removeAllTokensQuery.run(id);
+    },
+    insertToken(id) {
+        const salt = crypto.randomBytes(128).toString('base64');
+        const token = require('crypto').createHash('md5').update(id+salt).digest("hex")
+        insertTokenQuery.run(id,token);
+        return token;
     }
 };
+
+const removeAllTokensQuery = db.prepare("DELETE FROM api_token WHERE user_id = ?");
+const insertTokenQuery = db.prepare("INSERT INTO \"api_token\" (user_id,token_text) VALUES (?,?)");
+const getTokenQuery = db.prepare("SELECT * FROM api_token WHERE user_id = ?");
 const getCodesQuery = db.prepare("SELECT * FROM code ORDER BY code_id LIMIT ? OFFSET ?");
 const getUsersQuery = db.prepare("SELECT * FROM user");
 const getCodeByCodeQuery = db.prepare("SELECT * FROM code WHERE code_code=?");

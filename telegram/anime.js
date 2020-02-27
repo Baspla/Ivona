@@ -6,7 +6,7 @@ exports.command=command;
 
 function command(bot) {
     bot.hears(/\[\[.+]]/, (ctx,next) => {
-        if (utils.isGroup(ctx.chat.type)) {
+        if (utils.isGroupChat(ctx.chat.type)) {
             const names = ctx.message.text.match(/\[\[(.*?)]]/g);
             for (let i = 0; i < names.length; i++) {
                 let name = names[i].split(/[\[\]]/).join("");

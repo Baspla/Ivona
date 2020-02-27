@@ -11,8 +11,10 @@ db = require("../data/db");
 api = require("../api/server");
 const roles = require("./roles");
 const Auth = require("./middlewares/AuthenticationMiddleware");
+const Location = require("./middlewares/LocationMiddleware");
 const Command = require("./middlewares/CommandMiddleware");
 let userMemMap = {};
+const Markup = require("telegraf/markup");
 
 /** PREP | WICHTIG VOR DEN BEFEHLEN | add ctx.args */
 bot.use((ctx, next) => {
@@ -26,31 +28,22 @@ bot.use((ctx, next) => {
     next();
 });
 
-class InlineQueryResultArticle {
-    constructor(id, title, description, content, parse_mode) {
-        this.type="article";
-        this.id = id;
-        this.title = title;
-        this.input_message_content = {message_text: content, parse_mode: parse_mode};
-        this.description = description;
-    }
-}
-
+/** INLINE QUERYS */
 bot.on("inline_query", ((ctx, next) => {
     const result = [];
     let offset = Number(ctx.inlineQuery.offset);
     if (ctx.inlineQuery.query === "") {
-        db.getCodes(10,offset).forEach((code)=>{
+        db.getCodes(10, offset).forEach((code) => {
             result.push(new InlineQueryResultArticle(code.code_id, code.code_code, code.code_description, "<b>" + code.code_code + "</b>\n" + code.code_description, "HTML"))
         });
-        offset+=10;
+        offset += 10;
     } else {
         const code = db.getCodeByCode(ctx.inlineQuery.query);
         if (code !== undefined)
             result.push(new InlineQueryResultArticle(code.code_id, code.code_code, code.code_description, "<b>" + code.code_code + "</b>\n" + code.code_description, "HTML"))
     }
-    if(offset+""!==ctx.inlineQuery.offset)
-    ctx.answerInlineQuery(result, {next_offset:offset+""})
+    if (offset + "" !== ctx.inlineQuery.offset)
+        ctx.answerInlineQuery(result, {next_offset: offset + ""})
 }));
 
 /** COMMAND | CREATOR | claim */
@@ -68,7 +61,7 @@ bot.command('claim', (ctx) => {
 /**  COMMAND | CREATOR | registerGroup */
 bot.command('registerGroup', (ctx) => {
     if (utils.isCreator(ctx.from.id)) {
-        if (utils.isGroup(ctx.chat.type)) {
+        if (utils.isGroupChat(ctx.chat.type)) {
             if (!db.isRegisteredGroup(ctx.chat.id)) {
                 db.insertGroup(ctx.chat.id);
                 ctx.reply("Gruppe hinzugefügt.");
@@ -83,6 +76,10 @@ bot.start((ctx) => ctx.replyWithPhoto({source: 'resources/profile.jpg'}, {captio
 /** COMMAND | help */
 bot.help((ctx) => ctx.reply('Hilfe'));
 
+/** COMMAND | version */
+bot.command('version', (ctx) => {
+    ctx.reply("Ich laufe auf Version " + process.env.npm_package_version);
+});
 /** FEATURE | Kevins Anime Suche */
 anime.command(bot);
 
@@ -95,7 +92,7 @@ bot.use((ctx, next) => {
     if (db.hasUserRole(ctx.from.id, roles.user)) {
         return next();
     } else {
-        if (utils.isGroup(ctx.chat.type)) {
+        if (utils.isGroupChat(ctx.chat.type)) {
             if (db.isRegisteredGroup(ctx.chat.id)) {
                 db.insertUserRole(ctx.from.id, roles.user);
                 next();
@@ -166,6 +163,26 @@ bot.command('userlist', Auth.roleRequired("admin"), (ctx) => {
     ctx.reply(text);
 });
 
+/** COMMAND | token */
+bot.command('token', Auth.roleRequired("user"), Location.User, (ctx) => {
+    const tokens = db.getTokens(ctx.from.id);
+    if (tokens === undefined) {
+        ctx.reply("Du hast noch keinen API Token", {reply_markup: regenerateTokenKeyboard});
+    } else {
+        let text = "Deine Tokens sind";
+        tokens.forEach((v) => {
+            text += "\n<code>" + v.token_text + "</code>";
+        });
+        ctx.reply(text, {parse_mode: "HTML", reply_markup: regenerateTokenKeyboard});
+    }
+});
+
+bot.on("callback_query", Location.User,ctx => {
+    db.removeAllTokens(ctx.from.id);
+    const token = db.insertToken(ctx.from.id);
+    ctx.editMessageText("Dein neuer Token ist\n<code>"+token+"</code>",{parse_mode:"HTML",reply_markup:regenerateTokenKeyboard});
+});
+
 /** COMMAND | top */
 bot.command('top', (ctx) => {
     let rows = db.getTopPoints(10);
@@ -201,7 +218,7 @@ bot.use((ctx, next) => {
             userMemMap[user.user_id] = {lastUp: epoch, lastDown: epoch, lastSuper: epoch, lastReward: epoch}
         }
         if (ctx.chat !== undefined) {
-            if (utils.isGroup(ctx.chat.type)) {
+            if (utils.isGroupChat(ctx.chat.type)) {
                 let now = new Date();
                 if (now.getTime() - userMemMap[user.user_id].lastReward.getTime() > 180000) { //3 Minuten
                     userMemMap[user.user_id].lastReward = now;
@@ -218,7 +235,7 @@ bot.use((ctx, next) => {
 
 /** FEATURE | Super Ehren */
 bot.hears(/^(\u2764\ufe0f|\ud83d\udc96|\ud83e\udde1|\ud83d\udc9b|\ud83d\udc9a|\ud83d\udc99|\ud83d\udc9c|\ud83d\udda4).*|.*(\u2764\ufe0f|\ud83d\udc96|\ud83e\udde1|\ud83d\udc9b|\ud83d\udc9a|\ud83d\udc99|\ud83d\udc9c|\ud83d\udda4)$/, (ctx, next) => {
-    if (utils.isReply(ctx) && utils.isGroup(ctx.chat.type)) {
+    if (utils.isReply(ctx) && utils.isGroupChat(ctx.chat.type)) {
         if (ctx.message.reply_to_message.from !== undefined && !ctx.message.reply_to_message.from.is_bot) {
             if (ctx.message.reply_to_message.from.id !== ctx.from.id) {
                 db.insertUserIfNotExists(ctx.message.reply_to_message.from, 0, 0);
@@ -236,7 +253,7 @@ bot.hears(/^(\u2764\ufe0f|\ud83d\udc96|\ud83e\udde1|\ud83d\udc9b|\ud83d\udc9a|\u
 
 /** FEATURE | Ehren */
 bot.hears(/^(\u002b|\u261d|\ud83d\udc46|\ud83d\udc4f|\ud83d\ude18|\ud83d\ude0d|\ud83d\udc4c|\ud83d\udc4d|\ud83d\ude38).*|.*(\u002b|\u261d|\ud83d\udc46|\ud83d\udc4f|\ud83d\ude18|\ud83d\ude0d|\ud83d\udc4c|\ud83d\udc4d|\ud83d\ude38)$/, (ctx, next) => {
-    if (utils.isReply(ctx) && utils.isGroup(ctx.chat.type)) {
+    if (utils.isReply(ctx) && utils.isGroupChat(ctx.chat.type)) {
         if (ctx.message.reply_to_message.from !== undefined && !ctx.message.reply_to_message.from.is_bot) {
             if (ctx.message.reply_to_message.from.id !== ctx.from.id) {
                 db.insertUserIfNotExists(ctx.message.reply_to_message.from, 0, 0);
@@ -254,7 +271,7 @@ bot.hears(/^(\u002b|\u261d|\ud83d\udc46|\ud83d\udc4f|\ud83d\ude18|\ud83d\ude0d|\
 
 /** FEATURE | Entehren */
 bot.hears(/^(\u2639\ufe0f|\ud83d\ude20|\ud83d\ude21|\ud83e\udd2c|\ud83e\udd2e|\ud83d\udca9|\ud83d\ude3e|\ud83d\udc4e|\ud83d\udc47).*|.*(\u2639\ufe0f|\ud83d\ude20|\ud83d\ude21|\ud83e\udd2c|\ud83e\udd2e|\ud83d\udca9|\ud83d\ude3e|\ud83d\udc4e|\ud83d\udc47)$/, (ctx, next) => {
-    if (utils.isReply(ctx) && utils.isGroup(ctx.chat.type)) {
+    if (utils.isReply(ctx) && utils.isGroupChat(ctx.chat.type)) {
         if (ctx.message.reply_to_message.from !== undefined && !ctx.message.reply_to_message.from.is_bot) {
             if (ctx.message.reply_to_message.from.id !== ctx.from.id) {
                 db.insertUserIfNotExists(ctx.message.reply_to_message.from, 0, 0);
@@ -290,5 +307,19 @@ function checkLevelUp(ctx, id, previous) {
         } else if (dist > 1) {
             ctx.replyWithPhoto("smug.moe/smg/" + levelNow + ".png", {caption: user.user_name + " ist jetzt ein " + levelmanager.getTitel(levelNow) + " und hat " + (dist - 1) + " Level übersprungen"});
         }
+    }
+}
+
+const regenerateTokenKeyboard = Markup.inlineKeyboard([
+    Markup.callbackButton('Regenerate Token', 'regenerateToken')
+])
+
+class InlineQueryResultArticle {
+    constructor(id, title, description, content, parse_mode) {
+        this.type = "article";
+        this.id = id;
+        this.title = title;
+        this.input_message_content = {message_text: content, parse_mode: parse_mode};
+        this.description = description;
     }
 }
