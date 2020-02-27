@@ -28,13 +28,14 @@ bot.use((ctx, next) => {
 
 class InlineQueryResultArticle {
     constructor(id, title, description, content, parse_mode) {
+        this.type="article";
         this.id = id;
         this.title = title;
         this.input_message_content = {message_text: content, parse_mode: parse_mode};
         this.description = description;
     }
 
-    type = "article";
+    type;
     id;
     title;
     input_message_content;
