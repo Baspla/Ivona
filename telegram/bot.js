@@ -26,6 +26,36 @@ bot.use((ctx, next) => {
     next();
 });
 
+class InlineQueryResultArticle {
+    constructor(id, title, description, content, parse_mode) {
+        this.id = id;
+        this.title = title;
+        this.input_message_content = {message_text: content, parse_mode: parse_mode};
+        this.description = description;
+    }
+
+    type = "article";
+    id;
+    title;
+    input_message_content;
+}
+
+bot.on("inline_query", ((ctx, next) => {
+    const result = [];
+    let offset = Number(ctx.inlineQuery.offset);
+    if (ctx.inlineQuery.query === "") {
+        db.getCodes(10,offset).forEach((code)=>{
+            result.push(new InlineQueryResultArticle(code.code_id, code.code_code, code.code_description, "<b>" + code.code_code + "</b>\n" + code.code_description, "HTML"))
+        });
+        offset+=10;
+    } else {
+        const code = db.getCodeByCode(ctx.inlineQuery.query);
+        if (code !== undefined)
+            result.push(new InlineQueryResultArticle(code.code_id, code.code_code, code.code_description, "<b>" + code.code_code + "</b>\n" + code.code_description, "HTML"))
+    }
+    ctx.answerInlineQuery(result, {next_offset:offset+""})
+}));
+
 /** COMMAND | CREATOR | claim */
 bot.command('claim', (ctx) => {
     if (utils.isCreator(ctx.from.id)) {
@@ -173,14 +203,16 @@ bot.use((ctx, next) => {
             const epoch = new Date(0);
             userMemMap[user.user_id] = {lastUp: epoch, lastDown: epoch, lastSuper: epoch, lastReward: epoch}
         }
-        if (utils.isGroup(ctx.chat.type)) {
-            let now = new Date();
-            if (now.getTime() - userMemMap[user.user_id].lastReward.getTime() > 180000) { //3 Minuten
-                userMemMap[user.user_id].lastReward = now;
+        if (ctx.chat !== undefined) {
+            if (utils.isGroup(ctx.chat.type)) {
+                let now = new Date();
+                if (now.getTime() - userMemMap[user.user_id].lastReward.getTime() > 180000) { //3 Minuten
+                    userMemMap[user.user_id].lastReward = now;
 
-                const previous = user.user_points;
-                db.addPoints(user.user_id, Math.floor(Math.random() * 12) + 1);
-                checkLevelUp(ctx, ctx.from.id, previous);
+                    const previous = user.user_points;
+                    db.addPoints(user.user_id, Math.floor(Math.random() * 12) + 1);
+                    checkLevelUp(ctx, ctx.from.id, previous);
+                }
             }
         }
     }
@@ -248,7 +280,7 @@ bot.hears(/^((wenn)|(when)) /i, (ctx) => {
     ctx.replyWithPhoto({source: "resources/wip.jpg"});
 });
 
-bot.launch().then(()=>console.log("Bot gestartet"));
+bot.launch().then(() => console.log("Bot gestartet"));
 
 function checkLevelUp(ctx, id, previous) {
     let user = db.getUser(id);

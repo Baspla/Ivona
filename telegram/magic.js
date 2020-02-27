@@ -4,7 +4,7 @@ const utils = require("./utils");
 exports.command = command;
 
 function command(bot) {
-    bot.hears(/\(\(.+\)\)/, (ctx,next) => {
+    bot.hears(/\(\(.+\)\)/, (ctx, next) => {
         if (utils.isGroup(ctx.chat.type)) {
             const names = ctx.message.text.match(/\(\((.*?)\)\)/g);
             if (names.length >= 4) {
@@ -13,12 +13,18 @@ function command(bot) {
             }
             for (let i = 0; i < names.length; i++) {
                 let name = names[i].split(/[)(]/).join("");
+                let small = true;
+                if (name.startsWith("+")) {
+                    small = false;
+                    name = name.substr(1);
+                }
                 scry.Cards.search("include:extras (lang:de or lang:en) !\"" + name + "\"").on("data", card => {
+                    const link = (small) ? card.scryfall_uri : card.image_uris.normal;
                     if (card.prices.eur != null) {
-                        ctx.reply("Hier ist die Karte nach der du gesucht hast: <a href=\"" + card.image_uris.normal + "\">" + card.name + "</a>\nIhr Preis liegt bei " + card.prices.eur + "€", {parse_mode: "HTML"});
+                        ctx.reply("Hier ist die Karte nach der du gesucht hast: <a href=\"" + link + "\">" + card.name + "</a>\nIhr Preis liegt bei " + card.prices.eur + "€", {parse_mode: "HTML"});
 
                     } else {
-                        ctx.reply("Hier ist die Karte nach der du gesucht hast: <a href=\"" + card.image_uris.normal + "\">" + card.name + "</a>\nEin Preis konnte nicht ermittelt werden.", {parse_mode: "HTML"});
+                        ctx.reply("Hier ist die Karte nach der du gesucht hast: <a href=\"" + link + "\">" + card.name + "</a>\nEin Preis konnte nicht ermittelt werden.", {parse_mode: "HTML"});
 
                     }
                 });

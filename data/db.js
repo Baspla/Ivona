@@ -130,9 +130,23 @@ module.exports = {
     },
     getUserWithRoles() {
         return getUsersWithRolesQuery.get();
+    },
+    insertCode(code, description, user_id) {
+        insertCodeQuery.run(code,description,user_id);
+    },
+    getCodeByCode(code) {
+        return getCodeByCodeQuery.get(code);
+    },
+    getCodes(limit,offset) {
+        return getCodesQuery.all(limit,offset);
     }
 };
+const getCodesQuery = db.prepare("SELECT * FROM code ORDER BY code_id LIMIT ? OFFSET ?");
 const getUsersQuery = db.prepare("SELECT * FROM user");
+const getCodeByCodeQuery = db.prepare("SELECT * FROM code WHERE code_code=?");
+const getCodeByIdQuery = db.prepare("SELECT * FROM code WHERE code_id=?");
+const getCodeByDescriptionQuery = db.prepare("SELECT * FROM code WHERE code_description=?");
+const getCodesByCreatorQuery = db.prepare("SELECT * FROM code WHERE code_creator=?");
 const getUserWithRolesQuery = db.prepare("SELECT user.*,group_concat(role.role_name,\", \") AS \"roles\" FROM user,user_role,role WHERE user.user_id=? AND user_role.user_id=user.user_id AND role.role_id=user_role.role_id GROUP BY user.user_id");
 const getUsersWithRolesQuery = db.prepare("SELECT user.*,group_concat(role.role_name,\", \") AS \"roles\" FROM user,user_role,role WHERE user.user_id = user_role.user_id AND role.role_id=user_role.role_id GROUP BY user_role.user_id\n");
 const getUserByTokenQuery = db.prepare("SELECT user_id FROM api_token WHERE token_text = ?");
@@ -140,6 +154,7 @@ const getUserByNameQuery = db.prepare("SELECT * FROM user WHERE user_name = ?");
 const getUserQuery = db.prepare("SELECT * FROM user WHERE user_id = ?");
 const insertUserQuery = db.prepare("INSERT INTO user (user_id,user_name,user_points,user_karma) VALUES (?,?,?,?)");
 const insertGroupQuery = db.prepare("INSERT INTO \"group\" (group_id) VALUES (?)");
+const insertCodeQuery = db.prepare("INSERT INTO \"code\" (code_code,code_description,code_creator) VALUES (?,?,?)");
 const insertUserRoleQuery = db.prepare("INSERT INTO user_role (user_id,role_id) VALUES (?,(SELECT role_id FROM role WHERE role_name = ?))");
 const deleteUserRoleQuery = db.prepare("DELETE FROM user_role WHERE user_id = ? AND role_id=(SELECT role_id FROM role WHERE role_name = ?)");
 const getUserRolesQuery = db.prepare("SELECT * FROM user_role WHERE user_id = ?");
