@@ -34,11 +34,6 @@ class InlineQueryResultArticle {
         this.input_message_content = {message_text: content, parse_mode: parse_mode};
         this.description = description;
     }
-
-    type;
-    id;
-    title;
-    input_message_content;
 }
 
 bot.on("inline_query", ((ctx, next) => {
@@ -54,6 +49,7 @@ bot.on("inline_query", ((ctx, next) => {
         if (code !== undefined)
             result.push(new InlineQueryResultArticle(code.code_id, code.code_code, code.code_description, "<b>" + code.code_code + "</b>\n" + code.code_description, "HTML"))
     }
+    if(offset+""!==ctx.inlineQuery.offset)
     ctx.answerInlineQuery(result, {next_offset:offset+""})
 }));
 
