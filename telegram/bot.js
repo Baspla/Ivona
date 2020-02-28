@@ -292,9 +292,10 @@ bot.hears(/^(\u2639\ufe0f|\ud83d\ude20|\ud83d\ude21|\ud83e\udd2c|\ud83e\udd2e|\u
 
 /** FEATURE | JustThings Bildgenerator */
 bot.hears(/^((wenn)|(when)) /i, (ctx) => {
-    //if (utils.isGroup(ctx.chat.type)){
-    justThings.generateImage(ctx.message.text, ctx.from.first_name);
-    ctx.replyWithPhoto({source: "resources/wip.jpg"});
+    if (utils.isGroup(ctx.chat.type)) {
+        justThings.generateImage(ctx.message.text, ctx.from.first_name, () =>
+            ctx.replyWithPhoto({source: "resources/justThings.png"}));
+    }
 });
 
 bot.launch().then(() => console.log("Bot gestartet"));
