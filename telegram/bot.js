@@ -245,7 +245,7 @@ bot.hears(/^(\u2764\ufe0f|\ud83d\udc96|\ud83e\udde1|\ud83d\udc9b|\ud83d\udc9a|\u
                 let now = new Date();
                 if (now.getTime() - userMemMap[ctx.from.id].lastSuper.getTime() > 7200000) { //2 Stunden
                     userMemMap[ctx.from.id].lastSuper = now;
-                    ctx.reply(db.getUser(ctx.from.id).user_name + " entehrt " + db.getUser(ctx.message.reply_to_message.from.id).user_name + " absolut hart!");
+                    ctx.reply(db.getUser(ctx.from.id).user_name + " ehrt " + db.getUser(ctx.message.reply_to_message.from.id).user_name + " absolut hart!");
                     db.addKarma(ctx.message.reply_to_message.from.id, 3);
                 }
             }
