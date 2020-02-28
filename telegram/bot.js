@@ -166,21 +166,24 @@ bot.command('userlist', Auth.roleRequired("admin"), (ctx) => {
 /** COMMAND | token */
 bot.command('token', Auth.roleRequired("user"), Location.User, (ctx) => {
     const tokens = db.getTokens(ctx.from.id);
-    if (tokens === undefined) {
-        ctx.reply("Du hast noch keinen API Token", {reply_markup: regenerateTokenKeyboard});
-    } else {
+    if (Array.isArray(tokens) && tokens.length) {
         let text = "Deine Tokens sind";
         tokens.forEach((v) => {
             text += "\n<code>" + v.token_text + "</code>";
         });
         ctx.reply(text, {parse_mode: "HTML", reply_markup: regenerateTokenKeyboard});
+    } else {
+        ctx.reply("Du hast noch keinen API Token", {reply_markup: regenerateTokenKeyboard});
     }
 });
 
-bot.on("callback_query", Location.User,ctx => {
+bot.on("callback_query", Location.User, ctx => {
     db.removeAllTokens(ctx.from.id);
     const token = db.insertToken(ctx.from.id);
-    ctx.editMessageText("Dein neuer Token ist\n<code>"+token+"</code>",{parse_mode:"HTML",reply_markup:regenerateTokenKeyboard});
+    ctx.editMessageText("Dein neuer Token ist\n<code>" + token + "</code>", {
+        parse_mode: "HTML",
+        reply_markup: regenerateTokenKeyboard
+    });
 });
 
 /** COMMAND | top */
