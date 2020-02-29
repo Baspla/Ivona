@@ -1,4 +1,4 @@
-const Telegraf = require('telegraf'); //https://telegraf.js.org/#/?id=sendmessage
+const Telegraf = require('telegraf');
 //const TelegrafI18n = require('telegraf-i18n') //https://github.com/telegraf/telegraf-i18n
 const bot = new Telegraf(process.env.BOT_TOKEN);
 const shell = require('shelljs');
