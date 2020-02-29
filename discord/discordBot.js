@@ -1,8 +1,8 @@
 const Discord = require('discord.js');
 const discordBot = new Discord.Client();
 
-const TOKEN = "NjgzMzQ2MzcxMzc3NzU4MjI0.Xlq03A.ya2Nd8DpZ3Ug9LZSdyZsrxN5pVU";
-const channelID = "415966551817191435";
+const TOKEN = process.env.DISCORD_TOKEN;
+const channelID =  process.env.DISCORD_CHANNELID;
 
 var cachedQuotes = null;
 
