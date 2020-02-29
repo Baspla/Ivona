@@ -1,7 +1,7 @@
 const Discord = require('discord.js');
 const discordBot = new Discord.Client();
 
-const TOKEN = "NjgzMzQ2MzcxMzc3NzU4MjI0.XlqOIw.j1Xu9IrBlHyhT5QtnXrKxLCDSGc";
+const TOKEN = "NjgzMzQ2MzcxMzc3NzU4MjI0.Xlq03A.ya2Nd8DpZ3Ug9LZSdyZsrxN5pVU";
 const channelID = "415966551817191435";
 
 var cachedQuotes = null;
@@ -36,7 +36,7 @@ function getRandomQuote(){
 }
 
 function sendQuote(channel){
-    var rnd = Math.floor(Math.random() * cachedQuotes.length);
+    let rnd = Math.floor(Math.random() * cachedQuotes.length);
     console.log(cachedQuotes.length);
     console.log(rnd);
     console.log(cachedQuotes[rnd]);
