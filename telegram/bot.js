@@ -3,6 +3,7 @@ const Telegraf = require('telegraf'); //https://telegraf.js.org/#/?id=sendmessag
 const bot = new Telegraf(process.env.BOT_TOKEN);
 const shell = require('shelljs');
 const anime = require("./anime");
+const discord = require("./discordBridge.js");
 const magic = require("./magic");
 const utils = require("./utils");
 const levelmanager = require("./levels");
@@ -85,6 +86,9 @@ anime.command(bot);
 
 /** FEATURE | Kevins Magic Suche */
 magic.command(bot);
+
+/** DISCORD INTEGRATION */
+discord.init(bot);
 
 /** PREP | WICHTIG VOR NUTZERABFRAGEN | Erstelle user und überprüfe ob sie die Rolle user haben (sind in Gruppe) */
 bot.use((ctx, next) => {

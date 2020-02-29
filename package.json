@@ -11,6 +11,7 @@
   "license": "ISC",
   "dependencies": {
     "better-sqlite3": "^5.4.3",
+    "discord.js": "^11.6.1",
     "express": "^4.17.1",
     "jikan-node": "^1.2.0",
     "scryfall-sdk": "1.5.1",
