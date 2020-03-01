@@ -5,7 +5,7 @@ const roles = require("../utils/roles");
 exports.setupMod = setupMod;
 
 function setupMod(bot) {
-    bot.command('mod', Command.minimumArgs(1), Auth.roleRequired("admin"), (ctx) => {
+    bot.command('mod', Command.minimumArgs(1), Auth.roleRequired(roles.admin), (ctx) => {
         const name = ctx.args.join(" ");
         const user = db.getUserFromName(name);
         if (user === undefined) {

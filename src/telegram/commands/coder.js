@@ -6,7 +6,7 @@ const roles = require("../utils/roles");
 exports.setupCoder = setupCoder;
 
 function setupCoder(bot) {
-    bot.command('coder', Command.minimumArgs(1), Auth.roleRequired("admin"), (ctx) => {
+    bot.command('coder', Command.minimumArgs(1), Auth.roleRequired(roles.moderator,roles.admin), (ctx) => {
         const name = ctx.args.join(" ");
         const user = db.getUserFromName(name);
         if (user === undefined) {

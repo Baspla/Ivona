@@ -47,9 +47,6 @@ setupRegisterGroup(bot);
 setupStart(bot);
 setupHelp(bot);
 setupVersion(bot);
-setupAnime(bot);
-setupMagic(bot);
-setupQuote(bot);
 
 /** Erstelle user und überprüfe ob sie die Rolle user haben (sind in Gruppe) */
 bot.use((ctx, next) => {
@@ -70,20 +67,20 @@ bot.use((ctx, next) => {
 
 setupReload(bot);
 setupRestart(bot);
-
 setupAdmin(bot);
 setupMod(bot);
 setupCoder(bot);
-
 setupDebug(bot);
-
-setupCodeInline(bot);
-
 setupUserlist(bot);
-
 setupToken(bot);
 setupTokenCallback(bot);
 
+setupCodeInline(bot);
+
+setupAnime(bot);
+setupMagic(bot);
+
+setupQuote(bot);
 setupTop(bot);
 setupEhre(bot);
 setupStats(bot);

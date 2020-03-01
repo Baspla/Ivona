@@ -15,7 +15,7 @@ exports.reloadQuoteCache = reloadQuoteCache;
 exports.getRandomQuote = getRandomQuote;
 
 if (TOKEN === undefined || channelID === undefined) {
-    console.log("DISCORD_TOKEN oder DISCORD_CHANNELID fehlt. Discord Bot wird nicht gestartet");
+    console.log("DISCORD_TOKEN oder DISCORD_CHANNELID fehlt\nDiscord Bot wird nicht gestartet");
     disabled = true;
     return;
 }
