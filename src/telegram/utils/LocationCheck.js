@@ -1,7 +1,7 @@
 const utils = require("./utils");
 
 exports.User = (ctx, next) => {
-    if (utils.isUserChat(ctx.chat.type)) {
+    if (!utils.isUserChat(ctx.chat.type)) {
         ctx.reply("Das geht nur in Privatnachrichten");
     } else {
         next();
@@ -9,7 +9,7 @@ exports.User = (ctx, next) => {
 };
 
 exports.Group = (ctx, next) => {
-    if (utils.isGroupChat(ctx.chat.type)) {
+    if (!utils.isGroupChat(ctx.chat.type)) {
         ctx.reply("Das geht nur in Gruppen");
     } else {
         next();

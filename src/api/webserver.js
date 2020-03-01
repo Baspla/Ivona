@@ -36,7 +36,7 @@ router.get('/codes/:code', ValidationMiddleware.validTokenNeeded, Authentication
     res.json(db.getCodeByCode(req.params.code));
 });
 
-router.post('/codes', ValidationMiddleware.validTokenNeeded, AuthenticationMiddleware.roleRequired("coder"), function (req, res, next) {
+router.post('/codes', ValidationMiddleware.validTokenNeeded, AuthenticationMiddleware.roleRequired("coder"), function (req, res) {
     if (req.body.code === undefined) {
         res.status(400).json({code: 400, message: "'code' fehlt"});
     } else if (req.body.description === undefined) {
@@ -47,7 +47,7 @@ router.post('/codes', ValidationMiddleware.validTokenNeeded, AuthenticationMiddl
     } else {
         res.status(500).json({code: 500, message: "Code existiert schon"});
     }
-})
+});
 
 router.get('/status', function (req, res) {
     res.json({status: "ok"});
@@ -59,7 +59,7 @@ app.use(function (req, res) {
     res.status(404).json({code: 404, message: "Ungültiger Pfad"})
 });
 
-app.use(function (err, req, res, next) {
+app.use(function (err, req, res) {
     console.error(err.stack);
     //TODO stack trace entfernen
     res.status(500).json({code: 500, message: "Da ist wohl Etwas schiefgegangen. Stimmen alle deine Eingaben?"})

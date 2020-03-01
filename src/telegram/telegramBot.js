@@ -31,6 +31,7 @@ const {setupMagic} = require("./listeners/magic");
 
 /** ctx.args hinzufügen */
 bot.use((ctx, next) => {
+    db.insertUserIfNotExists(ctx.from, 0, 0);
     if (ctx.message !== undefined) {
         if (ctx.message.text !== undefined) {
             const args = ctx.message.text.split(" ");
@@ -45,12 +46,10 @@ setupClaim(bot);
 setupRegisterGroup(bot);
 
 setupStart(bot);
-setupHelp(bot);
 setupVersion(bot);
 
-/** Erstelle user und überprüfe ob sie die Rolle user haben (sind in Gruppe) */
+// Weiter gehts nur für User
 bot.use((ctx, next) => {
-    db.insertUserIfNotExists(ctx.from, 0, 0);
     if (db.hasUserRole(ctx.from.id, roles.user)) {
         return next();
     } else {
@@ -80,6 +79,7 @@ setupCodeInline(bot);
 setupAnime(bot);
 setupMagic(bot);
 
+setupHelp(bot);
 setupQuote(bot);
 setupTop(bot);
 setupEhre(bot);

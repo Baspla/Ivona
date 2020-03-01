@@ -149,7 +149,7 @@ module.exports = {
     },
     insertToken(id) {
         const salt = crypto.randomBytes(128).toString('base64');
-        const token = require('crypto').createHash('md5').update(id+salt).digest("hex")
+        const token = require('crypto').createHash('md5').update(id+salt).digest("hex");
         insertTokenQuery.run(id,token);
         return token;
     }

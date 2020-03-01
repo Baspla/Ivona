@@ -19,7 +19,7 @@ function setupPoints(bot) {
 
                         const previous = user.user_points;
                         db.addPoints(user.user_id, Math.floor(Math.random() * 12) + 1);
-                        checkLevelUp(ctx, ctx.from.id, previous);
+                        utils.checkLevelUp(ctx, ctx.from.id, previous);
                     }
                 }
             }

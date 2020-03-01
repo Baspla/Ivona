@@ -1,4 +1,4 @@
-const utils = require("../utils/utils");
+require("../utils/utils");
 const discord = require("../../discord/discordBot");
 
 exports.setupQuote = setupQuote;

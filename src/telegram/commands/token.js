@@ -7,7 +7,7 @@ exports.setupToken = setupToken;
 
 const regenerateTokenKeyboard = Markup.inlineKeyboard([
     Markup.callbackButton('Regenerate Token', 'regenerateToken')
-])
+]);
 
 function setupToken(bot) {
     bot.command('token', Auth.roleRequired("user"), Location.User, (ctx) => {

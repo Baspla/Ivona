@@ -2,7 +2,7 @@ const db = require("../../data/db");
 exports.setupCodeInline = setupCodeInline;
 
 function setupCodeInline(bot) {
-    bot.on("inline_query", ((ctx, next) => {
+    bot.on("inline_query", ((ctx) => {
         const result = [];
         let offset = Number(ctx.inlineQuery.offset);
         if (ctx.inlineQuery.query === "") {

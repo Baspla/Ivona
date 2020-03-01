@@ -1,4 +1,4 @@
-const utils = require("../utils/utils");
+require("../utils/utils");
 const discord = require("../../discord/discordBot");
 const Auth = require("../utils/AuthenticationCheck");
 const roles = require("../utils/roles");
