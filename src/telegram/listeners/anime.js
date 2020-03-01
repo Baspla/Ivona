@@ -1,10 +1,10 @@
 const Jikan = require('jikan-node');
 const mal = new Jikan();
-const utils = require("./utils");
+const utils = require("../utils/utils");
 
-exports.command=command;
+exports.setupAnime=setupAnime;
 
-function command(bot) {
+function setupAnime(bot) {
     bot.hears(/\[\[.+]]/, (ctx,next) => {
         if (utils.isGroupChat(ctx.chat.type)) {
             const names = ctx.message.text.match(/\[\[(.*?)]]/g);

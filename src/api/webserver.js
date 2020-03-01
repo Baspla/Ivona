@@ -10,21 +10,21 @@ router.use('/top', ValidationMiddleware.validTokenNeeded, AuthenticationMiddlewa
 router.use('/users', ValidationMiddleware.validTokenNeeded, AuthenticationMiddleware.roleRequired("user"));
 router.get('/top/points', function (req, res) {
     let result = [];
-    db.getTopPoints(10).forEach((value,index)=>{
+    db.getTopPoints(10).forEach((value, index) => {
         let obj = {};
         obj.user_id = value.user_id;
         obj.user_points = value.user_points;
-        result[index]=obj;
+        result[index] = obj;
     });
     res.json(result);
 });
 router.get('/top/karma', function (req, res) {
     let result = [];
-    db.getTopKarma(10).forEach((value,index)=>{
+    db.getTopKarma(10).forEach((value, index) => {
         let obj = {};
         obj.user_id = value.user_id;
         obj.user_karma = value.user_karma;
-        result[index]=obj;
+        result[index] = obj;
     });
     res.json(result);
 });
@@ -63,10 +63,17 @@ app.use(function (err, req, res, next) {
     console.error(err.stack);
     //TODO stack trace entfernen
     res.status(500).json({code: 500, message: "Da ist wohl Etwas schiefgegangen. Stimmen alle deine Eingaben?"})
-})
+});
 
-const server = app.listen(6969, function () {
-    const host = server.address().address;
-    const port = server.address().port;
+let running = false;
+
+exports.isRunning = function() {return running};
+
+const webserver = app.listen(6969, function () {
+    running = true;
+    const host = webserver.address().address;
+    const port = webserver.address().port;
     console.log("Example app listening at http://%s:%s", host, port)
 });
+
+webserver.on('close', () => running = false);

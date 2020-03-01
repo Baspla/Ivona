@@ -1,9 +1,9 @@
 const scry = require("scryfall-sdk");
-const utils = require("./utils");
+const utils = require("../utils/utils");
 
-exports.command = command;
+exports.setupMagic = setupMagic;
 
-function command(bot) {
+function setupMagic(bot) {
     bot.hears(/\(\(.+\)\)/, (ctx, next) => {
         if (utils.isGroupChat(ctx.chat.type)) {
             const names = ctx.message.text.match(/\(\((.*?)\)\)/g);

@@ -2,9 +2,9 @@
   "name": "ivonabot",
   "version": "1.0.4",
   "description": "",
-  "main": "telegram/bot.js",
+  "main": "src/server.js",
   "scripts": {
-    "start": "node telegram/bot.js"
+    "start": "node src/server.js"
   },
   "keywords": [],
   "author": "Tim Morgner",
