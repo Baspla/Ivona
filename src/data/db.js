@@ -152,9 +152,13 @@ module.exports = {
         const token = require('crypto').createHash('md5').update(id+salt).digest("hex");
         insertTokenQuery.run(id,token);
         return token;
+    },
+    removeUsersWithoutRoles() {
+        return removeUsersWithoutRolesQuery.run();
     }
 };
 
+const removeUsersWithoutRolesQuery = db.prepare("DELETE FROM user WHERE user_id NOT IN (SELECT user_id FROM user_role GROUP BY user_id)");
 const removeAllTokensQuery = db.prepare("DELETE FROM api_token WHERE user_id = ?");
 const insertTokenQuery = db.prepare("INSERT INTO \"api_token\" (user_id,token_text) VALUES (?,?)");
 const getTokenQuery = db.prepare("SELECT * FROM api_token WHERE user_id = ?");

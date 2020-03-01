@@ -4,6 +4,7 @@ bot.userMemMap={};
 const utils = require("./utils/utils");
 const roles = require("./utils/roles");
 const db = require("../data/db");
+const {setupStrangerDanger} = require("./commands/strangerDanger");
 const {setupDebug} = require("./commands/debug");
 const {setupCodeInline} = require("./listeners/codeInline");
 const {setupJustThings} = require("./listeners/justThings");
@@ -73,6 +74,7 @@ setupDebug(bot);
 setupUserlist(bot);
 setupToken(bot);
 setupTokenCallback(bot);
+setupStrangerDanger(bot);
 
 setupCodeInline(bot);
 
