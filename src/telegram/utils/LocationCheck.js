@@ -1,4 +1,4 @@
-const utils = require("../utils");
+const utils = require("./utils");
 
 exports.User = (ctx, next) => {
     if (utils.isUserChat(ctx.chat.type)) {
