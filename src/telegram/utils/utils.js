@@ -3,7 +3,7 @@ module.exports = {
     isGroupChat(type) {
         return type === "group" || type === "supergroup";
     }, isUserChat(type) {
-        return type === "user";
+        return type === "private";
     },
     isCreator(id) {
         return id === 67025299;
