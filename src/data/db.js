@@ -11,7 +11,9 @@ process.on('SIGTERM', () => process.exit(128 + 15));
 const setupFile = fs.readFileSync('setup.sql', 'utf8');
 const roleFile = fs.readFileSync('role.sql', 'utf8');
 db.exec(setupFile);
-db.exec(roleFile);
+if (0 === db.prepare("SELECT Count(*) FROM role").get()) {
+    db.exec(roleFile);
+}
 
 module.exports = {
     getUser(id) {
@@ -52,7 +54,7 @@ module.exports = {
             while (getUserByNameQuery.get(name) !== undefined) {
                 i++;
                 name = user.first_name + i;
-                if(i>1000){
+                if (i > 1000) {
                     throw "Keine Nutzernamen frei";
                 }
             }
@@ -91,13 +93,13 @@ module.exports = {
         return getUserWithRolesQuery.get(id);
     },
     insertCode(code, description, user_id) {
-        insertCodeQuery.run(code,description,user_id);
+        insertCodeQuery.run(code, description, user_id);
     },
     getCodeByCode(code) {
         return getCodeByCodeQuery.get(code);
     },
-    getCodes(limit,offset) {
-        return getCodesQuery.all(limit,offset);
+    getCodes(limit, offset) {
+        return getCodesQuery.all(limit, offset);
     },
     getTokens(id) {
         return getTokenQuery.all(id);
@@ -107,8 +109,8 @@ module.exports = {
     },
     insertToken(id) {
         const salt = crypto.randomBytes(128).toString('base64');
-        const token = require('crypto').createHash('md5').update(id+salt).digest("hex");
-        insertTokenQuery.run(id,token);
+        const token = require('crypto').createHash('md5').update(id + salt).digest("hex");
+        insertTokenQuery.run(id, token);
         return token;
     },
     removeUsersWithoutRoles() {
