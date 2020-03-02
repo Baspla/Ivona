@@ -30,6 +30,7 @@ const {setupHelp} = require("./commands/help");
 const {setupRestart} = require("./commands/restart");
 const {setupAnime} = require("./listeners/anime");
 const {setupMagic} = require("./listeners/magic");
+const {setupRandomCard} = require("./commands/randomCard");
 
 /** ctx.args hinzufügen */
 bot.use((ctx, next) => {
@@ -82,6 +83,7 @@ setupCodeInline(bot);
 
 setupAnime(bot);
 setupMagic(bot);
+setupRandomCard(bot);
 
 setupHelp(bot);
 setupQuote(bot);
