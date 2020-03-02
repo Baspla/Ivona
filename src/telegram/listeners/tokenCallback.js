@@ -1,5 +1,5 @@
 const db = require("../../data/db");
-const Location = require("../utils/LocationCheck");
+const Location = require("../utils/checks/location");
 
 exports.setupTokenCallback = setupTokenCallback;
 

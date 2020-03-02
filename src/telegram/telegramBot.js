@@ -4,6 +4,7 @@ bot.userMemMap={};
 const utils = require("./utils/utils");
 const roles = require("./utils/roles");
 const db = require("../data/db");
+const {setupBackup} = require("./commands/backup");
 const {setupStrangerDanger} = require("./commands/strangerDanger");
 const {setupDebug} = require("./commands/debug");
 const {setupCodeInline} = require("./listeners/codeInline");
@@ -67,6 +68,7 @@ bot.use((ctx, next) => {
 
 setupReload(bot);
 setupRestart(bot);
+setupBackup(bot);
 setupAdmin(bot);
 setupMod(bot);
 setupCoder(bot);

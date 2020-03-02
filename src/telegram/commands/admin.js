@@ -1,6 +1,6 @@
 const db = require("../../data/db");
-const Command = require("../utils/ArgumentsCheck");
-const Auth = require("../utils/AuthenticationCheck");
+const Command = require("../utils/checks/arguments");
+const Auth = require("../utils/checks/authentication");
 const roles = require("../utils/roles");
 exports.setupAdmin = setupAdmin;
 

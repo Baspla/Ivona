@@ -1,4 +1,4 @@
-db = require("../../data/db.js");
+db = require("../../../data/db.js");
 
 exports.roleRequired = (...roles) => {
     return (ctx, next) => {

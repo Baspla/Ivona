@@ -1,6 +1,6 @@
 const db = require("../../data/db");
 const roles = require("../utils/roles");
-const Auth = require("../utils/AuthenticationCheck");
+const Auth = require("../utils/checks/authentication");
 
 exports.setupStrangerDanger = setupStrangerDanger;
 

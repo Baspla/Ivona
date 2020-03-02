@@ -1,6 +1,6 @@
 require("../utils/utils");
 const discord = require("../../discord/discordBot");
-const Auth = require("../utils/AuthenticationCheck");
+const Auth = require("../utils/checks/authentication");
 const roles = require("../utils/roles");
 
 exports.setupReload = setupReload;

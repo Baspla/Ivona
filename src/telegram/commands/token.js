@@ -1,7 +1,7 @@
 const db = require("../../data/db");
 const Markup = require("telegraf/markup");
-const Auth = require("../utils/AuthenticationCheck");
-const Location = require("../utils/LocationCheck");
+const Auth = require("../utils/checks/authentication");
+const Location = require("../utils/checks/location");
 
 exports.setupToken = setupToken;
 

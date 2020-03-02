@@ -1,5 +1,5 @@
 const shell = require('shelljs');
-const Auth = require("../utils/AuthenticationCheck");
+const Auth = require("../utils/checks/authentication");
 const roles = require("../utils/roles");
 
 exports.setupRestart = setupRestart;

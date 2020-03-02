@@ -129,8 +129,8 @@ module.exports = {
     getUsersWithRoles() {
         return getUsersWithRolesQuery.all();
     },
-    getUserWithRoles() {
-        return getUsersWithRolesQuery.get();
+    getUserWithRoles(id) {
+        return getUserWithRolesQuery.get(id);
     },
     insertCode(code, description, user_id) {
         insertCodeQuery.run(code,description,user_id);
@@ -155,6 +155,9 @@ module.exports = {
     },
     removeUsersWithoutRoles() {
         return removeUsersWithoutRolesQuery.run();
+    },
+    backup(filename) {
+        return db.backup(filename);
     }
 };
 

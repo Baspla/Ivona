@@ -1,5 +1,5 @@
 const db = require("../../data/db");
-const Auth = require("../utils/AuthenticationCheck");
+const Auth = require("../utils/checks/authentication");
 
 exports.setupUserlist = setupUserlist;
 

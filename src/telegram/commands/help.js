@@ -1,5 +1,5 @@
 const roles = require("../utils/roles");
-const Location = require("../utils/LocationCheck");
+const Location = require("../utils/checks/location");
 const utils = require("../utils/utils");
 exports.setupHelp = setupHelp;
 
@@ -15,11 +15,12 @@ function setupHelp(bot) {
                 "/quote - Zufälliges Zitat\n" +
                 "/top - Top 10 Punktesammler\n" +
                 "/ehre - Top 10 Ehrenmänner\n" +
-                "/stats - deine Stats\n";
+                "/stats - deine Stats\n" +
+                "/token - zeigt deinen API-Token an\n";
         }
         if (db.hasUserRole(ctx.from.id, roles.coder)) {
             txt += "\nCoder-Befehle:\n" +
-                "/token - zeigt deinen API-Token an\n";
+                "\n";
         }
         if (db.hasUserRole(ctx.from.id, roles.moderator)) {
             txt += "\nMod-Befehle:\n" +

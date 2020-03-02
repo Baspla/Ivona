@@ -1,4 +1,4 @@
-db = require("../../data/db.js");
+db = require("../../../data/db.js");
 
 exports.minimumArgs = (min) => {
     return (ctx, next) => {
