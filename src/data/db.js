@@ -7,53 +7,10 @@ process.on('SIGHUP', () => process.exit(128 + 1));
 process.on('SIGINT', () => process.exit(128 + 2));
 process.on('SIGTERM', () => process.exit(128 + 15));
 
-db.exec("BEGIN TRANSACTION;\n" +
-    "CREATE TABLE IF NOT EXISTS \"user_role\" (\n" +
-    "\t\"user_id\"\tINTEGER NOT NULL,\n" +
-    "\t\"role_id\"\tINTEGER NOT NULL,\n" +
-    "\tFOREIGN KEY(\"role_id\") REFERENCES \"role\"(\"role_id\"),\n" +
-    "\tPRIMARY KEY(\"user_id\",\"role_id\"),\n" +
-    "\tFOREIGN KEY(\"user_id\") REFERENCES \"user\"(\"user_id\")\n" +
-    ");\n" +
-    "CREATE TABLE IF NOT EXISTS \"user\" (\n" +
-    "\t\"user_id\"\tINTEGER NOT NULL UNIQUE,\n" +
-    "\t\"user_name\"\tTEXT NOT NULL UNIQUE,\n" +
-    "\t\"user_points\"\tINTEGER DEFAULT 0,\n" +
-    "\t\"user_karma\"\tINTEGER DEFAULT 0,\n" +
-    "\tPRIMARY KEY(\"user_id\")\n" +
-    ");\n" +
-    "CREATE TABLE IF NOT EXISTS \"award\" (\n" +
-    "\t\"award_id\"\tINTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,\n" +
-    "\t\"award_title\"\tTEXT NOT NULL,\n" +
-    "\t\"award_description\"\tTEXT\n" +
-    ");\n" +
-    "CREATE TABLE IF NOT EXISTS \"role\" (\n" +
-    "\t\"role_id\"\tINTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,\n" +
-    "\t\"role_name\"\tTEXT\n" +
-    ");\n" +
-    "CREATE TABLE IF NOT EXISTS \"code\" (\n" +
-    "\t\"code_id\"\tINTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,\n" +
-    "\t\"code_code\"\tTEXT NOT NULL UNIQUE,\n" +
-    "\t\"code_description\"\tTEXT NOT NULL,\n" +
-    "\t\"code_creator\"\tINTEGER NOT NULL\n" +
-    ");\n" +
-    "CREATE TABLE IF NOT EXISTS \"user_award\" (\n" +
-    "\t\"user_id\"\tINTEGER NOT NULL,\n" +
-    "\t\"award_id\"\tINTEGER NOT NULL,\n" +
-    "\tFOREIGN KEY(\"user_id\") REFERENCES \"user\"(\"user_id\"),\n" +
-    "\tPRIMARY KEY(\"user_id\",\"award_id\"),\n" +
-    "\tFOREIGN KEY(\"award_id\") REFERENCES \"award\"(\"award_id\")\n" +
-    ");\n" +
-    "CREATE TABLE IF NOT EXISTS \"group\" (\n" +
-    "\t\"group_id\"\tINTEGER NOT NULL UNIQUE,\n" +
-    "\tPRIMARY KEY(\"group_id\")\n" +
-    ");\n" + "CREATE TABLE IF NOT EXISTS \"api_token\" (\n" +
-    "\t\"token_id\"\tINTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,\n" +
-    "\t\"user_id\"\tINTEGER NOT NULL,\n" +
-    "\t\"token_text\"\tTEXT NOT NULL,\n" +
-    "\tFOREIGN KEY(\"user_id\") REFERENCES \"user\"(\"user_id\")\n" +
-    ");" +
-    "COMMIT;\n");
+const setupFile = fs.readFileSync('setup.sql', 'utf8');
+const roleFile = fs.readFileSync('role.sql', 'utf8');
+db.exec(setupFile);
+db.exec(roleFile);
 
 module.exports = {
     getUser(id) {
