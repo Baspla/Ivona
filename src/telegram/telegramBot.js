@@ -34,14 +34,18 @@ const {setupAnime} = require("./listeners/anime");
 const {setupMagic} = require("./listeners/magic");
 const {setupRandomCard} = require("./commands/randomCard");
 
+setupVersion(bot);
+
 /** ctx.args hinzufügen */
 bot.use((ctx, next) => {
-    db.insertUserIfNotExists(ctx.from, 0, 0);
-    if (ctx.message !== undefined) {
-        if (ctx.message.text !== undefined) {
-            const args = ctx.message.text.split(" ");
-            args.shift();
-            ctx.args = args;
+    if(ctx.from !== undefined){
+        db.insertUserIfNotExists(ctx.from, 0, 0);
+        if (ctx.message !== undefined) {
+            if (ctx.message.text !== undefined) {
+                const args = ctx.message.text.split(" ");
+                args.shift();
+                ctx.args = args;
+            }
         }
     }
     next();
@@ -51,7 +55,6 @@ setupClaim(bot);
 setupRegisterGroup(bot);
 
 setupStart(bot);
-setupVersion(bot);
 
 // Weiter gehts nur für User
 bot.use((ctx, next) => {
