@@ -2,7 +2,7 @@ exports.setupAnimalCrossing = setupAnimalCrossing;
 
 function setupAnimalCrossing(bot) {
   bot.command("ac", (ctx) => {
-    var goal = new Date(2020, 1, 20, 0, 0, 0);
+    var goal = new Date(2020, 2, 20, 0, 0, 0);
     var now = new Date();
     var s = goal - now;
     if(s<0){
