@@ -33,6 +33,7 @@ const {setupRestart} = require("./commands/restart");
 const {setupAnime} = require("./listeners/anime");
 const {setupMagic} = require("./listeners/magic");
 const {setupRandomCard} = require("./commands/randomCard");
+const {setupAnimalCrossing} = require("./commands/animalCrossing");
 
 setupVersion(bot);
 
@@ -47,8 +48,10 @@ bot.use((ctx, next) => {
                 ctx.args = args;
             }
         }
-    }
     next();
+    }else{
+    console.log("Kein from bei:"+ctx);
+    }
 });
 
 setupClaim(bot);
@@ -91,6 +94,7 @@ setupCodeInline(bot);
 setupAnime(bot);
 setupMagic(bot);
 setupRandomCard(bot);
+setupAnimalCrossing(bot);
 
 setupHelp(bot);
 setupQuote(bot);
