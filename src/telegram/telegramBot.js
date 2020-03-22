@@ -1,3 +1,4 @@
+const schedule = require('node-schedule');
 const Telegraf = require('telegraf');
 const bot = new Telegraf(process.env.BOT_TOKEN);
 bot.userMemMap={};
@@ -33,8 +34,7 @@ const {setupRestart} = require("./commands/restart");
 const {setupAnime} = require("./listeners/anime");
 const {setupMagic} = require("./listeners/magic");
 const {setupRandomCard} = require("./commands/randomCard");
-const {setupAnimalCrossing} = require("./commands/animalCrossing");
-
+const {dailyCard} = require("./scheduledTasks/dailyCard");
 setupVersion(bot);
 
 /** ctx.args hinzufügen */
@@ -94,7 +94,6 @@ setupCodeInline(bot);
 setupAnime(bot);
 setupMagic(bot);
 setupRandomCard(bot);
-setupAnimalCrossing(bot);
 
 setupHelp(bot);
 setupQuote(bot);
@@ -106,5 +105,10 @@ setupPoints(bot);
 setupVote(bot);
 
 setupJustThings(bot);
+
+var daily = schedule.scheduleJob('* * 12 * *', function(){
+  console.log('dailyCard executed');
+  dailyCard(bot);
+});
 
 bot.launch().then(() => console.log("Bot gestartet"));

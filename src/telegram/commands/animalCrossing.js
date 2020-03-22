@@ -1,6 +1,7 @@
 exports.setupAnimalCrossing = setupAnimalCrossing;
 
 function setupAnimalCrossing(bot) {
+  /*
   bot.command("ac", (ctx) => {
     var goal = new Date(2020, 2, 20, 0, 0, 0);
     var now = new Date();
@@ -19,5 +20,5 @@ function setupAnimalCrossing(bot) {
       ctx.reply("Noch "+days + " Tage, " + hrs + " Stunden, " + mins + " Minuten und " + secs + " Sekunden.");
     }
   });
+  */
 }
-

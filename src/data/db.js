@@ -71,6 +71,9 @@ module.exports = {
     isRegisteredGroup(id) {
         return getGroupQuery.get(id) !== undefined;
     },
+    getAllGroups() {
+        return getAllGroupsQuery.all();
+    },
     insertGroup(id) {
         insertGroupQuery.run(id);
     },
@@ -146,6 +149,7 @@ const hasUserRoleQuery = db.prepare("SELECT * FROM user_role WHERE user_id = ? A
 const getTopPointsQuery = db.prepare("SELECT * FROM user ORDER BY user_points DESC LIMIT ?");
 const getTopKarmaQuery = db.prepare("SELECT * FROM user ORDER BY user_karma DESC LIMIT ?");
 const getGroupQuery = db.prepare("SELECT * FROM \"group\" WHERE group_id = ?");
+const getAllGroupsQuery = db.prepare("SELECT * FROM \"group\"");
 const addPointsQuery = db.prepare("UPDATE user SET user_points = user_points + ? WHERE user_id = ?");
 const addKarmaQuery = db.prepare("UPDATE user SET user_karma = user_karma + ? WHERE user_id = ?");
 const removePointsQuery = db.prepare("UPDATE user SET user_points = user_points - ? WHERE user_id = ?");
