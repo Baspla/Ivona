@@ -1,5 +1,5 @@
 const Database = require('better-sqlite3');
-const db = new Database('ivona.db', /*{verbose: console.log}*/);
+const db = new Database('ivona.db', {verbose: console.log});
 const crypto = require("crypto");
 const fs = require("fs");
 
@@ -12,10 +12,10 @@ const setupFile = fs.readFileSync('setup.sql', 'utf8');
 const roleFile = fs.readFileSync('role.sql', 'utf8');
 const featureFile = fs.readFileSync('feature.sql', 'utf8');
 db.exec(setupFile);
-if (0 === db.prepare("SELECT Count(*) FROM role").get()) {
+if (0 === db.prepare("SELECT Count(*) AS \"i\" FROM role").get().i) {
     db.exec(roleFile);
 }
-if (0 === db.prepare("SELECT Count(*) FROM feature").get()) {
+if (0 === db.prepare("SELECT Count(*) AS \"i\" FROM feature").get().i) {
     db.exec(featureFile);
 }
 
