@@ -7,7 +7,7 @@ exports.setupMod = setupMod;
 function setupMod(bot) {
     bot.command('mod', Command.minimumArgs(1), Auth.roleRequired(roles.admin), (ctx) => {
         const name = ctx.args.join(" ");
-        const user = db.getUserFromName(name);
+        const user = db.getUserByName(name);
         if (user === undefined) {
             ctx.reply("Unbekannter Nutzer");
         } else if (!db.hasUserRole(user.id, roles.moderator)) {
