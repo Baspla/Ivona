@@ -1,5 +1,5 @@
 const Database = require('better-sqlite3');
-const db = new Database('ivona.db', {verbose: console.log});
+const db = new Database('ivona.db', /*{verbose: console.log}*/);
 const crypto = require("crypto");
 const fs = require("fs");
 
@@ -10,9 +10,13 @@ process.on('SIGTERM', () => process.exit(128 + 15));
 
 const setupFile = fs.readFileSync('setup.sql', 'utf8');
 const roleFile = fs.readFileSync('role.sql', 'utf8');
+const featureFile = fs.readFileSync('feature.sql', 'utf8');
 db.exec(setupFile);
 if (0 === db.prepare("SELECT Count(*) FROM role").get()) {
     db.exec(roleFile);
+}
+if (0 === db.prepare("SELECT Count(*) FROM feature").get()) {
+    db.exec(featureFile);
 }
 
 function Award(id, title, description) {
@@ -121,6 +125,25 @@ function parseUserRole(dbUserRole) {
     return new UserRole(dbUserRole.user_id, dbUserRole.role_id);
 }
 
+function Feature(id, name) {
+    this.id = id;
+    this.name = name;
+}
+
+function parseFeature(dbFeature) {
+    if (dbFeature === undefined) return undefined;
+    return new Feature(dbFeature.feature_id, dbFeature.feature_name);
+}
+
+function GroupFeature(groupId, featureId) {
+    this.featureId = featureId;
+    this.groupId = groupId;
+}
+
+function parseGroupFeature(dbGroupFeature) {
+    if (dbGroupFeature === undefined) return undefined;
+    return new GroupFeature(dbGroupFeature.group_id, dbGroupFeature.feature_id);
+}
 
 //add & remove für relations
 //create & delete für base-objects
@@ -243,8 +266,8 @@ module.exports = {
         return parseGroup(getGroupByTGIDQuery.get(tgid));
     }, getCodeByName(name) {
         return parseCode(getCodeByNameQuery.get(name));
-    }, getCodesMatchingNameOrDescription(text,limit,offset) {
-        return getCodesMatchingNameOrDescriptionQuery.all(limit,offset,{text:"\"\"\""+text+"\"\"\""}).map(db => parseCode(db));
+    }, getCodesMatchingNameOrDescription(text, limit, offset) {
+        return getCodesMatchingNameOrDescriptionQuery.all(limit, offset, {text: "\"\"\"" + text + "\"\"\""}).map(db => parseCode(db));
     }, getCodesByUser(userId) {
         //TODO
     }, getAwardByTitle(title) {
@@ -310,43 +333,87 @@ module.exports = {
     }, hasUserAward(userId, awardId) {
         return module.exports.getUserAward(userId, awardId) !== undefined;
     }, getAwards(limit, offset) {
-        if(limit===undefined||offset===undefined)
+        if (limit === undefined || offset === undefined)
             return getAwardsQuery.all().map(db => parseAward(db));
         return getAwardsLimitedQuery.all(limit, offset).map(db => parseAward(db));
     }, getCodes(limit, offset) {
-        if(limit===undefined||offset===undefined)
+        if (limit === undefined || offset === undefined)
             return getCodesQuery.all().map(db => parseCode(db));
         return getCodesLimitedQuery.all(limit, offset).map(db => parseCode(db));
     }, getGroups(limit, offset) {
-        if(limit===undefined||offset===undefined)
+        if (limit === undefined || offset === undefined)
             return getGroupsQuery.all().map(db => parseGroup(db));
         return getGroupsLimitedQuery.all(limit, offset).map(db => parseGroup(db));
     }, getRoles(limit, offset) {
-        if(limit===undefined||offset===undefined)
+        if (limit === undefined || offset === undefined)
             return getRolesQuery.all().map(db => parseRole(db));
         return getRolesLimitedQuery.all(limit, offset).map(db => parseRole(db));
     }, getTokens(limit, offset) {
-        if(limit===undefined||offset===undefined)
+        if (limit === undefined || offset === undefined)
             return getTokensQuery.all().map(db => parseToken(db));
         return getTokensQuery.all(limit, offset).map(db => parseToken(db));
     }, getUsers(limit, offset) {
-        if(limit===undefined||offset===undefined)
+        if (limit === undefined || offset === undefined)
             return getUsersQuery.all().map(db => parseUser(db));
         return getUsersLimitedQuery.all(limit, offset).map(db => parseUser(db));
     }, getUsersOrderedByPoints(groupId, limit, offset) {
         return getUsersOrderedByPointsQuery.all(groupId, limit, offset).map(db => {
             let ug = parseUserGroup(db);
-            Object.assign(ug,parseUser(db));
+            Object.assign(ug, parseUser(db));
             return ug;
         });
     }, getUsersOrderedByKarma(groupId, limit, offset) {
         return getUsersOrderedByKarmaQuery.all(groupId, limit, offset).map(db => {
             let ug = parseUserGroup(db);
-            Object.assign(ug,parseUser(db));
+            Object.assign(ug, parseUser(db));
             return ug;
         });
+    }, getFeature(featureId) {
+        return parseFeature(getFeatureQuery.get(featureId));
+    }, getFeatureByName(name) {
+        return parseFeature(getFeatureByNameQuery.get(name));
+    }, getGroupFeature(groupId, featureId) {
+        return parseGroupFeature(getGroupFeatureQuery.get(groupId, featureId));
+    }, hasGroupFeature(groupId, featureId) {
+        return module.exports.getGroupFeature(groupId, featureId) !== undefined;
+    }, createFeature(name) {
+        if (module.exports.getFeatureByName(name) === undefined) {
+            insertFeatureQuery.run(name);
+            console.log("feature \"" + name + "\" erstellt");
+        } else throw "Name schon benutzt"
+    }, deleteFeature(featureId) {
+        if (module.exports.getFeature(featureId) !== undefined) {
+            deleteFeatureTransaction({featureId: featureId});
+        } else throw "Unbekanntes Feature";
+    }, addGroupFeature(groupId, featureId) {
+        console.log(groupId,featureId);
+        if (module.exports.getGroupFeature(groupId, featureId) === undefined) {
+            insertGroupFeatureQuery.run(groupId, featureId);
+            console.log("Feature " + featureId + " an " + groupId + " gegeben");
+        } else throw "Gruppe hat Feature schon";
+    }, removeGroupFeature(groupId, featureId) {
+        if (module.exports.getGroupFeature(groupId, featureId) !== undefined) {
+            deleteGroupFeatureQuery.run(groupId, featureId);
+        } else throw "Unbekanntes Feature";
+    }, getFeatures(limit, offset) {
+        if (limit === undefined || offset === undefined)
+            return getFeaturesQuery.all().map(db => parseFeature(db));
+        return getFeaturesLimitedQuery.all(limit, offset).map(db => parseFeature(db));
     },
 };
+
+const getFeaturesQuery = db.prepare("SELECT * FROM feature");
+const getFeaturesLimitedQuery = db.prepare("SELECT * FROM feature ORDER BY feature_id LIMIT ? OFFSET ?");
+const getFeatureQuery = db.prepare("SELECT * FROM feature WHERE feature_id = ?");
+const getFeatureByNameQuery = db.prepare("SELECT * FROM feature WHERE feature_name = ?");
+const getGroupFeatureQuery = db.prepare("SELECT * FROM group_feature WHERE group_id = ? AND feature_id = ?");
+const insertFeatureQuery = db.prepare("INSERT INTO \"feature\" (feature_name) VALUES (?)");
+const deleteFeatureTransaction = db.transaction((params) => {
+    db.prepare("DELETE FROM group_feature WHERE feature_id = $featureId;").run(params);
+    db.prepare("DELETE FROM feature WHERE feature_id = $featureId;").run(params);
+});
+const insertGroupFeatureQuery = db.prepare("INSERT INTO \"group_feature\" (group_id,feature_id) VALUES (?,?)");
+const deleteGroupFeatureQuery = db.prepare("DELETE FROM group_feature WHERE group_id = ? AND feature_id = ?");
 
 const getUserQuery = db.prepare("SELECT * FROM \"user\" WHERE user_id = ?");
 const getGroupQuery = db.prepare("SELECT * FROM \"group\" WHERE group_id = ?");
@@ -416,23 +483,23 @@ const insertUserRoleQuery = db.prepare("INSERT INTO user_role (user_id,role_id) 
 const insertUserAwardQuery = db.prepare("INSERT INTO user_award (user_id,award_id,user_award_date) VALUES (?,?,?)");
 
 const deleteUserTransaction = db.transaction((params) => {
-    db.prepare("DELETE FROM user WHERE user_id = $userId;").run(params);
     db.prepare("DELETE FROM user_award WHERE user_id = $userId;").run(params);
     db.prepare("DELETE FROM user_group WHERE user_id = $userId;").run(params);
     db.prepare("DELETE FROM user_role WHERE user_id = $userId;").run(params);
     db.prepare("DELETE FROM token WHERE user_id = $userId;").run(params);
+    db.prepare("DELETE FROM user WHERE user_id = $userId;").run(params);
 });
 const deleteGroupTransaction = db.transaction((params) => {
-    db.prepare("DELETE FROM group WHERE group_id = $groupId;").run(params);
     db.prepare("DELETE FROM user_group WHERE group_id = $groupId;");
+    db.prepare("DELETE FROM group WHERE group_id = $groupId;").run(params);
 });
 const deleteRoleTransaction = db.transaction((params) => {
-    db.prepare("DELETE FROM role WHERE role_id = $roleId;").run(params);
     db.prepare("DELETE FROM user_role WHERE role_id = $roleId;");
+    db.prepare("DELETE FROM role WHERE role_id = $roleId;").run(params);
 });
 const deleteAwardTransaction = db.transaction((params) => {
-    db.prepare("DELETE FROM award WHERE award_id = $awardId;").run(params);
     db.prepare("DELETE FROM user_award WHERE award_id = $awardId;").run(params);
+    db.prepare("DELETE FROM award WHERE award_id = $awardId;").run(params);
 });
 const deleteCodeQuery = db.prepare("DELETE FROM code WHERE rowid = ?");
 const deleteTokenQuery = db.prepare("DELETE FROM token WHERE token_id = ?");

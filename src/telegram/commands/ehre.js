@@ -1,10 +1,11 @@
 const db = require("../../data/db");
 const Location = require("../utils/checks/location");
-
+const Feature = require("../utils/checks/feature");
+const features = require("../utils/features");
 exports.setupEhre = setupEhre;
 
 function setupEhre(bot) {
-    bot.command('ehre',Location.Group, (ctx) => {
+    bot.command('ehre',Feature.hasFeature(features.karma),Location.Group, (ctx) => {
         let rows = db.getUsersOrderedByKarma(db.getGroupByTGID(ctx.chat.id).id,10,0);
         let list = "Top Ehre:\n";
         rows.forEach(v => {

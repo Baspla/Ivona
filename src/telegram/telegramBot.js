@@ -5,6 +5,8 @@ const {performance} = require("perf_hooks");
 const utils = require("./utils/utils");
 const roles = require("./utils/roles");
 const db = require("../data/db");
+const {setupFeatures} = require("./commands/features");
+const {setupFeature} = require("./commands/feature");
 const {setupIp} = require("./commands/ip");
 const {setupCode} = require("./commands/code");
 const {setupBackup} = require("./commands/backup");
@@ -97,6 +99,8 @@ setupBackup(bot);
 setupAdmin(bot);
 setupMod(bot);
 setupCoder(bot);
+setupFeature(bot);
+setupFeatures(bot);
 setupDebug(bot);
 setupCode(bot);
 setupIp(bot);
@@ -120,9 +124,15 @@ setupVote(bot);
 
 setupJustThings(bot);
 
-const daily = schedule.scheduleJob('* * 12 * *', function () {
-    console.log('dailyCard executed');
+const daily = schedule.scheduleJob('0 9 * * *', function () {
+    console.log('daily executed');
     dailyCard(bot);
+});
+const hourly = schedule.scheduleJob('0 */1 * * *', function () {
+    //console.log('hourly executed');
+});
+const minute = schedule.scheduleJob('*/5 * * * *', function () {
+    //console.log('minute executed');
 });
 
 bot.launch().then(() => console.log("Bot gestartet"));

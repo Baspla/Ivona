@@ -1,11 +1,13 @@
 const db = require("../../data/db");
 const levelmanager = require("../utils/levels");
 const Location = require("../utils/checks/location");
+const Feature = require("../utils/checks/feature");
+const features = require("../utils/features");
 
 exports.setupTop = setupTop;
 
 function setupTop(bot) {
-    bot.command('top',Location.Group, (ctx) => {
+    bot.command('top',Feature.hasFeature(features.points),Location.Group, (ctx) => {
         let rows = db.getUsersOrderedByPoints(db.getGroupByTGID(ctx.chat.id).id,10,0);
         let list = "Top Punkte:\n";
 

@@ -81,4 +81,15 @@ CREATE TABLE IF NOT EXISTS "user_role" (
 	PRIMARY KEY("user_id","role_id"),
 	FOREIGN KEY("user_id") REFERENCES "user"("user_id")
 );
+CREATE TABLE IF NOT EXISTS "feature" (
+	"feature_id"	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
+	"feature_name"	TEXT NOT NULL UNIQUE
+);
+CREATE TABLE IF NOT EXISTS "group_feature" (
+	"group_id"	INTEGER NOT NULL,
+	"feature_id"	INTEGER NOT NULL,
+	PRIMARY KEY("feature_id","group_id"),
+	FOREIGN KEY("group_id") REFERENCES "group"("group_id"),
+	FOREIGN KEY("feature_id") REFERENCES "feature"("feature_id")
+);
 COMMIT;

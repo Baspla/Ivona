@@ -1,5 +1,6 @@
 const utils = require("../utils/utils");
 const db = require("../../data/db");
+const features = require("../utils/features");
 exports.setupVote = setupVote;
 
 function setupVote(bot) {
@@ -9,6 +10,7 @@ function setupVote(bot) {
                 const group = db.getGroupByTGID(ctx.chat.id);
                 const user = db.getUserByTGID(ctx.from.id);
                 if (group !== undefined && user !== undefined) {
+                    if (!db.hasGroupFeature(group.id, features.karma)) return next();
                     const ustats = db.getUserGroup(user.id, group.id);
                     if (ustats !== undefined) {
                         if (ctx.message.reply_to_message.from !== undefined && !ctx.message.reply_to_message.from.is_bot) {
@@ -20,7 +22,10 @@ function setupVote(bot) {
                                         let now = new Date().getTime();
                                         if (now - ustats.lastSuper > 7200000) { //2 Stunden
                                             db.setUserGroupLastSuper(user.id, group.id, now);
-                                            ctx.reply("<a href=\"tg://user?id=" + user.tgid + "\">" + user.name + "</a> ehrt <a href=\"tg://user?id=" + to.tgid + "\">" + to.name + "</a> absolut hart!", {parse_mode: "HTML",disable_notification:true});
+                                            ctx.reply("<a href=\"tg://user?id=" + user.tgid + "\">" + user.name + "</a> ehrt <a href=\"tg://user?id=" + to.tgid + "\">" + to.name + "</a> absolut hart!", {
+                                                parse_mode: "HTML",
+                                                disable_notification: true
+                                            });
                                             db.setUserGroupKarma(to.id, group.id, tostats.karma + 3);
                                         }
                                     }
@@ -40,6 +45,7 @@ function setupVote(bot) {
             const group = db.getGroupByTGID(ctx.chat.id);
             const user = db.getUserByTGID(ctx.from.id);
             if (group !== undefined && user !== undefined) {
+                if (!db.hasGroupFeature(group.id, features.karma)) return next();
                 const ustats = db.getUserGroup(user.id, group.id);
                 if (ustats !== undefined) {
                     if (ctx.message.reply_to_message.from !== undefined && !ctx.message.reply_to_message.from.is_bot) {
@@ -51,7 +57,10 @@ function setupVote(bot) {
                                     let now = new Date().getTime();
                                     if (now - ustats.lastUp > 300000) { //5 Minuten
                                         db.setUserGroupLastUp(user.id, group.id, now);
-                                        ctx.reply("<a href=\"tg://user?id=" + user.tgid + "\">" + user.name + "</a> ehrt <a href=\"tg://user?id=" + to.tgid + "\">" + to.name + "</a>.", {parse_mode: "HTML",disable_notification:true});
+                                        ctx.reply("<a href=\"tg://user?id=" + user.tgid + "\">" + user.name + "</a> ehrt <a href=\"tg://user?id=" + to.tgid + "\">" + to.name + "</a>.", {
+                                            parse_mode: "HTML",
+                                            disable_notification: true
+                                        });
                                         db.setUserGroupKarma(to.id, group.id, tostats.karma + 1);
                                     }
                                 }
@@ -70,6 +79,7 @@ function setupVote(bot) {
             const group = db.getGroupByTGID(ctx.chat.id);
             const user = db.getUserByTGID(ctx.from.id);
             if (group !== undefined && user !== undefined) {
+                if (!db.hasGroupFeature(group.id, features.karma)) return next();
                 const ustats = db.getUserGroup(user.id, group.id);
                 if (ustats !== undefined) {
                     if (ctx.message.reply_to_message.from !== undefined && !ctx.message.reply_to_message.from.is_bot) {
@@ -81,7 +91,10 @@ function setupVote(bot) {
                                     let now = new Date().getTime();
                                     if (now - ustats.lastDown > 600000) { //10 Minuten
                                         db.setUserGroupLastDown(user.id, group.id, now);
-                                        ctx.reply("<a href=\"tg://user?id=" + user.tgid + "\">" + user.name + "</a> entehrt <a href=\"tg://user?id=" + to.tgid + "\">" + to.name + "</a>.", {parse_mode: "HTML",disable_notification:true});
+                                        ctx.reply("<a href=\"tg://user?id=" + user.tgid + "\">" + user.name + "</a> entehrt <a href=\"tg://user?id=" + to.tgid + "\">" + to.name + "</a>.", {
+                                            parse_mode: "HTML",
+                                            disable_notification: true
+                                        });
                                         db.setUserGroupKarma(to.id, group.id, tostats.karma - 1);
                                     }
                                 }

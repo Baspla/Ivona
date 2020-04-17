@@ -1,0 +1,10 @@
+BEGIN TRANSACTION;
+INSERT INTO "feature" VALUES (0,'points');
+INSERT INTO "feature" VALUES (1,'karma');
+INSERT INTO "feature" VALUES (2,'anime');
+INSERT INTO "feature" VALUES (3,'magic');
+INSERT INTO "feature" VALUES (4,'magicDaily');
+INSERT INTO "feature" VALUES (5,'justThings');
+INSERT INTO "feature" VALUES (6,'quote');
+INSERT INTO "feature" VALUES (7,'steam');
+COMMIT;
