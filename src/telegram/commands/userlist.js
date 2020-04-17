@@ -1,13 +1,14 @@
 const db = require("../../data/db");
 const Auth = require("../utils/checks/authentication");
+const roles = require("../utils/roles");
 
 exports.setupUserlist = setupUserlist;
 
 function setupUserlist(bot) {
-    bot.command('userlist', Auth.roleRequired("admin"), (ctx) => {
+    bot.command('userlist', Auth.roleRequired(roles.admin), (ctx) => {
         let text = "User: \n";
-        db.getUsersWithRoles().forEach((row) => {
-            text += row.user_name + " - Rollen: " + row.roles + "\n";
+        db.getUsers().forEach((row) => {
+            text += row.name +"\n ";
         });
         ctx.reply(text);
     });

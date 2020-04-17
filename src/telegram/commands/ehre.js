@@ -1,14 +1,15 @@
 const db = require("../../data/db");
+const Location = require("../utils/checks/location");
 
 exports.setupEhre = setupEhre;
 
 function setupEhre(bot) {
-    bot.command('ehre', (ctx) => {
-        let rows = db.getTopKarma(10);
+    bot.command('ehre',Location.Group, (ctx) => {
+        let rows = db.getUsersOrderedByKarma(db.getGroupByTGID(ctx.chat.id).id,10,0);
         let list = "Top Ehre:\n";
         rows.forEach(v => {
-            list += "<code>" + v.user_karma + " Ehre</code> - <a href=\"tg://user?id=" + v.user_id + "\">" + v.user_name + "</a>\n";
+            list += "<code>" + v.karma + " Ehre</code> - <a href=\"tg://user?id=" + v.tgid + "\">" + v.name + "</a>\n";
         });
-        ctx.reply(list, {parse_mode: "HTML"})
+        ctx.reply(list, {parse_mode: "HTML",disable_notification:true})
     });
 }

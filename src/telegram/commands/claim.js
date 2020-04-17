@@ -7,9 +7,10 @@ exports.setupClaim = setupClaim;
 function setupClaim(bot) {
     bot.command('claim', (ctx) => {
         if (utils.isCreator(ctx.from.id)) {
-            if (!db.hasUserRole(ctx.from.id, roles.admin)) {
+            let user = db.getUserByTGID(ctx.from.id);
+            if (!db.hasUserRole(user.id, roles.admin)) {
                 ctx.reply("Du bist jetzt Admin.");
-                db.insertUserRole(ctx.from.id, roles.admin);
+                db.addUserRole(user.id, roles.admin);
             } else {
                 ctx.reply("Du bist schon Admin.");
             }

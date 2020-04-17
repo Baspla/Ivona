@@ -11,11 +11,11 @@ const regenerateTokenKeyboard = Markup.inlineKeyboard([
 
 function setupToken(bot) {
     bot.command('token', Auth.roleRequired("user"), Location.User, (ctx) => {
-        const tokens = db.getTokens(ctx.from.id);
+        const tokens = db.getTokensByUser(db.getUserByTGID(ctx.from.id).id);
         if (Array.isArray(tokens) && tokens.length) {
             let text = "Deine Tokens sind";
             tokens.forEach((v) => {
-                text += "\n<code>" + v.token_text + "</code>";
+                text += "\n<code>" + v.text + "</code>";
             });
             ctx.reply(text, {parse_mode: "HTML", reply_markup: regenerateTokenKeyboard});
         } else {

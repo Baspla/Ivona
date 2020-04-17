@@ -11,12 +11,12 @@ function setupCoder(bot) {
         const user = db.getUserFromName(name);
         if (user === undefined) {
             ctx.reply("Unbekannter Nutzer");
-        } else if (!db.hasUserRole(user.user_id, roles.coder)) {
-            db.insertUserRole(user.user_id, roles.coder);
-            ctx.reply(user.user_name + " wurde der Coder Status anerkannt.");
+        } else if (!db.hasUserRole(user.id, roles.coder)) {
+            db.addUserRole(user.id, roles.coder);
+            ctx.reply(user.name + " wurde der Coder Status anerkannt.");
         } else {
-            db.deleteUserRole(user.user_id, roles.coder);
-            ctx.reply(user.user_name + " wurde der Coder Status aberkannt.");
+            db.removeUserRole(user.id, roles.coder);
+            ctx.reply(user.name + " wurde der Coder Status aberkannt.");
         }
     });
 }

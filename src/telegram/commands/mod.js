@@ -10,12 +10,12 @@ function setupMod(bot) {
         const user = db.getUserFromName(name);
         if (user === undefined) {
             ctx.reply("Unbekannter Nutzer");
-        } else if (!db.hasUserRole(user.user_id, roles.moderator)) {
-            db.insertUserRole(user.user_id, roles.moderator);
-            ctx.reply(user.user_name + " wurde der Moderator Status anerkannt.");
+        } else if (!db.hasUserRole(user.id, roles.moderator)) {
+            db.addUserRole(user.id, roles.moderator);
+            ctx.reply(user.name + " wurde der Moderator Status anerkannt.");
         } else {
-            db.deleteUserRole(user.user_id, roles.moderator);
-            ctx.reply(user.user_name + " wurde der Moderator Status aberkannt.");
+            db.removeUserRole(user.id, roles.moderator);
+            ctx.reply(user.name + " wurde der Moderator Status aberkannt.");
         }
     });
 }

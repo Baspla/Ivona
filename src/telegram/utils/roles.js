@@ -1,6 +1,6 @@
+const db = require("../../data/db");
 module.exports = {
-    user: "user",
-    moderator: "moderator",
-    admin: "admin",
-    coder: "coder",
+    moderator: db.getRoleByName("moderator").id,
+    admin: db.getRoleByName("admin").id,
+    coder: db.getRoleByName("coder").id,
 };

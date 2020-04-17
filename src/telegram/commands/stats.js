@@ -4,7 +4,12 @@ exports.setupStats = setupStats;
 
 function setupStats(bot) {
     bot.command('stats', (ctx) => {
-        const row = db.getUserWithRoles(ctx.from.id);
-        ctx.reply(row.user_name + "\nPunkte: " + row.user_points + "\nEhre: " + row.user_karma + "\nRollen: " + row.roles);
+        const user = db.getUserByTGID(ctx.from.id);
+        let txt="";
+        db.getUserGroups(user.id).forEach((row) => {
+            group=db.getGroup(row.groupId);
+            txt = txt+"<b>"+ group.name+"</b>\nPunkte: " + row.points + "\nEhre: " + row.karma+"\n\n";
+        });
+        ctx.replyWithHTML("Name: "+user.name +"\n\n"+txt);
     });
 }

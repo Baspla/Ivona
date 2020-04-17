@@ -7,13 +7,14 @@ function setupCodeInline(bot) {
         let offset = Number(ctx.inlineQuery.offset);
         if (ctx.inlineQuery.query === "") {
             db.getCodes(10, offset).forEach((code) => {
-                result.push(new InlineQueryResultArticle(code.code_id, code.code_code, code.code_description, "<b>" + code.code_code + "</b>\n" + code.code_description, "HTML"))
+                result.push(new InlineQueryResultArticle(code.rowid, code.name, code.description, "<b>" + code.name + "</b>\n" + code.description, "HTML"))
             });
             offset += 10;
         } else {
-            const code = db.getCodeByCode(ctx.inlineQuery.query);
-            if (code !== undefined)
-                result.push(new InlineQueryResultArticle(code.code_id, code.code_code, code.code_description, "<b>" + code.code_code + "</b>\n" + code.code_description, "HTML"))
+            db.getCodesMatchingNameOrDescription(ctx.inlineQuery.query,10, offset).forEach((code) => {
+                result.push(new InlineQueryResultArticle(code.rowid, code.name, code.description, "<b>" + code.name + "</b>\n" + code.description, "HTML"))
+            });
+            offset += 10;
         }
         if (offset + "" !== ctx.inlineQuery.offset)
             ctx.answerInlineQuery(result, {next_offset: offset + ""})

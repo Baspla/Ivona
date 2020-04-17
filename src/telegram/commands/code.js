@@ -9,8 +9,8 @@ function setupCode(bot) {
     bot.command('code', Args.minimumArgs(2), Auth.roleRequired(roles.coder), (ctx) => {
         const code = ctx.args.shift();
         const description = ctx.args.join(" ");
-        if (db.getCodeByCode(code) === undefined) {
-            db.insertCode(code, description, ctx.from.user_id);
+        if (db.getCodeByName(code) === undefined) {
+            db.createCode(code, description, ctx.from.id);
             ctx.reply("Code "+code+" erstellt");
         }else{
             ctx.reply("Dieser Code exisitert schon");

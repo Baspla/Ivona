@@ -10,14 +10,12 @@ const head = "Das sind alle Befehle, die ich dir anbieten kann\n";
 function setupHelp(bot) {
     bot.help(Location.User, (ctx) => {
         let txt = head;
-        if (db.hasUserRole(ctx.from.id, roles.user)) {
             txt += "\nUser-Befehle:\n" +
                 "/quote - Zufälliges Zitat\n" +
                 "/top - Top 10 Punktesammler\n" +
                 "/ehre - Top 10 Ehrenmänner\n" +
                 "/stats - deine Stats\n" +
                 "/token - zeigt deinen API-Token an\n";
-        }
         if (db.hasUserRole(ctx.from.id, roles.coder)) {
             txt += "\nCoder-Befehle:\n" +
                 "\n";
