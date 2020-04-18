@@ -5,6 +5,7 @@ const {performance} = require("perf_hooks");
 const utils = require("./utils/utils");
 const roles = require("./utils/roles");
 const db = require("../data/db");
+const {steamTest} = require("./scheduledTasks/steamTest");
 const {setupFeatures} = require("./commands/features");
 const {setupFeature} = require("./commands/feature");
 const {setupIp} = require("./commands/ip");
@@ -39,7 +40,7 @@ const {dailyCard} = require("./scheduledTasks/dailyCard");
 bot.use((ctx, next) => {
     let start = performance.now()
     let r = next();
-    console.log("Der Request hat ",performance.now()-start," Millisekunden zum Bearbeiten gebraucht.");
+    console.log("Der Request hat ", performance.now() - start, " Millisekunden zum Bearbeiten gebraucht.");
     return r;
 })
 
@@ -124,6 +125,11 @@ setupVote(bot);
 
 setupJustThings(bot);
 
+bot.command("trigger", (ctx, next) => {
+    if (db.hasUserRole(db.getUserByTGID(ctx.from.id).id, roles.admin))
+        steamTest(bot);
+    return next();
+});
 const daily = schedule.scheduleJob('0 9 * * *', function () {
     console.log('daily executed');
     dailyCard(bot);
@@ -131,8 +137,9 @@ const daily = schedule.scheduleJob('0 9 * * *', function () {
 const hourly = schedule.scheduleJob('0 */1 * * *', function () {
     //console.log('hourly executed');
 });
-const minute = schedule.scheduleJob('*/5 * * * *', function () {
-    //console.log('minute executed');
+const minute = schedule.scheduleJob('*/30 * * * *', function () {
+    console.log('minute executed');
+    if (0 === Math.floor(Math.random() * Math.floor(11)))
+        steamTest(bot);
 });
-
 bot.launch().then(() => console.log("Bot gestartet"));
