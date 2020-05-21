@@ -12,7 +12,7 @@ function setupPoints(bot) {
                 if (utils.isGroupChat(ctx.chat.type)) {
                     const group = db.getGroupByTGID(ctx.chat.id);
                     if (group !== undefined) {
-                        if (db.hasGroupFeature(group.id, features.karma)) return next();
+                        if (!db.hasGroupFeature(group.id, features.points)) return next();
                         const ug = db.getUserGroup(user.id, group.id);
                         let now = new Date().getTime();
                         if (now - ug.lastReward > 180000) { //3 Minuten
