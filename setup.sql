@@ -34,34 +34,6 @@ CREATE TABLE IF NOT EXISTS "group" (
 	"group_tgid"	INTEGER NOT NULL UNIQUE,
 	"group_name"	INTEGER NOT NULL UNIQUE
 );
-CREATE TABLE IF NOT EXISTS "code_config" (
-	"k"	TEXT,
-	"v"	TEXT,
-	PRIMARY KEY("k")
-) WITHOUT ROWID;
-CREATE TABLE IF NOT EXISTS "code_docsize" (
-	"id"	INTEGER,
-	"sz"	BLOB,
-	PRIMARY KEY("id")
-);
-CREATE TABLE IF NOT EXISTS "code_content" (
-	"id"	INTEGER,
-	"c0"	TEXT,
-	"c1"	TEXT,
-	"c2"	TEXT,
-	PRIMARY KEY("id")
-);
-CREATE TABLE IF NOT EXISTS "code_idx" (
-	"segid"	TEXT,
-	"term"	TEXT,
-	"pgno"	TEXT,
-	PRIMARY KEY("segid","term")
-) WITHOUT ROWID;
-CREATE TABLE IF NOT EXISTS "code_data" (
-	"id"	INTEGER,
-	"block"	BLOB,
-	PRIMARY KEY("id")
-);
 CREATE VIRTUAL TABLE IF NOT EXISTS "code" USING fts5(code_name, code_description, code_creator);
 CREATE TABLE IF NOT EXISTS "user" (
 	"user_id"	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
