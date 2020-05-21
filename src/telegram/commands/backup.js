@@ -9,7 +9,7 @@ function setupBackup(bot) {
     bot.command('backup', Auth.roleRequired(roles.admin),Location.User,(ctx) => {
         const filename=`resources/backup.db`;
         ctx.reply("Starte Backup");
-        console.l
+        console.log("Backup");
         db.backup(filename)
             .then(() => {
                 console.log("Backup an "+ctx.from.id+" gesendet");

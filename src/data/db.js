@@ -148,6 +148,9 @@ function parseGroupFeature(dbGroupFeature) {
 //add & remove für relations
 //create & delete für base-objects
 module.exports = {
+    backup(filename) {
+        return db.backup(filename);
+    },
     createUser(tgid, name) {
         if (module.exports.getUserByTGID(tgid) === undefined) {
             let fname = name;

@@ -10,15 +10,15 @@
   "author": "Tim Morgner",
   "license": "ISC",
   "dependencies": {
-    "better-sqlite3": "^5.4.3",
+    "better-sqlite3": "^7.0.1",
     "canvas": "^2.6.1",
     "discord.js": "^11.6.1",
     "express": "^4.17.1",
     "jikan-node": "^1.2.0",
+    "node-schedule": "latest",
+    "public-ip": "latest",
     "scryfall-sdk": "1.5.1",
     "shelljs": "^0.8.3",
-    "telegraf": "^3.36.0",
-    "public-ip": "latest",
-    "node-schedule": "latest"
+    "telegraf": "^3.36.0"
   }
 }
