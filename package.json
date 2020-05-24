@@ -1,6 +1,6 @@
 {
   "name": "ivonabot",
-  "version": "1.3.6",
+  "version": "1.3.7",
   "description": "Telegram Bot",
   "main": "src/server.js",
   "scripts": {
@@ -19,6 +19,7 @@
     "public-ip": "latest",
     "scryfall-sdk": "1.5.1",
     "shelljs": "^0.8.3",
-    "telegraf": "^3.36.0"
+    "telegraf": "^3.36.0",
+    "minecraft-lib": "^1.1.6"
   }
 }

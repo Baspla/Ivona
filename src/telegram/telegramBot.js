@@ -5,6 +5,7 @@ const {performance} = require("perf_hooks");
 const utils = require("./utils/utils");
 const roles = require("./utils/roles");
 const db = require("../data/db");
+const {setupMc} = require("./commands/mc");
 const {steamTest} = require("./scheduledTasks/steamTest");
 const {setupFeatures} = require("./commands/features");
 const {setupFeature} = require("./commands/feature");
@@ -105,6 +106,7 @@ setupFeatures(bot);
 setupDebug(bot);
 setupCode(bot);
 setupIp(bot);
+setupMc(bot);
 setupUserlist(bot);
 setupToken(bot);
 setupTokenCallback(bot);
@@ -124,7 +126,6 @@ setupPoints(bot);
 setupVote(bot);
 
 setupJustThings(bot);
-
 bot.command("trigger", (ctx, next) => {
     if (db.hasUserRole(db.getUserByTGID(ctx.from.id).id, roles.admin))
         steamTest(bot);
