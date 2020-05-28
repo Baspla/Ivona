@@ -1,9 +1,11 @@
+const fs = require("fs");
 const createError = require('http-errors');
 const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const session = require("express-session");
 const app = express();
+const https = require("https");
 const db = require("../data/db.js");
 
 app.set('view engine', 'pug');
@@ -26,12 +28,15 @@ let running = false;
 
 exports.isRunning = function() {return running};
 
-const webserver = app.listen(process.env.WEB_PORT, function () {
+const webserver = https.createServer({
+    key: fs.readFileSync('./key.pem'),
+    cert: fs.readFileSync('./cert.pem')
+},app).listen(process.env.WEB_PORT, function () {
     running = true;
     let host = webserver.address().address;
     const port = webserver.address().port;
     if(host==="::")host = "localhost";
-    console.log("Example app listening at http://%s:%s", host, port)
+    console.log("Webserver listening at https://%s:%s", host, port)
 });
 
 webserver.on('close', () => running = false);
