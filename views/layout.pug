@@ -21,10 +21,10 @@ html(lang="en")
                         a.nav-link(href="/impressum") Impressum
             .ml-auto.navbar-nav
                 if user === undefined
-                    script(async, src="https://telegram.org/js/telegram-widget.js?9", data-telegram-login="IvonaBot", data-size="large", data-auth-url="google.com", data-request-access="write")
+                    script(async, src="https://telegram.org/js/telegram-widget.js?9", data-telegram-login="IvonaBot", data-size="large", data-auth-url="login", data-request-access="write")
                 else
                     a.nav-link(href="/dashboard") Dashboard
-                    a.nav-link(href="/users/logout") Logout
+                    a.nav-link(href="/logout") Logout
 
         block content
 
