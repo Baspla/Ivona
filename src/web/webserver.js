@@ -26,7 +26,7 @@ let running = false;
 
 exports.isRunning = function() {return running};
 
-const webserver = app.listen(process.env.API_PORT, function () {
+const webserver = app.listen(process.env.WEB_PORT, function () {
     running = true;
     let host = webserver.address().address;
     const port = webserver.address().port;

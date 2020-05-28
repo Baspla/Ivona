@@ -5,7 +5,7 @@ const {performance} = require("perf_hooks");
 const utils = require("./utils/utils");
 const roles = require("./utils/roles");
 let db = require("../data/db");
-const http = require("http");
+const https = require("https");
 const {setupMc} = require("./commands/mc");
 const {steamTest} = require("./scheduledTasks/steamTest");
 const {setupFeatures} = require("./commands/features");
@@ -139,7 +139,7 @@ const daily = schedule.scheduleJob('0 9 * * *', function () {
 const hourly = schedule.scheduleJob('0 */1 * * *', function () {
     //console.log('hourly executed');
     if (process.env.DYNDNS_URL !== undefined)
-        http.get(process.env.DYNDNS_URL);
+        https.get(process.env.DYNDNS_URL);
 });
 const minute = schedule.scheduleJob('*/30 * * * *', function () {
     //console.log('minute executed');
