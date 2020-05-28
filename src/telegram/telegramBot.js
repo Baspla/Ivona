@@ -4,7 +4,8 @@ const bot = new Telegraf(process.env.BOT_TOKEN);
 const {performance} = require("perf_hooks");
 const utils = require("./utils/utils");
 const roles = require("./utils/roles");
-const db = require("../data/db");
+let db = require("../data/db");
+const http = require("http");
 const {setupMc} = require("./commands/mc");
 const {steamTest} = require("./scheduledTasks/steamTest");
 const {setupFeatures} = require("./commands/features");
@@ -132,14 +133,16 @@ bot.command("trigger", (ctx, next) => {
     return next();
 });
 const daily = schedule.scheduleJob('0 9 * * *', function () {
-    console.log('daily executed');
+    //console.log('daily executed');
     dailyCard(bot);
 });
 const hourly = schedule.scheduleJob('0 */1 * * *', function () {
     //console.log('hourly executed');
+    if (process.env.DYNDNS_URL !== undefined)
+        http.get(process.env.DYNDNS_URL);
 });
 const minute = schedule.scheduleJob('*/30 * * * *', function () {
-    console.log('minute executed');
+    //console.log('minute executed');
     if (0 === Math.floor(Math.random() * Math.floor(11)))
         steamTest(bot);
 });

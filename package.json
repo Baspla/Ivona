@@ -12,14 +12,19 @@
   "dependencies": {
     "better-sqlite3": "^7.0.1",
     "canvas": "^2.6.1",
+    "cookie-parser": "^1.4.5",
     "discord.js": "^11.6.1",
     "express": "^4.17.1",
+    "express-session": "^1.17.1",
+    "http-errors": "^1.7.3",
     "jikan-node": "^1.2.0",
+    "minecraft-lib": "^1.1.6",
     "node-schedule": "latest",
+    "promise": "^8.1.0",
     "public-ip": "latest",
+    "pug": "^3.0.0",
     "scryfall-sdk": "1.5.1",
     "shelljs": "^0.8.3",
-    "telegraf": "^3.36.0",
-    "minecraft-lib": "^1.1.6"
+    "telegraf": "^3.36.0"
   }
 }

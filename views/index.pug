@@ -1,0 +1,14 @@
+extends layout
+
+block variables
+    - var title = "Home"
+
+block content
+    .jumbotron.border
+        h2 Ivona
+        p.lead Der clevere Telegram Bot der nie jemanden stalken würde...
+        hr.my-4
+        button.btn.btn-primary.mr-2(, role="button", data-toggle="collapse", data-target="#collapser", aria-expanded="false", aria-controls="collapser") Telegram
+        a.btn.btn-primary(href="#", role="button") GitHub
+        .mt-2.collapse#collapser
+            .card.card-body Telegram Infos

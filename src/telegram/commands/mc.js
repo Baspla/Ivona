@@ -15,7 +15,6 @@ function setupMc(bot) {
                         txt = txt + "\n" + sample[i].username;
                     }
                 }
-                console.log(server)
                 ctx.replyWithHTML("<b>"+server.version+" Minecraft Server</b> (" + server.players.online + "/" + server.players.max + ")\n<i>"+server.motd.formatted+"</i>" + txt);
             }
         });

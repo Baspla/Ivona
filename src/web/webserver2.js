@@ -1,6 +1,6 @@
 const express = require('express');
 const app = express();
-db = require("../data/db.js");
+const db = require("../data/db.js");
 ValidationMiddleware = require("./middlewares/ValidationMiddleware");
 AuthenticationMiddleware = require("./middlewares/AuthenticationMiddleware");
 //TODO
@@ -53,7 +53,7 @@ router.get('/status', function (req, res) {
     res.json({status: "ok"});
 });
 
-app.use('/api', router);
+app.use('/web', router);
 
 app.use(function (req, res) {
     res.status(404).json({code: 404, message: "Ungültiger Pfad"})
