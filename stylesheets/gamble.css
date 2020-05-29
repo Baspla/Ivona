@@ -1,0 +1,19 @@
+#items{
+    transition: transform 6s cubic-bezier(0, 0.11, 0.33, 1) 1s;
+    height: 80px;
+}
+.start{
+    transform: translate(2000px,0px);
+}
+.card{
+    width: 10rem;
+    float:left;
+    height:10rem;
+}
+.rolling{
+    transform: translate(0px,0px);
+}
+.scroll {
+    max-width: 100%;
+    overflow:hidden;
+}

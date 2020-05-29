@@ -9,6 +9,16 @@ block breadcrumbs
     li.breadcrumb-item.active(aria-current="page") Dashboard
 
 block content
-    h2 Dashboard
+    .container-fluid.bg-light.py-4
+        h2 Dashboard
 
-    p Welcome to your dashboard page. #{user.first_name}
+        p Hallo, #{session.user.name}
+        .card-deck.mx-auto
+            each userGroup in userGroups
+                .col-md
+                    .card
+                        .card-body
+                            h5.card-title #{userGroup.group.name}
+                            p.card-subtitle #{userGroup.points} Punkte und #{userGroup.karma} Ehre
+                            if userGroup.group.link
+                                a.card-link(href="#") Telegram

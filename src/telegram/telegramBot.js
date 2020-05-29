@@ -1,6 +1,7 @@
 const schedule = require('node-schedule');
 const Telegraf = require('telegraf');
 const bot = new Telegraf(process.env.BOT_TOKEN);
+module.exports.bot=bot;
 const {performance} = require("perf_hooks");
 const utils = require("./utils/utils");
 const roles = require("./utils/roles");
