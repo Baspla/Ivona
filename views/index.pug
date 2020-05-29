@@ -3,12 +3,15 @@ extends layout
 block variables
     - var title = "Home"
 
+block breadcrumbs
+    li.breadcrumb-item.active(aria-current="page") Home
+
 block content
     .jumbotron.border
         h2 Ivona
         p.lead Der clevere Telegram Bot der nie jemanden stalken würde...
         hr.my-4
         button.btn.btn-primary.mr-2(, role="button", data-toggle="collapse", data-target="#collapser", aria-expanded="false", aria-controls="collapser") Telegram
-        a.btn.btn-primary(href="#", role="button") GitHub
+        a.btn.btn-primary(href="https://github.com/Baspla/Ivona", role="button") GitHub
         .mt-2.collapse#collapser
-            .card.card-body Telegram Infos
+            .card.card-body Hier kommt noch Info zum Bot

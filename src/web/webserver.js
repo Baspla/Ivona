@@ -44,14 +44,44 @@ app.use(session({
 app.get('/', function (req, res) {
     res.render('index');
 });
+app.get('/dashboard', function (req, res) {
+    if (req.session.user === undefined) {
+        res.redirect("/loginPrompt")
+    } else
+        res.render('dashboard', {user: req.session.user});
+});
+app.get('/loginPrompt', function (req, res) {
+    res.render('loginError', {message: "Bitte melde dich an"});
+});
+;
+app.get('/loginUnknown', function (req, res) {
+    res.render('loginError', {message: "Auf das Web Interface kann nur von Nutzern zugegriffen werden"});
+});
+;
+app.get('/loginError', function (req, res) {
+    res.render('loginError', {message: "Falsche Antwort von Telegram erhalten"});
+});
+;
+app.get('/impressum', function (req, res) {
+    res.render('impressum');
+});
+;
+app.get('/features', function (req, res) {
+    res.render('features');
+});
 app.get('/login', function (req, res) {
     let data = checkLogin(req.query, secret);
-    if (data !== null) {
+    if (data !== false) {
         console.log(data)
-
-        res.redirect("/dashboard")
+        let user = db.getUser(data.id)
+        if (user === undefined) {
+            res.redirect("/loginUnknown")
+        } else {
+            req.session.user = user;
+            res.redirect("/dashboard")
+        }
     } else
-        res.redirect("/")
+        res.redirect("/loginError")
 });
 app.use(function (req, res, err) {
     res.status(404);

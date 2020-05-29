@@ -3,7 +3,12 @@ extends layout
 block variables
     - var title = "Dashboard"
 
+block breadcrumbs
+    li.breadcrumb-item
+        a(href="/") Home
+    li.breadcrumb-item.active(aria-current="page") Dashboard
+
 block content
     h2 Dashboard
 
-    . Welcome to your dashboard page.
+    . Welcome to your dashboard page. #{user.first_name}
