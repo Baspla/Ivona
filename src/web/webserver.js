@@ -72,9 +72,7 @@ app.get('/features', function (req, res) {
 app.get('/login', function (req, res) {
     let data = checkLogin(req.query, secret);
     if (data !== false) {
-        console.log(data.id)
-        let user = db.getUser(data.id)
-        console.log(user)
+        let user = db.getUserByTGID(data.id)
         if (user === undefined) {
             res.redirect("/loginUnknown")
         } else {
