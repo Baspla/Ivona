@@ -1,6 +1,6 @@
 {
   "name": "ivonabot",
-  "version": "1.4.0",
+  "version": "1.4.2",
   "description": "Telegram Bot",
   "main": "src/server.js",
   "scripts": {
@@ -10,6 +10,7 @@
   "author": "Tim Morgner",
   "license": "ISC",
   "dependencies": {
+    "bootstrap": "^4.5.0",
     "better-sqlite3": "^7.0.1",
     "canvas": "^2.6.1",
     "cookie-parser": "^1.4.5",

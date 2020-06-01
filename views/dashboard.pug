@@ -13,12 +13,43 @@ block content
         h2 Dashboard
 
         p Hallo, #{session.user.name}
-        .card-deck.mx-auto
-            each userGroup in userGroups
-                .col-md
-                    .card
-                        .card-body
-                            h5.card-title #{userGroup.group.name}
-                            p.card-subtitle #{userGroup.points} Punkte und #{userGroup.karma} Ehre
-                            if userGroup.group.link
-                                a.card-link(href="#") Telegram
+            br
+            | Schön dich wieder zu sehen.
+        .row.row-cols-1.row-cols-sm-2.row-cols-lg-3
+            .col.mb-4
+                .card
+                    .card-body
+                        h5.card-title
+                            a(href="/user/gruppen") Gruppen
+                        p.card-subtitle Alle Gruppen in denen du und Ivona sind
+            .col.mb-4
+                .card
+                    .card-body
+                        h5.card-title
+                            a(href="/user/abzeichen") Abzeichen
+                        p.card-subtitle Alle Abzeichen die du erhalten hast
+            .col.mb-4
+                .card
+                    .card-body
+                        h5.card-title
+                            a(href="/user/shop") Shop
+                        p.card-subtitle Kaufe tolle Sachen ein
+            .col.mb-4
+                .card
+                    .card-body
+                        h5.card-title
+                            a(href="/user/gamble") Roulette
+                        p.card-subtitle Verspiel alle deine Punkte
+            .col.mb-4
+                .card
+                    .card-body
+                        h5.card-title
+                            a(href="/user/profil") Profil
+                        p.card-subtitle Bearbeite dein Profil
+            .col.mb-4
+                .card.bg-primary.text-white.text-center.p-3
+                    blockquote.blockquote.mb-0
+                        p Hype dich und spiel Dodge or Die!
+                        footer.blockquote-footer.text-white
+                            small Werbung von unserem&nbsp
+                                cite(title="CookieJ4R") Sponsor

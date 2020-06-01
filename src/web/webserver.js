@@ -6,14 +6,22 @@ const cookieParser = require('cookie-parser');
 const session = require("express-session");
 const app = express();
 const https = require("https");
+const http = require('http');
 const db = require("../data/db.js");
 const crypto = require('crypto');
 const tg = require("../telegram/telegramBot");
 const roles = require("../telegram/utils/roles");
 
 let secret = crypto.createHash('sha256').update(process.env.BOT_TOKEN).digest();
+let running = false;
+let apiRouter = express.Router();
+let userRouter = express.Router();
 
-function checkLogin(data, secret) {
+exports.isRunning = function () {
+    return running
+};
+
+function checkTelegramLogin(data, secret) {
     data = JSON.parse(JSON.stringify(data));
     let input_hash = data.hash;
     delete data.hash;
@@ -48,48 +56,52 @@ app.use(function (req, res, next) {
     next();
 });
 app.use("/stylesheets", express.static('stylesheets'))
-app.use(express.static('public'))
-app.get('/', function (req, res) {
-    res.render('index');
-});
-app.get('/dashboard', function (req, res) {
-    if (req.session.user === undefined) {
-        res.redirect("/loginPrompt")
-    } else {
-        let userGroups = db.getUserGroups(req.session.user.id);
-
-        userGroups.forEach(userGroup => {
-            userGroup.group = db.getGroup(userGroup.groupId);
-        });
-        res.render('dashboard', {userGroups: userGroups});
-    }
+app.use("/static",express.static('node_modules/bootstrap/dist/'))
+apiRouter.get("/auth",function (req,res) {
+    res.render("index");
 })
-;
-app.get("/gamble", function (req, res) {
+apiRouter.use((req, res, next) => {
+    if (req.session.user !== undefined) {
+        next();
+    } else {
+        res.status(401).json({error:"Sie sind nicht angemeldet"});
+    }
+});
+apiRouter.use((req,res,next)=>{
+    res.status(404).json({error:"Unbekannter API Pfad"});
+});
+app.use("/api", apiRouter);
+userRouter.use((req, res, next) => {
+    if (req.session.user !== undefined) {
+        next();
+    } else {
+        res.redirect("/loginMissing");
+    }
+});
+userRouter.get('/', function (req, res) {
+    res.render('dashboard');
+});
+userRouter.get("/gamble", function (req, res) {
     res.render('gamble');
 });
-app.get('/loginPrompt', function (req, res) {
-    res.render('loginError', {message: "Bitte melde dich an"});
-});
-app.get('/loginUnknown', function (req, res) {
-    res.render('loginError', {message: "Auf das Web Interface kann nur von Nutzern zugegriffen werden"});
-});
-app.get('/loginError', function (req, res) {
-    res.render('loginError', {message: "Falsche Antwort von Telegram erhalten"});
-});
-app.get('/impressum', function (req, res) {
-    res.render('impressum');
-});
-app.get('/features', function (req, res) {
-    res.render('features');
-});
-app.get('/features', function (req, res) {
-    res.render('features');
-});
-app.get('/profile', function (req, res) {
+userRouter.get('/profile', function (req, res) {
     res.render('profile');
 });
-app.get('/logout', function (req, res) {
+userRouter.get('/gruppen', function (req, res) {
+    let userGroups = db.getUserGroups(req.session.user.id);
+
+    userGroups.forEach(userGroup => {
+        userGroup.group = db.getGroup(userGroup.groupId);
+    });
+    res.render('gruppen', {userGroups: userGroups});
+});
+userRouter.get('/abzeichen', function (req, res) {
+    res.render('abzeichen');
+});
+userRouter.get('/shop', function (req, res) {
+    res.render('shop');
+});
+userRouter.get('/logout', function (req, res) {
     if (req.session.user !== undefined) {
         delete req.session.user
         res.render('index', {notification: "Du wurdest erfolgreich abgemeldet"});
@@ -97,12 +109,31 @@ app.get('/logout', function (req, res) {
         res.redirect("/");
     }
 });
+app.use('/user',userRouter);
+app.get('/', function (req, res) {
+    res.render('index');
+});
+app.get('/loginUnknown', function (req, res) {
+    res.render('loginError', {message: "Auf das Web Interface kann nur von Nutzern zugegriffen werden"});
+});
+app.get('/loginError', function (req, res) {
+    res.render('loginError', {message: "Falsche Antwort von Telegram erhalten"});
+});
+app.get('/loginMissing', function (req, res) {
+    res.render('loginError', {message: "Sie sind nicht angemeldet"});
+});
+app.get('/impressum', function (req, res) {
+    res.render('impressum');
+});
+app.get('/befehle', function (req, res) {
+    res.render('befehle');
+});
 app.get('/login', function (req, res) {
     let data;
     if (req.query.id !== undefined) {
         data = {id: req.query.id};
     } else {
-        data = checkLogin(req.query, secret);
+        data = checkTelegramLogin(req.query, secret);
     }
     if (data !== false) {
         let user = db.getUserByTGID(data.id)
@@ -115,26 +146,19 @@ app.get('/login', function (req, res) {
                 if (userRole.roleId === roles.admin)
                     req.session.user.isAdmin = true;
             })
-            res.redirect("/dashboard")
+            res.redirect("/user")
         }
     } else
         res.redirect("/loginError")
 });
 app.use(function (req, res) {
-    res.status(404);
-    res.render('error', {error: {status: 404}, message: "Seite konnte nicht gefunden werden"});
+    res.status(404).render('error', {error: {status: 404}, message: "Seite konnte nicht gefunden werden"});
 });
-
-let running = false;
-
-exports.isRunning = function () {
-    return running
-};
 
 const webserver = https.createServer({
     key: fs.readFileSync('./key.pem'),
     cert: fs.readFileSync('./cert.pem')
-}, app).listen(process.env.WEB_PORT, function () {
+}, app).on('close', () => running = false).listen(process.env.HTTPS_PORT, function () {
     running = true;
     let host = webserver.address().address;
     const port = webserver.address().port;
@@ -142,4 +166,7 @@ const webserver = https.createServer({
     console.log("Webserver listening at https://%s:%s", host, port)
 });
 
-webserver.on('close', () => running = false);
+var redirectServer = http.createServer(function(req, res) {
+    res.writeHead(301, { "Location": "https://" + req.headers['host'] + req.url });
+    res.end();
+}).listen(process.env.HTTP_PORT);
