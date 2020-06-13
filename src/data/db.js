@@ -394,13 +394,13 @@ module.exports = {
 		return db.prepare("SELECT permission.* FROM user JOIN user_role ON user_role.user_id = user.id JOIN role_permission ON role_permission.role_id = user_role.role_id JOIN permission ON permission.id = role_permission.permission_id WHERE user.tgid = ? AND permission.name = ? GROUP BY permission.id").get(tgid, permissionName) != null;
 	},
 	getGroupSettingsByTGID(tgid) {
-		return db.prepare("SELECT group_setting.* FROM group_setting JOIN setting ON setting.id = group_setting.setting_id JOIN \"group\" ON \"group\".id = group_setting.group_id WHERE \"group\".tgid = ? AND setting.type = "+constants.settings.types.group).expand().all(tgid).map(Setting.parse);
+		return db.prepare("SELECT group_setting.* FROM group_setting JOIN setting ON setting.id = group_setting.setting_id JOIN \"group\" ON \"group\".id = group_setting.group_id WHERE \"group\".tgid = ? AND setting.type = \""+constants.settings.types.group+"\"").expand().all(tgid).map(Setting.parse);
 	},
 	getGroupSettingByTGID(tgid, settingName) {
-		return GroupSetting.parse(db.prepare("SELECT group_setting.* FROM group_setting JOIN setting ON setting.id = group_setting.setting_id JOIN \"group\" ON \"group\".id = group_setting.group_id WHERE \"group\".tgid = ? AND setting.name = ? AND setting.type = "+constants.settings.types.group).expand().get(tgid, settingName));
+		return GroupSetting.parse(db.prepare("SELECT group_setting.* FROM group_setting JOIN setting ON setting.id = group_setting.setting_id JOIN \"group\" ON \"group\".id = group_setting.group_id WHERE \"group\".tgid = ? AND setting.name = ? AND setting.type = \""+constants.settings.types.group+"\"").expand().get(tgid, settingName));
 	},
 	getGroupSetting(id, settingName) {
-		return GroupSetting.parse(db.prepare("SELECT group_setting.* FROM group_setting JOIN setting ON setting.id = group_setting.setting_id JOIN \"group\" ON \"group\".id = group_setting.group_id WHERE \"group\".id = ? AND setting.name = ? AND setting.type = "+constants.settings.types.group).expand().get(id, settingName));
+		return GroupSetting.parse(db.prepare("SELECT group_setting.* FROM group_setting JOIN setting ON setting.id = group_setting.setting_id JOIN \"group\" ON \"group\".id = group_setting.group_id WHERE \"group\".id = ? AND setting.name = ? AND setting.type = \""+constants.settings.types.group+"\"").expand().get(id, settingName));
 	},
 	createUserGroup(userId, groupId) {
 		db.prepare("INSERT INTO user_group (user_id,group_id) VALUES (?,?)").run(userId,groupId);
