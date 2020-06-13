@@ -10,7 +10,7 @@ html(lang="en")
         block head
         title Ivona - #{title}
     body
-        nav.navbar.navbar-light.bg-light.navbar-expand-sm
+        nav.navbar.navbar-light.bg-light.navbar-expand-md
             a.navbar-brand(href="#") Ivona
             button.navbar-toggler(type="button", data-toggle="collapse", data-target="#navbarNav", aria-controls="navbarNav", aria-expanded="false", aria-label="Toggle navigation")
                 .navbar-toggler-icon
@@ -29,6 +29,8 @@ html(lang="en")
                             a.nav-link(href="/user/shop") Shop
                         li.nav-item
                             a.nav-link(href="/user/gamble") Roulette
+                        li.nav-item
+                            a.nav-link(href="/user/magic") Magic
                 .navbar-nav.ml-auto
                     if session.user === undefined
                         script(async, src="https://telegram.org/js/telegram-widget.js?9", data-telegram-login="IvonaBot", data-size="large", data-auth-url="login", data-request-access="write")
@@ -49,6 +51,10 @@ html(lang="en")
                 block breadcrumbs
 
         block alerts
+            if notification
+                .alert.alert-success.alert-dismissable.fade.show.mx-2(role="alert") #{notification}
+                    button.close(type="button", data-dismiss="alert")
+                        span &times;
 
         block content
 

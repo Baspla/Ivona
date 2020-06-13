@@ -1,30 +1,27 @@
 const db = require("../../data/db");
 const utils = require("../utils/utils");
-const features = require("../utils/features");
-
+const GroupSetting = require("../utils/checks/groupsetting");
+const config = require("../../config");
+const constants = require("../../constants");
 exports.setupPoints = setupPoints;
 
 function setupPoints(bot) {
-    bot.use((ctx, next) => {
-        const user = db.getUserByTGID(ctx.from.id);
-        if (user !== undefined) {
-            if (ctx.chat !== undefined) {
-                if (utils.isGroupChat(ctx.chat.type)) {
-                    const group = db.getGroupByTGID(ctx.chat.id);
-                    if (group !== undefined) {
-                        if (!db.hasGroupFeature(group.id, features.points)) return next();
-                        const ug = db.getUserGroup(user.id, group.id);
-                        let now = new Date().getTime();
-                        if (now - ug.lastReward > 180000) { //3 Minuten
-                            db.setUserGroupLastReward(user.id, group.id, now);
-                            const previous = user.points;
-                            db.setUserGroupPoints(user.id, group.id, ug.points + Math.floor(Math.random() * 12) + 1);
-                            utils.checkLevelUp(ctx, ctx.from.id, previous);
-                        }
-                    }
-                }
-            }
-        }
-        next();
-    });
+	bot.use((ctx, next) => {
+		if (ctx.chat !== undefined) {
+			if (utils.isGroupChat(ctx.chat.type)) {
+				if (!GroupSetting.isEnabled(constants.settings.features.points)) return next();
+				const ug = db.getUserGroupByTGID(ctx.from.id, ctx.chat.id);
+				if (ug != null) {
+					let now = new Date().getTime();
+					if (now - ug.lastReward > config.cooldown.reward) { //3 Minuten
+						db.setUserGroupLastReward(ug.user.id, ug.group.id, now);
+						db.setUserGroupPoints(ug.user.id, ug.group.id, ug.points + Math.floor(Math.random() * 12) + 1);
+						utils.checkLevelUp(ctx,ug);
+						db.addMoney(ug.user.id,config.chatReward,constants.transaction.reward,null);
+					}
+				}
+			}
+		}
+		next();
+	});
 }

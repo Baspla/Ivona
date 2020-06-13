@@ -1,0 +1,20 @@
+mixin pagination
+    if page !== undefined
+        - var prev = Math.max(1,Math.min(lastPage,parseInt(page,10) - 1));
+        - var next = Math.max(1,Math.min(lastPage,parseInt(page,10) + 1));
+        nav
+            ul.pagination.justify-content-center
+                li.page-item
+                    a.page-link(href="?p=" + prev)
+                        span &laquo;
+                if page - 1 > 0
+                    li.page-item
+                        a.page-link(href="?p=" + prev)= prev
+                li.page-item.active
+                    a.page-link(href="?p=" + page) #{page}
+                if page < lastPage
+                    li.page-item
+                        a.page-link(href="?p=" + next)= next
+                li.page-item
+                    a.page-link(href="?p=" + next)
+                        span &raquo;

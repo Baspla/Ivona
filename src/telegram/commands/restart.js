@@ -1,12 +1,12 @@
-const shell = require('shelljs');
-const Auth = require("../utils/checks/authentication");
-const roles = require("../utils/roles");
+const shell = require("shelljs");
+const Permission = require("../utils/checks/permission");
+const constants = require("../../constants");
 
 exports.setupRestart = setupRestart;
 
 function setupRestart(bot) {
-        bot.command('restart', Auth.roleRequired(roles.admin), (ctx) => {
-            ctx.reply("Starte neu...");
-            shell.exec('../restart.sh');
-        });
+	bot.command("restart", Permission.hasPermission(constants.permissions.system.restart), (ctx) => {
+		ctx.reply("Starte neu...");
+		shell.exec("../restart.sh");
+	});
 }

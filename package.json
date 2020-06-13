@@ -1,10 +1,11 @@
 {
   "name": "ivonabot",
-  "version": "1.4.2",
+  "version": "1.5.0",
   "description": "Telegram Bot",
   "main": "src/server.js",
   "scripts": {
-    "start": "node src/server.js"
+    "start": "node src/server.js",
+    "test": "jest"
   },
   "keywords": [],
   "author": "Tim Morgner",
@@ -14,7 +15,7 @@
     "better-sqlite3": "^7.0.1",
     "canvas": "^2.6.1",
     "cookie-parser": "^1.4.5",
-    "discord.js": "^11.6.1",
+    "discord.js": "^12.2.0",
     "express": "^4.17.1",
     "express-session": "^1.17.1",
     "http-errors": "^1.7.3",
@@ -24,8 +25,11 @@
     "promise": "^8.1.0",
     "public-ip": "latest",
     "pug": "^3.0.0",
-    "scryfall-sdk": "1.5.1",
-    "shelljs": "^0.8.3",
-    "telegraf": "^3.36.0"
+    "scryfall-sdk": "^1.6.4",
+    "shelljs": "^0.8.4",
+    "telegraf": "^3.38.0"
+  },
+  "devDependencies": {
+    "jest": "^26.0.1"
   }
 }

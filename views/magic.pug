@@ -1,0 +1,36 @@
+extends layout
+
+block variables
+    - var title = "Magic"
+
+block breadcrumbs
+    li.breadcrumb-item
+        a(href="/") Home
+    li.breadcrumb-item
+        a(href="/user/") Dashboard
+    li.breadcrumb-item.active(aria-current="page") Magic
+
+block content
+    .container-fluid.bg-light.py-4
+        h2 Magic
+        .row.row-cols-1.row-cols-sm-2.row-cols-lg-2
+            .col.mb-4
+                .card
+                    .card-body
+                        h5.card-title
+                            a(href="/user/magic/decks") Decks
+                        p.card-subtitle Deine Decks
+            .col.mb-4
+                .card
+                    .card-body
+                        h5.card-title
+                            a(href="/user/magic/matches") Matches
+                        p.card-subtitle Bearbeite deine Matches
+        .row.row-cols-1
+            .col.mb-4
+                .card.bg-primary.text-white.text-center.p-3
+                    blockquote.blockquote.mb-0
+                        p Hype dich und spiel Dodge or Die!
+                        footer.blockquote-footer.text-white
+                            small Werbung von unserem&nbsp
+                                cite(title="CookieJ4R") Sponsor

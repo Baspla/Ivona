@@ -14,56 +14,19 @@ block breadcrumbs
     li.breadcrumb-item.active(aria-current="page") Gamble
 
 block content
-    .container.scroll
-        .start.mb-3.justify-content-center#items
-            .card.mx-2
-                .card-body
-                    h5.card-title Sache 1
-                    h6.card-subtitle.mb-2.text-muted Rare
-                    p.card-text Uiii
-            .card.mx-2
-                .card-body
-                    h5.card-title Gegenstand 1
-                    h6.card-subtitle.mb-2.text-muted Limited
-                    p.card-text Schau dir das an
-            .card.mx-2
-                .card-body
-                    h5.card-title Ding 1
-                    h6.card-subtitle.mb-2.text-muted Legendary
-                    p.card-text Was ein Krasses Teil
-            .card.mx-2
-                .card-body
-                    h5.card-title Sache 2
-                    h6.card-subtitle.mb-2.text-muted Rare
-                    p.card-text Uiii
-            .card.mx-2
-                .card-body
-                    h5.card-title Gegenstand 2
-                    h6.card-subtitle.mb-2.text-muted Limited
-                    p.card-text Schau dir das an
-            .card.mx-2
-                .card-body
-                    h5.card-title Ding 2
-                    h6.card-subtitle.mb-2.text-muted Legendary
-                    p.card-text Was ein Krasses Teil
-            .card.mx-2
-                .card-body
-                    h5.card-title Sache 3
-                    h6.card-subtitle.mb-2.text-muted Rare
-                    p.card-text Uiii
-            .card.mx-2
-                .card-body
-                    h5.card-title Gegenstand 3
-                    h6.card-subtitle.mb-2.text-muted Limited
-                    p.card-text Schau dir das an
-            .card.mx-2
-                .card-body
-                    h5.card-title Ding 3
-                    h6.card-subtitle.mb-2.text-muted Legendary
-                    p.card-text Was ein Krasses Teil
-    .row.justify-content-center
-        .text-center
-            button.btn.btn-primary.m-3(onclick="roll()") Roll it
+    p Das kommt noch. Sorry.
+    .container-fluid
+        #gambleBox
+            ul.justify-content-center.start#items
+                li
+                    p A
+                li
+                    p B
+                li
+                    p C
+        .justify-content-center
+            .text-center
+                button.btn.btn-primary.m-3(onclick="roll()") Roll it
 
     script.
         function roll() {

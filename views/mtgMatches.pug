@@ -1,16 +1,17 @@
 extends layout
 
 block variables
-    - var title = "Abzeichen"
+    - var title = "Magic Matches"
 
 block breadcrumbs
     li.breadcrumb-item
         a(href="/") Home
     li.breadcrumb-item
         a(href="/user/") Dashboard
-    li.breadcrumb-item.active(aria-current="page") Abzeichen
+    li.breadcrumb-item
+        a(href="/user/magic") Magic
+    li.breadcrumb-item.active(aria-current="page") Matches
 
 block content
     .container-fluid.bg-light.py-4
-        h2 Abzeichen
-        p Das kommt noch. Sorry.
+        h2 Matches
