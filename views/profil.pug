@@ -5,19 +5,18 @@ block variables
 
 block breadcrumbs
     li.breadcrumb-item
-        a(href="/") Home
+        a(href="/user") Dashboard
     li.breadcrumb-item.active(aria-current="page") Profil
 
 block content
     .container-fluid.bg-light.py-4
         h2 Dein Profil
         p
-            form
-                input.mr-3(type="text" name="name" placeholder="Nutzername" required value = session.user.name)
-                button.btn.btn-primary(type="submit") Nutzername ändern
+            h5= session.user.name
             if session.user.tgusername
                 | @#{session.user.tgusername}
                 br
-            = "Telegram Name: " + session.user.tgfirstname + " " + session.user.tglastname
+            = "Name: " + session.user.tgfirstname + " " + session.user.tglastname
             br
             | Guthaben: #{session.user.money}$
+        a.btn.btn-primary(href="profil/edit") Bearbeiten

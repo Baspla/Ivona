@@ -81,12 +81,15 @@ userRouter.get("/gamble", function (req, res) {
 	res.render("gamble");
 });
 userRouter.get("/profil", function (req, res) {
+	res.render("profil");
+});
+userRouter.get("/profil/edit",function (req,res) {
 	if (req.query.name !== undefined) {
 		db.setUserName(req.session.user.id, req.query.name);
 		req.session.user = db.getUser(req.session.user.id);
-		res.redirect("profil");
+		res.redirect("/user/profil");
 	} else
-		res.render("profil");
+		res.render("editProfil");
 });
 userRouter.get("/gruppen", function (req, res) {
 	let userGroups = db.getUserGroups(req.session.user.id);
