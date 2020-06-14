@@ -1,5 +1,4 @@
 block variables
-- var views = 0;
 doctype html
 html(lang="en")
     head
@@ -43,7 +42,7 @@ html(lang="en")
                         li.nav-item.dropdown
                             a.nav-link.dropdown-toggle#navbarDropdown(href="#", role="button", data-toggle="dropdown", aria-haspopup="true", aria-expanded="false") #{session.user.name}
                             .dropdown-menu.dropdown-menu-right(aria-ladelledby="navbarDropdown")
-                                a.dropdown-item(href="/user/profile") Profil
+                                a.dropdown-item(href="/user/profil") Profil
                                 a.dropdown-item(href="/user/logout") Logout
 
         nav(aria-label="breadcrumb")
@@ -51,8 +50,16 @@ html(lang="en")
                 block breadcrumbs
 
         block alerts
+            if notificationDanger
+                .alert.alert-danger.alert-dismissable.fade.show.mx-2(role="alert") #{notificationDanger}
+                    button.close(type="button", data-dismiss="alert")
+                        span &times;
+            if notificationSucess
+                .alert.alert-success.alert-dismissable.fade.show.mx-2(role="alert") #{notificationSucess}
+                    button.close(type="button", data-dismiss="alert")
+                        span &times;
             if notification
-                .alert.alert-success.alert-dismissable.fade.show.mx-2(role="alert") #{notification}
+                .alert.alert-primary.alert-dismissable.fade.show.mx-2(role="alert") #{notification}
                     button.close(type="button", data-dismiss="alert")
                         span &times;
 

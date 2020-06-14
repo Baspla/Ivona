@@ -1,0 +1,16 @@
+extends layout
+
+block variables
+    - var title = "Test"
+
+block breadcrumbs
+    li.breadcrumb-item.active(aria-current="page") Test
+
+block content
+    .jumbotron.border
+        h2 Dein Nutzername ist #{session.user.name}
+        hr.my-4
+        form
+            input(type="text" name="name" placeholder="Nutzername" required value = session.user.name)
+            br.mb-3
+            button.btn.btn-primary(type="submit") Nutzername ändern

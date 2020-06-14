@@ -81,7 +81,12 @@ userRouter.get("/gamble", function (req, res) {
 	res.render("gamble");
 });
 userRouter.get("/profil", function (req, res) {
-	res.render("profil");
+	if (req.query.name !== undefined) {
+		db.setUserName(req.session.user.id, req.query.name);
+		req.session.user = db.getUser(req.session.user.id);
+		res.redirect("profil");
+	} else
+		res.render("profil");
 });
 userRouter.get("/gruppen", function (req, res) {
 	let userGroups = db.getUserGroups(req.session.user.id);
@@ -103,6 +108,10 @@ userRouter.get("/magic/matches", function (req, res) {
 });
 userRouter.get("/shop", function (req, res) {
 	res.render("shop");
+});
+userRouter.get("/test", function (req, res) {
+	res.render("test");
+	//TODO TEST REMOVE
 });
 userRouter.get("/logout", function (req, res) {
 	if (req.session.user !== undefined) {
@@ -144,11 +153,6 @@ app.get("/login", function (req, res) {
 			res.redirect("/loginUnknown");
 		} else {
 			req.session.user = user;
-			req.session.user.isAdmin = false;
-			/*db.getUserRoles(user.id).forEach(userRole => {
-                if (userRole.roleId === roles.admin)
-                    req.session.user.isAdmin = true;
-            })*/
 			res.redirect("/user");
 		}
 	} else
