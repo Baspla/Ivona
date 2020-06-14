@@ -1,6 +1,6 @@
 {
   "name": "ivonabot",
-  "version": "1.5.2",
+  "version": "1.5.3",
   "description": "Telegram Bot",
   "main": "src/server.js",
   "scripts": {
@@ -30,6 +30,8 @@
     "telegraf": "^3.38.0"
   },
   "devDependencies": {
-    "jest": "^26.0.1"
+    "jest": "^26.0.1",
+    "eslint-plugin-jest": "^23.13.2",
+    "eslint": "^7.2.0"
   }
 }
