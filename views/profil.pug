@@ -5,9 +5,18 @@ block variables
 
 block breadcrumbs
     li.breadcrumb-item
-        a(href="/") Home
+        a(href="/user") Dashboard
     li.breadcrumb-item.active(aria-current="page") Profil
 
 block content
     .container-fluid.bg-light.py-4
-        h2 #{session.user.name}
+        h2 Dein Profil
+        p
+            h5= session.user.name
+            if session.user.tgusername
+                | @#{session.user.tgusername}
+                br
+            = "Name: " + session.user.tgfirstname + " " + session.user.tglastname
+            br
+            | Guthaben: #{session.user.money}$
+        a.btn.btn-primary(href="profil/edit") Bearbeiten

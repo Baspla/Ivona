@@ -186,7 +186,7 @@ class User {
 	}
 
 	static parse(res) {
-		return (res && res.user) ? new User(res.user.id, res.user.name, res.user.money, res.user.tgid, res.user.firstname, res.user.lastname, res.user.tgusername, res.user.onetime) : null;
+		return (res && res.user) ? new User(res.user.id, res.user.name, res.user.money, res.user.tgid, res.user.tgfirstname, res.user.tglastname, res.user.tgusername, res.user.onetime) : null;
 	}
 }
 
@@ -339,6 +339,9 @@ module.exports = {
 		return UserGroup.parse(db.prepare("SELECT * FROM \"user_group\" JOIN \"user\" ON \"user_group\".user_id = \"user\".id JOIN \"group\" ON \"user_group\".group_id = \"group\".id WHERE \"user\".tgid = ? AND \"group\".tgid = ?")
 			.expand().get(userId, groupId));
 	},
+	getUser(id) {
+		return User.parse(db.prepare("SELECT * FROM \"user\" WHERE id = ?").expand().get(id));
+	},
 	getGroups() {
 		return db.prepare("SELECT * FROM \"group\"").expand().all().map(Group.parse);
 	},
@@ -404,5 +407,8 @@ module.exports = {
 	},
 	createUserGroup(userId, groupId) {
 		db.prepare("INSERT INTO user_group (user_id,group_id) VALUES (?,?)").run(userId,groupId);
+	},
+	setUserName(id, name) {
+		db.prepare("UPDATE user SET name = ? WHERE id = ? ").run(name,id);
 	}
 };

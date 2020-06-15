@@ -67,6 +67,7 @@ apiRouter.use((req, res, next) => {
 	res.status(404).json({error: "Unbekannter API Pfad"});
 });
 app.use("/api", apiRouter);
+
 userRouter.use((req, res, next) => {
 	if (req.session.user !== undefined) {
 		next();
@@ -82,6 +83,14 @@ userRouter.get("/gamble", function (req, res) {
 });
 userRouter.get("/profil", function (req, res) {
 	res.render("profil");
+});
+userRouter.get("/profil/edit",function (req,res) {
+	if (req.query.name !== undefined) {
+		db.setUserName(req.session.user.id, req.query.name);
+		req.session.user = db.getUser(req.session.user.id);
+		res.redirect("/user/profil");
+	} else
+		res.render("editProfil");
 });
 userRouter.get("/gruppen", function (req, res) {
 	let userGroups = db.getUserGroups(req.session.user.id);
@@ -104,6 +113,10 @@ userRouter.get("/magic/matches", function (req, res) {
 userRouter.get("/shop", function (req, res) {
 	res.render("shop");
 });
+userRouter.get("/test", function (req, res) {
+	res.render("test");
+	//TODO TEST REMOVE
+});
 userRouter.get("/logout", function (req, res) {
 	if (req.session.user !== undefined) {
 		delete req.session.user;
@@ -111,6 +124,7 @@ userRouter.get("/logout", function (req, res) {
 	}
 });
 app.use("/user", userRouter);
+
 app.get("/", function (req, res) {
 	let notification;
 	if (req.query.loggedOut === "1") notification = "Du wurdest erfolgreich abgemeldet.";
@@ -144,11 +158,6 @@ app.get("/login", function (req, res) {
 			res.redirect("/loginUnknown");
 		} else {
 			req.session.user = user;
-			req.session.user.isAdmin = false;
-			/*db.getUserRoles(user.id).forEach(userRole => {
-                if (userRole.roleId === roles.admin)
-                    req.session.user.isAdmin = true;
-            })*/
 			res.redirect("/user");
 		}
 	} else
