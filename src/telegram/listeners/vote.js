@@ -18,12 +18,12 @@ function setupVote(bot) {
 						if (ctx.message.reply_to_message.from.id !== ctx.from.id) {
 							let now = new Date().getTime();
 							if (now - ustats.lastSuper > config.cooldown.voteSuper) { //2 Stunden
-								db.setUserGroupLastSuper(ustats.id, ustats.group.id, now);
-								ctx.reply("<a href=\"tg://user?id=" + ustats.tgid + "\">" + ustats.name + "</a> ehrt <a href=\"tg://user?id=" + tostats.tgid + "\">" + tostats.name + "</a> absolut hart!", {
+								db.setUserGroupLastSuper(ustats.user.id, ustats.group.id, now);
+								ctx.reply("<a href=\"tg://user?id=" + ustats.user.tgid + "\">" + ustats.user.name + "</a> ehrt <a href=\"tg://user?id=" + tostats.user.tgid + "\">" + tostats.user.name + "</a> absolut hart!", {
 									parse_mode: "HTML",
 									disable_notification: true
 								});
-								db.setUserGroupKarma(tostats.id, ustats.group.id, tostats.karma + 3);
+								db.setUserGroupKarma(tostats.user.id, ustats.group.id, tostats.karma + 3);
 							}
 						}
 					}
@@ -46,12 +46,12 @@ function setupVote(bot) {
 						if (ctx.message.reply_to_message.from.id !== ctx.from.id) {
 							let now = new Date().getTime();
 							if (now - ustats.lastUp > config.cooldown.voteUp) { //5 Minuten
-								db.setUserGroupLastUp(ustats.id, ustats.group.id, now);
-								ctx.reply("<a href=\"tg://user?id=" + ustats.tgid + "\">" + ustats.name + "</a> ehrt <a href=\"tg://user?id=" + tostats.tgid + "\">" + tostats.name + "</a>.", {
+								db.setUserGroupLastUp(ustats.user.id, ustats.group.id, now);
+								ctx.reply("<a href=\"tg://user?id=" + ustats.user.tgid + "\">" + ustats.user.name + "</a> ehrt <a href=\"tg://user?id=" + tostats.user.tgid + "\">" + tostats.user.name + "</a>.", {
 									parse_mode: "HTML",
 									disable_notification: true
 								});
-								db.setUserGroupKarma(tostats.id, ustats.group.id, tostats.karma + 1);
+								db.setUserGroupKarma(tostats.user.id, ustats.group.id, tostats.karma + 1);
 							}
 						}
 					}
