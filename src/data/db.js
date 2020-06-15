@@ -330,7 +330,7 @@ module.exports = {
 			.expand().all(userId).map(UserGroup.parse);
 	},
 	createUser(tgid, name, firstname, lastname, username) {
-		db.prepare("INSERT INTO user (tgid, name, firstname, lastname, username) VALUES (?,?,?,?,?)").run(tgid, name, firstname, lastname, username);
+		db.prepare("INSERT INTO user (tgid, name, tgfirstname, tglastname, tgusername) VALUES (?,?,?,?,?)").run(tgid, name, firstname, lastname, username);
 	},
 	getUserByTGID(id) {
 		return User.parse(db.prepare("SELECT * FROM \"user\" WHERE tgid = ?").expand().get(id));
