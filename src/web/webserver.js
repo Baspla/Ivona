@@ -67,6 +67,7 @@ apiRouter.use((req, res, next) => {
 	res.status(404).json({error: "Unbekannter API Pfad"});
 });
 app.use("/api", apiRouter);
+
 userRouter.use((req, res, next) => {
 	if (req.session.user !== undefined) {
 		next();
@@ -123,6 +124,7 @@ userRouter.get("/logout", function (req, res) {
 	}
 });
 app.use("/user", userRouter);
+
 app.get("/", function (req, res) {
 	let notification;
 	if (req.query.loggedOut === "1") notification = "Du wurdest erfolgreich abgemeldet.";
