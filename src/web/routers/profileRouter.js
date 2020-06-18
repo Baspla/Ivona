@@ -10,6 +10,13 @@ router.get("/", function (req, res) {
 		breadcrumbs: req.breadcrumbs()
 	});
 });
+router.get("/edit", function (req, res) {
+	if (req.query.name !== undefined) {
+		db.setUserName(req.session.user.id, req.query.name);
+		req.session.user = db.getUser(req.session.user.id);
+	}
+	res.redirect("/user/profil");
+});
 router.get("/gruppen", function (req, res) {
 	req.breadcrumbs("Gruppen","/user/profil/gruppen");
 	let userGroups = db.getUserGroups(req.session.user.id);

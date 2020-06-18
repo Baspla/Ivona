@@ -26,13 +26,6 @@ router.get("/shop", function (req, res) {
 		breadcrumbs: req.breadcrumbs()
 	});
 });
-router.get("/edit", function (req, res) {
-	if (req.query.name !== undefined) {
-		db.setUserName(req.session.user.id, req.query.name);
-		req.session.user = db.getUser(req.session.user.id);
-	}
-	res.redirect("/user/profil");
-});
 router.get("/shop/:id", function (req, res) {
 	req.breadcrumbs("Shop Entry");
 	res.render("user/shop/shopEntry", {breadcrumbs: req.breadcrumbs(), shopEntryId: req.params.id});
