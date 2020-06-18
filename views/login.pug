@@ -1,0 +1,13 @@
+extends layout
+include mixins/telegramMixin
+
+block variables
+    - var title = "Login"
+
+block content
+    .container-fluid.bg-light.py-4
+        center
+            p Du bist nicht angemeldet
+                br
+                | Bitte melde dich an
+            +telegramLogin

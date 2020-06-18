@@ -1,0 +1,27 @@
+extends ../../layout
+
+block variables
+    - var title = "Gamble"
+
+block head
+    link(rel="stylesheet", href="/stylesheets/gamble.css")
+
+block content
+    p Das kommt noch. Sorry.
+    .container-fluid
+        #gambleBox
+            ul.justify-content-center.start#items
+                li
+                    p A
+                li
+                    p B
+                li
+                    p C
+        .justify-content-center
+            .text-center
+                button.btn.btn-primary.m-3(onclick="roll()") Roll it
+
+    script.
+        function roll() {
+            document.getElementById("items").classList.add("rolling")
+        }

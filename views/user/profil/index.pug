@@ -1,0 +1,58 @@
+extends ../../layout
+
+block variables
+    - var title = "Profil"
+
+block content
+    .modal#myModal(tabindex="-1" role="dialog")
+        .modal-dialog
+            .modal-content
+                .modal-header
+                    h5.modal-title Profil bearbeiten
+                    button.close(type="button" data-dismiss="modal")
+                        span &times;
+                .modal-body
+                    form#profileForm(action="profil/edit" method="get")
+                        .input-group
+                            .input-group-prepend
+                                span.input-group-text Nutzername
+                            input.form-control.mr-3(type="text" name="name" placeholder="Nutzername" required value = session.user.name)
+                .modal-footer
+                    button.btn.btn-secondary(type="button" data-dismiss="modal") Schließen
+                    button.btn.btn-primary(type="submit" form="profileForm") Speichern
+    .container-fluid.bg-light.py-4
+        h2 Dein Profil
+            button.btn.btn-outline-primary.ml-3.btn-sm(type="button" data-toggle="modal" data-target="#myModal") Bearbeiten
+        h4= session.user.name
+        if session.user.tgusername
+            | @#{session.user.tgusername}
+            br
+        = "Name: " + session.user.tgfirstname + " " + session.user.tglastname
+        br
+        | Guthaben: #{session.user.money}$
+        .container-fluid.bg-light.pt-4.my-3.rounded-lg.border
+            .row.row-cols-1.row-cols-sm-2.row-cols-lg-3
+                .col.mb-4
+                    .card
+                        .card-body
+                            h5.card-title
+                                a(href="/user/profil/abzeichen") Abzeichen
+                            p.card-subtitle Deine Abzeichen
+                .col.mb-4
+                    .card
+                        .card-body
+                            h5.card-title
+                                a(href="/user/profil/gruppen") Gruppen
+                            p.card-subtitle Die Gruppen in denen du bist
+                .col.mb-4
+                    .card
+                        .card-body
+                            h5.card-title
+                                a(href="/user/profil/items") Items
+                            p.card-subtitle Deine Items
+                .col.mb-4
+                    .card
+                        .card-body
+                            h5.card-title
+                                a(href="/user/profil/transaktionen") Transaktionen
+                            p.card-subtitle Alle deine Transaktionen

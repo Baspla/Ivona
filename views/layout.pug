@@ -1,16 +1,17 @@
+include mixins/telegramMixin
 block variables
 doctype html
 html(lang="en")
     head
         meta(charset="utf-8")
         meta(name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no")
-        link(rel="stylesheet" href="/static/css/bootstrap.css")
+        link(rel="stylesheet" href="/static/bootstrap/css/bootstrap.css")
         link(rel="stylesheet", href="/stylesheets/style.css")
         block head
         title Ivona - #{title}
     body
         nav.navbar.navbar-light.bg-light.navbar-expand-md
-            a.navbar-brand(href="#") Ivona
+            a.navbar-brand(href="") Ivona
             button.navbar-toggler(type="button", data-toggle="collapse", data-target="#navbarNav", aria-controls="navbarNav", aria-expanded="false", aria-label="Toggle navigation")
                 .navbar-toggler-icon
             .collapse.navbar-collapse#navbarNav
@@ -19,20 +20,10 @@ html(lang="en")
                       a.nav-link(href="/") Home
                     li.nav-item
                         a.nav-link(href="/befehle") Befehle
-                    if session.user !== undefined
-                        li.nav-item
-                            a.nav-link(href="/user/gruppen") Gruppen
-                        li.nav-item
-                            a.nav-link(href="/user/abzeichen") Abzeichen
-                        li.nav-item
-                            a.nav-link(href="/user/shop") Shop
-                        li.nav-item
-                            a.nav-link(href="/user/gamble") Roulette
-                        li.nav-item
-                            a.nav-link(href="/user/magic") Magic
                 .navbar-nav.ml-auto
                     if session.user === undefined
-                        script(async, src="https://telegram.org/js/telegram-widget.js?9", data-telegram-login="IvonaBot", data-size="large", data-auth-url="login", data-request-access="write")
+                        if title !== "Login"
+                            +telegramLogin
                     else
                         if session.user.isAdmin
                             li.nav-item
@@ -46,8 +37,11 @@ html(lang="en")
                                 a.dropdown-item(href="/user/logout") Logout
 
         nav(aria-label="breadcrumb")
-            ol.breadcrumb
-                block breadcrumbs
+            if breadcrumbs
+                ul.breadcrumb
+                    each breadcrumb in breadcrumbs
+                        li.breadcrumb-item
+                            a(href=breadcrumb.url) #{breadcrumb.name}
 
         block alerts
             if notificationDanger
@@ -70,6 +64,6 @@ html(lang="en")
             br
             | IvonaBot 2020
 
-        script(src="https://code.jquery.com/jquery-3.3.1.slim.min.js", integrity = "sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo", crossorigin="anonymous")
-        script(src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js", integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49", crossorigin="anonymous")
-        script(src="/static/js/bootstrap.js")
+        script(src="/static/jquery/jquery.js")
+        script(src="/static/popper.js/umd/popper.js")
+        script(src="/static/bootstrap/js/bootstrap.js")

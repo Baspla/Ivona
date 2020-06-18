@@ -1,0 +1,41 @@
+extends ../layout
+
+block variables
+    - var title = "User"
+
+block content
+    .container-fluid.bg-light.py-4
+        h2 Hallo, #{session.user.name}
+        .mb-3 Schön dich wieder zu sehen.
+        .row.row-cols-1.row-cols-sm-2.row-cols-lg-3
+            .col.mb-4
+                .card
+                    .card-body
+                        h5.card-title
+                            a(href="/user/profil") Profil
+                        p.card-subtitle Alles über dich
+            .col.mb-4
+                .card.bg-primary.text-white.text-center.p-3
+                    blockquote.blockquote.mb-0
+                        p Hype dich und spiel Dodge or Die!
+                        footer.blockquote-footer.text-white
+                            small Werbung von unserem&nbsp
+                                cite(title="CookieJ4R") Sponsor
+            .col.mb-4
+                .card
+                    .card-body
+                        h5.card-title
+                            a(href="/user/shop") Shop
+                        p.card-subtitle Kaufe tolle Sachen ein
+            .col.mb-4
+                .card
+                    .card-body
+                        h5.card-title
+                            a(href="/user/gamble") Gamble
+                        p.card-subtitle Verspiel alle deine Punkte
+            .col.mb-4
+                .card
+                    .card-body
+                        h5.card-title
+                            a(href="/user/magic") Magic
+                        p.card-subtitle Magic Decks und Spiele
