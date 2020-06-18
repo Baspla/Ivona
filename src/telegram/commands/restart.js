@@ -5,9 +5,9 @@ const constants = require("../../constants");
 exports.setupRestart = setupRestart;
 
 function setupRestart(bot) {
-	bot.command("restart", Permission.hasPermission(constants.permissions.system.restart), (ctx) => {
+	bot.command("restart", Permission.hasPermission(constants.permissions.system.restart), (ctx,next) => {
 		ctx.reply("Starte neu...");
-		ctx.deleteMessage();
+		next();
 		shell.exec("../restart.sh");
 	});
 }
