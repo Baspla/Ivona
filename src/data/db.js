@@ -309,8 +309,43 @@ class Match {
 		this.title = title;
 	}
 
+	get absoluteDate() {
+		var dat = new Date(this.date);
+		return dat.getDate() + "." + dat.getMonth() + "." + dat.getFullYear();
+	}
+
+	get relativeDate() {
+		var msProMinute = 60 * 1000;
+		var msProStunde = msProMinute * 60;
+		var msProTag = msProStunde * 24;
+		var msProMonat = msProTag * 30;
+		var msProJahr = msProTag * 365;
+
+		var diff = new Date() - new Date(this.date);
+		var t;
+		if (diff < msProMinute) {
+			t = Math.round(diff / 1000);
+			return "vor " + t + " Sekunde" + ((t !== 1) ? "n" : "");
+		} else if (diff < msProStunde) {
+			t = Math.round(diff / msProMinute);
+			return "vor " + t + " Minute"+ ((t !== 1) ? "n" : "");
+		} else if (diff < msProTag) {
+			t = Math.round(diff / msProStunde);
+			return "vor " + t + " Stunde"+ ((t !== 1) ? "n" : "");
+		} else if (diff < msProMonat) {
+			t = Math.round(diff / msProTag);
+			return "vor ungefähr " + t + " Tag"+ ((t !== 1) ? "en" : "");
+		} else if (diff < msProJahr) {
+			t = Math.round(diff / msProMonat);
+			return "vor ungefähr " + t + " Monat"+ ((t !== 1) ? "en" : "");
+		} else {
+			t = Math.round(diff / msProJahr);
+			return "vor ungefähr " + t + " Jahr"+ ((t !== 1) ? "en" : "");
+		}
+	}
+
 	static parse(res) {
-		return (res && res.match) ? new Token(res.match.id, res.match.date, res.match.type, res.match.title) : null;
+		return (res && res.match) ? new Match(res.match.id, res.match.date, res.match.type, res.match.title) : null;
 	}
 }
 
@@ -397,24 +432,54 @@ module.exports = {
 		return db.prepare("SELECT permission.* FROM user JOIN user_role ON user_role.user_id = user.id JOIN role_permission ON role_permission.role_id = user_role.role_id JOIN permission ON permission.id = role_permission.permission_id WHERE user.tgid = ? AND permission.name = ? GROUP BY permission.id").get(tgid, permissionName) != null;
 	},
 	getGroupSettingsByTGID(tgid) {
-		return db.prepare("SELECT group_setting.* FROM group_setting JOIN setting ON setting.id = group_setting.setting_id JOIN \"group\" ON \"group\".id = group_setting.group_id WHERE \"group\".tgid = ? AND setting.type = ?").expand().all(tgid,constants.settings.types.group).map(Setting.parse);
+		return db.prepare("SELECT group_setting.* FROM group_setting JOIN setting ON setting.id = group_setting.setting_id JOIN \"group\" ON \"group\".id = group_setting.group_id WHERE \"group\".tgid = ? AND setting.type = ?").expand().all(tgid, constants.settings.types.group).map(Setting.parse);
 	},
 	getGroupSettingByTGID(tgid, settingName) {
-		return GroupSetting.parse(db.prepare("SELECT group_setting.* FROM group_setting JOIN setting ON setting.id = group_setting.setting_id JOIN \"group\" ON \"group\".id = group_setting.group_id WHERE \"group\".tgid = ? AND setting.name = ? AND setting.type = ?").expand().get(tgid, settingName,constants.settings.types.group));
+		return GroupSetting.parse(db.prepare("SELECT group_setting.* FROM group_setting JOIN setting ON setting.id = group_setting.setting_id JOIN \"group\" ON \"group\".id = group_setting.group_id WHERE \"group\".tgid = ? AND setting.name = ? AND setting.type = ?").expand().get(tgid, settingName, constants.settings.types.group));
 	},
 	getGroupSetting(id, settingName) {
-		return GroupSetting.parse(db.prepare("SELECT group_setting.* FROM group_setting JOIN setting ON setting.id = group_setting.setting_id JOIN \"group\" ON \"group\".id = group_setting.group_id WHERE \"group\".id = ? AND setting.name = ? AND setting.type = ?").expand().get(id, settingName,constants.settings.types.group));
+		return GroupSetting.parse(db.prepare("SELECT group_setting.* FROM group_setting JOIN setting ON setting.id = group_setting.setting_id JOIN \"group\" ON \"group\".id = group_setting.group_id WHERE \"group\".id = ? AND setting.name = ? AND setting.type = ?").expand().get(id, settingName, constants.settings.types.group));
 	},
 	createUserGroup(userId, groupId) {
-		db.prepare("INSERT INTO user_group (user_id,group_id) VALUES (?,?)").run(userId,groupId);
+		db.prepare("INSERT INTO user_group (user_id,group_id) VALUES (?,?)").run(userId, groupId);
 	},
 	setUserName(id, name) {
-		db.prepare("UPDATE user SET name = ? WHERE id = ? ").run(name,id);
+		db.prepare("UPDATE user SET name = ? WHERE id = ?").run(name, id);
 	},
 	getDecksByUser(id) {
 		return db.prepare("SELECT * FROM deck JOIN user ON user.id = deck.user_id WHERE user_id = ?").expand().all(id).map(Deck.parse);
 	},
 	createDeck(titel, id, desc, type) {
-		db.prepare("INSERT INTO deck (title, user_id, description, type) VALUES (?,?,?,?)").run(titel,id,desc,type);
+		db.prepare("INSERT INTO deck (title, user_id, description, type) VALUES (?,?,?,?)").run(titel, id, desc, type);
+	},
+	getMatches() {
+		return db.prepare("SELECT * FROM match ORDER BY date DESC").expand().all().map(Match.parse);
+	},
+	createMatch(titel, type) {
+		db.prepare("INSERT INTO match (title, date, type) VALUES (?,?,?)").run(titel, new Date().getTime(), type);
+	},
+	getMatch(id) {
+		return Match.parse(db.prepare("SELECT * FROM match WHERE id = ?").expand().get(id));
+	},
+	getUserMatchesByMatch(id) {
+		return db.prepare("SELECT * FROM user_match JOIN user ON user_id = user.id JOIN match ON match_id = match.id WHERE match_id = ?").expand().all(id).map(UserMatch.parse).map(um => {
+			um.deck = module.exports.getDeck(um.deck_id);
+			return um;
+		});
+	},
+	getDeck(id) {
+		return Deck.parse(db.prepare("SELECT * FROM deck JOIN user ON user_id = user.id WHERE deck.id = ?").expand().get(id));
+	},
+	editMatch(id, title, type) {
+		db.prepare("UPDATE match SET title = ?, type = ? WHERE id = ?").run(title, type, id);
+	},
+	getDecksByType(type) {
+		return db.prepare("SELECT * FROM deck JOIN user ON user_id = user.id WHERE type = ?").expand().all(type).map(Deck.parse);
+	},
+	getUsers() {
+		return db.prepare("SELECT * FROM user ORDER BY id ASC").expand().all().map(User.parse);
+	},
+	createUserMatch(user, match, deck, place) {
+		db.prepare("INSERT INTO user_match (user_id,match_id,deck_id,place) VALUES (?,?,?,?)").run(user,match,deck,place);
 	}
 };

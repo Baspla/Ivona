@@ -4,6 +4,106 @@ block variables
     - var title = "Match"
 
 block content
-    h2= title
-
-    +workInProgress
+    .modal#bearbeitenModal(tabindex="-1" role="dialog")
+        .modal-dialog
+            .modal-content
+                .modal-header
+                    h5.modal-title Match bearbeiten
+                    button.close(type="button" data-dismiss="modal")
+                        span &times;
+                .modal-body
+                    form#matchForm(action=match.id+"/edit" method="post")
+                        .input-group.mb-3
+                            .input-group-prepend
+                                .input-group-text Titel
+                            input.form-control.mr-3(type="text" name="titel" required value=match.title)
+                        .input-group
+                            select.custom-select(name="type" required)
+                                option(disabled) Wähle einen Spiel-Typ
+                                option(value="commander" selected=(match.type==="commander")) Commander
+                                option(value="standard" selected=(match.type==="standard")) Standard
+                .modal-footer
+                    button.btn.btn-secondary(type="button" data-dismiss="modal") Schließen
+                    button.btn.btn-primary(type="submit" form="matchForm") Speichern
+    .modal#erstellenModal(tabindex="-1" role="dialog")
+        .modal-dialog
+            .modal-content
+                .modal-header
+                    h5.modal-title Spieler hinzufügen
+                    button.close(type="button" data-dismiss="modal")
+                        span &times;
+                .modal-body
+                    form#userForm(action=match.id + "/add" method="post")
+                        .input-group.mb-3
+                            select.custom-select(name="user" required)
+                                option(disabled selected) Nutzer
+                                if users
+                                    each user in users
+                                        option(value=user.id)= user.name
+                        .input-group.mb-3
+                            select.custom-select(name="deck" required)
+                                option(disabled selected) Deck
+                                if decks
+                                    each deck in decks
+                                        option(value=deck.id)= deck.title +" - "+ deck.user.name
+                        .input-group
+                            select.custom-select(name="place" required)
+                                option(disabled selected) Platz
+                                option(value=1) 1.
+                                option(value=2) 2.
+                                option(value=3) 3.
+                                option(value=4) 4.
+                                option(value=5) 5.
+                                option(value=6) 6.
+                                option(value=-1) Ausgeschieden
+                                option(value=0) Unentschieden
+                .modal-footer
+                    button.btn.btn-secondary(type="button" data-dismiss="modal") Schließen
+                    button.btn.btn-primary(type="submit" form="userForm") Speichern
+    .card.m-5
+        .card-body
+            .display-4= match.title
+                button.btn.btn-outline-primary.ml-3(type="button" data-toggle="modal" data-target="#bearbeitenModal") Bearbeiten
+            hr
+            .badge.badge-pill.badge-primary.text-capitalize.mr-2 #{match.type}
+            each userMatch in userMatches
+                .badge.badge-pill.badge-secondary.mr-2 #{userMatch.user.name}
+            hr
+            table.table.table-striped.table-hover
+                thead.thead-light
+                    tr
+                        th(scope="col") Platz
+                        th(scope="col") Name
+                        th(scope="col") Deck
+                        th.col-1
+                tbody
+                    each userMatch in userMatches
+                        -
+                            var platz = userMatch.place
+                            var classes;
+                            if (userMatch.place <= 0) {
+                                platz = "Unbekannter Status";
+                                classes = "table-danger";
+                            }
+                            if (userMatch.place === 0) {
+                                platz = "Unentschieden";
+                                classes="table-warning";
+                            }
+                            if (userMatch.place === -1) {
+                                platz = "Ausgeschieden";
+                                classes="table-danger";
+                            }
+                            if (userMatch.place === 1) {
+                                classes="table-success";
+                            }
+                        tr(class=classes)
+                            th(scope="row")= platz
+                            th= userMatch.user.name
+                            th= userMatch.deck.title
+                            th
+                                button.btn.btn-outline-danger.btn-sm(type="button" onclick="deleteUser()") Löschen
+            button.btn.btn-primary(type="button" data-toggle="modal" data-target="#erstellenModal")  Spieler hinzufügen
+        .card-footer
+            = match.absoluteDate
+            | &nbsp;&mdash;&nbsp;
+            = match.relativeDate
