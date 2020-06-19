@@ -21,9 +21,9 @@ module.exports = {
 			let levelPrev = ug.level;
 			let dist = levelNow - levelPrev;
 			if (dist === 1) {
-				ctx.replyWithPhoto("smug.moe/smg/" + levelNow + ".png", {caption: newug.name + " ist jetzt ein " + newug.titel});
+				ctx.replyWithPhoto("smug.moe/smg/" + levelNow + ".png", {caption: newug.user.name + " ist jetzt ein " + newug.titel});
 			} else if (dist > 1) {
-				ctx.replyWithPhoto("smug.moe/smg/" + levelNow + ".png", {caption: newug.name + " ist jetzt ein " + newug.titel + " und hat " + (dist - 1) + " Level übersprungen"});
+				ctx.replyWithPhoto("smug.moe/smg/" + levelNow + ".png", {caption: newug.user.name + " ist jetzt ein " + newug.titel + " und hat " + (dist - 1) + " Level übersprungen"});
 			}
 		}
 	}

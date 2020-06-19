@@ -1,9 +1,9 @@
 extends layout
-
+include mixins/wipMixin
 block variables
     - var title = "Impressum"
 
 block content
     h2 Impressum
 
-    p Hier kommt das Impressum
+    +workInProgress

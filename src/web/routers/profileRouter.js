@@ -10,9 +10,9 @@ router.get("/", function (req, res) {
 		breadcrumbs: req.breadcrumbs()
 	});
 });
-router.get("/edit", function (req, res) {
-	if (req.query.name !== undefined) {
-		db.setUserName(req.session.user.id, req.query.name);
+router.post("/edit", function (req, res) {
+	if (req.body.name !== undefined) {
+		db.setUserName(req.session.user.id, req.body.name);
 		req.session.user = db.getUser(req.session.user.id);
 	}
 	res.redirect("/user/profil");

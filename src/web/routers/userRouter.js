@@ -54,9 +54,8 @@ router.get("/magic", function (req, res) {
 });
 router.get("/magic/decks", function (req, res) {
 	req.breadcrumbs("Decks");
-	let page = req.query.p;
-	if (page === undefined) page = 1;
-	res.render("user/magic/decks/index", {breadcrumbs: req.breadcrumbs(), page: page, lastPage: 5});
+	let decks = db.getDecksByUser(req.session.user.id);
+	res.render("user/magic/decks/index", {breadcrumbs: req.breadcrumbs(), decks: decks});
 });
 router.get("/magic/decks/:id", function (req, res) {
 	req.breadcrumbs("Deck");
@@ -66,12 +65,17 @@ router.get("/magic/decks/:id/edit", function (req, res) {
 	req.breadcrumbs("Deck bearbeiten");
 	res.render("user/magic/decks/deckBearbeiten", {breadcrumbs: req.breadcrumbs(), deckId: req.params.id});
 });
-router.get("/magic/decks/create", function (req, res) {
-	req.breadcrumbs("Deck erstellen");
-	res.render("user/magic/decks/deckErstellen", {
-		breadcrumbs: req.breadcrumbs()
-	});
-});
+router.post("/magic/decks/create", function (req, res) {
+	if (req.body.titel !== undefined && req.body.type !== undefined) {
+		if (req.body.type === "commander" || req.body.type === "standard") {
+			let desc = req.body.desc;
+			if (desc === undefined) desc = "";
+			db.createDeck(req.body.titel, req.session.user.id, desc, req.body.type);
+		}
+	}
+	res.redirect("/user/magic/decks");
+})
+;
 router.get("/magic/matches", function (req, res) {
 	req.breadcrumbs("Matches");
 	res.render("user/magic/matches/index", {

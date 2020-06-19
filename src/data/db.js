@@ -410,5 +410,11 @@ module.exports = {
 	},
 	setUserName(id, name) {
 		db.prepare("UPDATE user SET name = ? WHERE id = ? ").run(name,id);
+	},
+	getDecksByUser(id) {
+		return db.prepare("SELECT * FROM deck JOIN user ON user.id = deck.user_id WHERE user_id = ?").expand().all(id).map(Deck.parse);
+	},
+	createDeck(titel, id, desc, type) {
+		db.prepare("INSERT INTO deck (title, user_id, description, type) VALUES (?,?,?,?)").run(titel,id,desc,type);
 	}
 };

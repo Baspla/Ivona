@@ -7,6 +7,10 @@ html(lang="en")
         meta(name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no")
         link(rel="stylesheet" href="/static/bootstrap/css/bootstrap.css")
         link(rel="stylesheet", href="/stylesheets/style.css")
+        script(defer src="/static/jquery/jquery.js")
+        script(defer src="/static/popper.js/umd/popper.js")
+        script(defer src="/static/bootstrap/js/bootstrap.js")
+        block scripts
         block head
         title Ivona - #{title}
     body
@@ -33,7 +37,6 @@ html(lang="en")
                         li.nav-item.dropdown
                             a.nav-link.dropdown-toggle#navbarDropdown(href="#", role="button", data-toggle="dropdown", aria-haspopup="true", aria-expanded="false") #{session.user.name}
                             .dropdown-menu.dropdown-menu-right(aria-ladelledby="navbarDropdown")
-                                a.dropdown-item(href="/user/profil") Profil
                                 a.dropdown-item(href="/logout") Logout
 
         nav(aria-label="breadcrumb")
@@ -63,7 +66,3 @@ html(lang="en")
             a(href="/impressum") Impressum
             br
             | IvonaBot 2020
-
-        script(src="/static/jquery/jquery.js")
-        script(src="/static/popper.js/umd/popper.js")
-        script(src="/static/bootstrap/js/bootstrap.js")

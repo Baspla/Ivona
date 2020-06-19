@@ -40,6 +40,7 @@ function checkTelegramLogin(data, secret) {
 
 app.set("view engine", "pug");
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(breadcrumbs.init());
 app.use(cookieParser());
 if (config.web.sessionSecret === undefined) {
@@ -55,10 +56,11 @@ app.use(function (req, res, next) {
 	next();
 });
 app.use(breadcrumbs.setHome());
-app.use("/stylesheets", express.static("stylesheets"));
+app.use("/stylesheets", express.static("web_files/stylesheets"));
 app.use("/static/bootstrap", express.static("node_modules/bootstrap/dist/"));
 app.use("/static/popper.js", express.static("node_modules/popper.js/dist/"));
 app.use("/static/jquery", express.static("node_modules/jquery/dist/"));
+app.use("/js", express.static("web_files/js"));
 app.use("/api", apiRouter);
 app.use("/user",userRouter);
 app.get("/", function (req, res) {

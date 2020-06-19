@@ -1,5 +1,5 @@
 extends ../layout
-
+include ../mixins/adMixin
 block variables
     - var title = "User"
 
@@ -14,13 +14,6 @@ block content
                         h5.card-title
                             a(href="/user/profil") Profil
                         p.card-subtitle Alles über dich
-            .col.mb-4
-                .card.bg-primary.text-white.text-center.p-3
-                    blockquote.blockquote.mb-0
-                        p Hype dich und spiel Dodge or Die!
-                        footer.blockquote-footer.text-white
-                            small Werbung von unserem&nbsp
-                                cite(title="CookieJ4R") Sponsor
             .col.mb-4
                 .card
                     .card-body
@@ -39,3 +32,5 @@ block content
                         h5.card-title
                             a(href="/user/magic") Magic
                         p.card-subtitle Magic Decks und Spiele
+            .col.mb-4
+                +ads

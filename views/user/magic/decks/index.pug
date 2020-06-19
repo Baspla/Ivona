@@ -5,38 +5,44 @@ block variables
     - var title = "Magic Decks"
 
 block content
+    .modal#erstellenModal(tabindex="-1" role="dialog")
+        .modal-dialog
+            .modal-content
+                .modal-header
+                    h5.modal-title Deck erstellen
+                    button.close(type="button" data-dismiss="modal")
+                        span &times;
+                .modal-body
+                    form#deckForm(action="decks/create" method="post")
+                        .input-group.mb-3
+                            .input-group-prepend
+                                .input-group-text Titel
+                            input.form-control.mr-3(type="text" name="titel" required)
+                        .input-group.mb-3
+                            .input-group-prepend
+                                .input-group-text Beschreibung
+                            textarea.form-control(name="desc")
+                        .input-group
+                            select.custom-select(name="type" required)
+                                option(disabled selected) Wähle einen Deck-Typ
+                                option(value="commander") Commander
+                                option(value="standard") Standard
+
+                .modal-footer
+                    button.btn.btn-secondary(type="button" data-dismiss="modal") Schließen
+                    button.btn.btn-primary(type="submit" form="deckForm") Speichern
     .container-fluid.bg-light.py-4
-        h2 Deine Decks
-        span Seite #{page} von #{lastPage}
-        .row.row-cols-1.row-cols-sm-2.row-cols-lg-1
-            .col.mb-4
-                .card
-                    .card-body
-                        h5.card-title
-                            a(href="/user/magic/decks/1") Commander 2019
-                        p.card-subtitle Deck 1 Beschreibung
-            .col.mb-4
-                .card
-                    .card-body
-                        h5.card-title
-                            a(href="/user/magic/decks/2") Commander 2020
-                        p.card-subtitle Deck 2 Beschreibung
-            .col.mb-4
-                .card
-                    .card-body
-                        h5.card-title
-                            a(href="/user/magic/decks/3") Standard White
-                        p.card-subtitle Deck 3 Beschreibung
-            .col.mb-4
-                .card
-                    .card-body
-                        h5.card-title
-                            a(href="/user/magic/decks/4") Pioneer
-                        p.card-subtitle Deck 4 Beschreibung
-            .col.mb-4
-                .card
-                    .card-body
-                        h5.card-title
-                            a(href="/user/magic/decks/5") Vintage
-                        p.card-subtitle Deck 5 Beschreibung
+        .mb-3
+            h2 Deine Decks
+                button.btn.btn-outline-primary.ml-3.btn-sm(type="button" data-toggle="modal" data-target="#erstellenModal") Neues Deck
+        .row.row-cols-1.row-cols-sm-2.row-cols-md-3.row-cols-lg-4.row-cols-xl-5
+            each deck in decks
+                .col.mb-4
+                    .card
+                        .card-body
+                            h5.card-title
+                                a(href="/user/magic/decks/" + deck.id)= deck.title
+                            p.card-subtitle #{deck.description}
+                            hr
+                            .badge.badge-pill.badge-primary.text-capitalize #{deck.type}
             +pagination
