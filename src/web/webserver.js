@@ -61,6 +61,7 @@ app.use("/static/bootstrap", express.static("node_modules/bootstrap/dist/"));
 app.use("/static/popper.js", express.static("node_modules/popper.js/dist/"));
 app.use("/static/jquery", express.static("node_modules/jquery/dist/"));
 app.use("/js", express.static("web_files/js"));
+app.use("/sitemap.xml", express.static("web_files/sitemap.xml"));
 app.use("/api", apiRouter);
 app.use("/user",userRouter);
 app.get("/", function (req, res) {
@@ -119,11 +120,11 @@ app.use(function (req, res) {
 		message: "Seite konnte nicht gefunden werden"
 	});
 });
-
 const webserver = https.createServer({
 	key: fs.readFileSync("./key.pem"),
-	cert: fs.readFileSync("./cert.pem")
-}, app).on("close", () => running = false).listen(process.env.HTTPS_PORT, function () {
+	cert: fs.readFileSync("./cert.pem"),
+	passphrase: config.ssl.passphrase
+}, app).on("close", () => running = false).listen(config.web.ports.https, function () {
 	running = true;
 	let host = webserver.address().address;
 	const port = webserver.address().port;
@@ -134,4 +135,4 @@ const webserver = https.createServer({
 http.createServer(function (req, res) {
 	res.writeHead(301, {"Location": "https://" + req.headers["host"] + req.url});
 	res.end();
-}).listen(process.env.HTTP_PORT);
+}).listen(config.web.ports.http);
