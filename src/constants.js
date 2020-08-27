@@ -12,7 +12,7 @@ module.exports.settings = {
 		{
 			points: "features.points", magic: "features.magic", justThings: "features.justThings",
 			anime: "features.anime", karma: "features.karma", steam: "features.steam",
-			magicDaily:"features.magicDaily"
+			magicDaily:"features.magicDaily", haiku: "features.haiku"
 		}
 };
 module.exports.logs = {db: "[Database]"};

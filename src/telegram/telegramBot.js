@@ -28,6 +28,7 @@ const {setupHelp} = require("./commands/help");
 const {setupRestart} = require("./commands/restart");
 const {setupAnime} = require("./listeners/anime");
 const {setupMagic} = require("./listeners/magic");
+const {setupHaiku} = require("./listeners/haiku");
 const {setupRandomCard} = require("./commands/randomCard");
 const {dailyCard} = require("./scheduledTasks/dailyCard");
 
@@ -97,6 +98,8 @@ setupQuote(bot);
 setupTop(bot);
 setupEhre(bot);
 setupStats(bot);
+
+setupHaiku(bot);
 
 setupPoints(bot);
 setupVote(bot);
