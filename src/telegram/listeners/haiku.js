@@ -6,7 +6,7 @@ const syllable = require("syllable");
 exports.setupHaiku = setupHaiku;
 
 function setupHaiku(bot) {
-	bot.use((ctx, next) => {
+	bot.on("text", (ctx, next) => {
 		if (ctx.chat !== undefined) {
 			if (utils.isGroupChat(ctx.chat.type)) {
 				if (!GroupSetting.isEnabled(constants.settings.features.haiku)) return next();
