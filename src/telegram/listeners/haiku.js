@@ -19,11 +19,13 @@ function setupHaiku(bot) {
 				if (ug != null) {
 					console.debug("Process Haiku - 5");
 					let text = ctx.message.text;
+					console.debug("text: "+text);
 					let textSplitted = text.split(" ");
 					let lines = ["", "", ""];
 					let counter = 0;
 					let iteration = 0;
 					for(let i = 0; i < textSplitted.length; i++){
+						console.debug("c: "+counter+", i: "+iteration);
 						if(iteration > 2)
 							return;
 						counter += syllable(textSplitted[i]);
@@ -41,6 +43,7 @@ function setupHaiku(bot) {
 							counter = 0;
 						}
 					}
+					console.debug("Counter: "+counter);
 					if(counter !== 0)
 						return;
 					console.debug("Process Haiku - 6");
