@@ -38,7 +38,8 @@ function setupHaiku(bot) {
 							counter = 0;
 						}
 					}
-					if(counter !== 0 || iteration !== 2){
+					console.debug("Haiku Debug: counter+" - "+iteration);
+					if(counter !== 0 || iteration !== 3){
 						return next();
 					}
 					ctx.reply(lines[0].trim() + "\n" + lines[1].trim() + "\n" + lines[2].trim() + "\n- " + ug.user.name);
