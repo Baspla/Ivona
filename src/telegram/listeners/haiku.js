@@ -20,6 +20,7 @@ function setupHaiku(bot) {
 					console.debug("Process Haiku - 5");
 					let text = ctx.message.text;
 					console.debug("text: "+text);
+					console.debug("len:"+text.length);
 					let textSplitted = text.split(" ");
 					let lines = ["", "", ""];
 					let counter = 0;
