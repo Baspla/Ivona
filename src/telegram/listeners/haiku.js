@@ -30,6 +30,8 @@ function setupHaiku(bot) {
 							console.debug("return 1 - c: "+counter+", i: "+iteration);
 							return;
 						}
+						console.debug("syllableing: "+textSplitted[i]);
+						console.debug("has: "+syllable(textSplitted[i]));
 						counter += syllable(textSplitted[i]);
 						if(iteration === 0 || iteration === 2){
 							if(counter > 5){
