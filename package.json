@@ -1,6 +1,6 @@
 {
   "name": "ivonabot",
-  "version": "1.5.3",
+  "version": "1.5.4",
   "description": "Telegram Bot",
   "main": "src/server.js",
   "scripts": {
