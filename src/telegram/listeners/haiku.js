@@ -26,16 +26,22 @@ function setupHaiku(bot) {
 					let iteration = 0;
 					for(let i = 0; i < textSplitted.length; i++){
 						console.debug("c: "+counter+", i: "+iteration);
-						if(iteration > 2)
+						if(iteration > 2){
+							console.debug("return 1 - c: "+counter+", i: "+iteration);
 							return;
+						}
 						counter += syllable(textSplitted[i]);
 						if(iteration === 0 || iteration === 2){
-							if(counter > 5)
+							if(counter > 5){
+								console.debug("return 2 - c: "+counter+", i: "+iteration);
 								return;
+							}
 						}
 						else if(iteration === 1){
-							if(counter > 7)
+							if(counter > 7){
+								console.debug("return 3 - c: "+counter+", i: "+iteration);
 								return;
+							}
 						}
 						lines[iteration] += textSplitted[i] + " ";
 						if(((iteration === 0 || iteration === 2) && counter === 5) || (iteration === 1 && counter === 7)){
@@ -44,8 +50,10 @@ function setupHaiku(bot) {
 						}
 					}
 					console.debug("Counter: "+counter);
-					if(counter !== 0)
+					if(counter !== 0){
+						console.debug("return 4 - c: "+counter+", i: "+iteration);
 						return;
+					}
 					console.debug("Process Haiku - 6");
 					ctx.reply(lines[0].trim() + "\n" + lines[1].trim() + "\n" + lines[2].trim() + "\n- " + ug.user.name);
 				}
