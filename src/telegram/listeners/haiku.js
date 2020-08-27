@@ -38,7 +38,7 @@ function setupHaiku(bot) {
 							counter = 0;
 						}
 					}
-					console.debug("Haiku Debug: counter+" - "+iteration);
+					console.debug("Haiku Debug: "+counter+" - "+iteration);
 					if(counter !== 0 || iteration !== 3){
 						return next();
 					}
