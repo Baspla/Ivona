@@ -1,5 +1,5 @@
 const Database = require("better-sqlite3");
-const db = new Database("ivona.db", {verbose: console.debug});
+const db = new Database("peristent/ivona.db", {verbose: console.debug});
 const crypto = require("crypto");
 const fs = require("fs");
 const constants = require("../constants");
