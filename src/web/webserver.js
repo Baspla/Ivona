@@ -121,8 +121,8 @@ app.use(function (req, res) {
 	});
 });
 const webserver = https.createServer({
-	key: fs.readFileSync("./key.pem"),
-	cert: fs.readFileSync("./cert.pem"),
+	key: fs.readFileSync("./persistent/key.pem"),
+	cert: fs.readFileSync("./persistent/cert.pem"),
 	passphrase: config.ssl.passphrase
 }, app).on("close", () => running = false).listen(config.web.ports.https, function () {
 	running = true;
