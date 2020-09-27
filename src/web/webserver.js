@@ -133,6 +133,5 @@ const webserver = https.createServer({
 });
 
 http.createServer(function (req, res) {
-	res.writeHead(301, {"Location": "https://" + req.headers["host"] + req.url});
-	res.end();
+	res.redirect("https://" + req.headers["host"] + req.url);
 }).listen(config.web.ports.http);
