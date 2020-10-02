@@ -119,7 +119,7 @@ app.use(function (req, res) {
 		message: "Seite konnte nicht gefunden werden"
 	});
 });
-const webserver = http.createServer(app).on("close", () => running = false).listen(config.web.ports.https, function () {
+const webserver = http.createServer(app).on("close", () => running = false).listen(config.web.ports.http, function () {
 	running = true;
 	let host = webserver.address().address;
 	const port = webserver.address().port;
