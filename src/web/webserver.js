@@ -3,7 +3,6 @@ const express = require("express");
 const cookieParser = require("cookie-parser");
 const session = require("express-session");
 const app = express();
-const https = require("https");
 const http = require("http");
 const db = require("../data/db.js");
 const crypto = require("crypto");
@@ -120,18 +119,10 @@ app.use(function (req, res) {
 		message: "Seite konnte nicht gefunden werden"
 	});
 });
-const webserver = https.createServer({
-	key: fs.readFileSync("./persistent/key.pem"),
-	cert: fs.readFileSync("./persistent/cert.pem"),
-	passphrase: config.ssl.passphrase
-}, app).on("close", () => running = false).listen(config.web.ports.https, function () {
+const webserver = http.createServer(app).on("close", () => running = false).listen(config.web.ports.https, function () {
 	running = true;
 	let host = webserver.address().address;
 	const port = webserver.address().port;
 	if (host === "::") host = "localhost";
 	console.info("Webserver listening at https://" + host + ":" + port);
 });
-
-http.createServer(function (req, res) {
-	res.redirect("https://" + req.headers["host"] + req.url);
-}).listen(config.web.ports.http);
