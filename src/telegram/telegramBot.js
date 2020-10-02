@@ -116,7 +116,6 @@ schedule.scheduleJob("0 9 * * *", function () {
 });
 schedule.scheduleJob("0 */1 * * *", function () {
 	//console.log('hourly executed');
-	if (config.dyndns.url !== undefined)
-		https.get(config.dyndns.url);
+
 });
 bot.launch().then(() => console.info("Bot gestartet"));

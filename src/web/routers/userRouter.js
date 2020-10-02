@@ -4,7 +4,7 @@ const db = require("../../data/db.js");
 const profilRouter = require("./profileRouter");
 let router = express.Router();
 router.use("/", breadcrumbs.setHome({
-	name: "User",
+	name: "Dashboard",
 	url: "/user"
 }));
 router.use((req, res, next) => {
