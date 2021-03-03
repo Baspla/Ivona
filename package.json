@@ -29,7 +29,7 @@
     "node-schedule": "latest",
     "promise": "^8.1.0",
     "public-ip": "latest",
-    "pug": "^3.0.0",
+    "pug": "^3.0.1",
     "scryfall-sdk": "^1.6.4",
     "shelljs": "^0.8.4",
     "telegraf": "^3.38.0",
