@@ -31,7 +31,7 @@
     "public-ip": "latest",
     "pug": "^3.0.0",
     "scryfall-sdk": "^1.6.4",
-    "shelljs": "^0.8.4",
+    "shelljs": "^0.8.5",
     "telegraf": "^3.38.0",
     "syllable": "4.1.0"
   }
