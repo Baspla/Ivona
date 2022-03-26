@@ -1,0 +1,1 @@
+{"version":3,"file":"version.js","sourceRoot":"","sources":["../../../../src/telegram/commands/utility/version.ts"],"names":[],"mappings":";;;AACA,SAAS,YAAY,CAAC,GAAG;IACxB,GAAG,CAAC,OAAO,CAAC,SAAS,EAAE,CAAC,GAAG,EAAE,EAAE;QAC9B,GAAG,CAAC,KAAK,CAAC,gDAAgD,EAAC,EAAC,UAAU,EAAC,MAAM,EAAC,CAAC,CAAC;IACjF,CAAC,CAAC,CAAC;AACJ,CAAC;AALQ,oCAAY"}

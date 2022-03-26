@@ -1,6 +1,6 @@
 import scry from 'scryfall-sdk';
-import * as GroupSetting from '../utils/checks/groupsetting.js';
-import * as constants from '../../constants.js';
+import * as GroupSetting from '../../utils/checks/groupsetting.js';
+import * as constants from '../../../constants.js';
 
 export { setupRandomCard };
 

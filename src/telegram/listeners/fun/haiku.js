@@ -1,9 +1,9 @@
 import * as syllable from "syllable";
 
-import db from '../../data/db.js';
-import utils from '../utils/utils.js';
-import * as GroupSetting from '../utils/checks/groupsetting.js';
-import * as constants from '../../constants.js';
+import db from '../../../data/db.js';
+import utils from '../../utils/utils.js';
+import * as GroupSetting from '../../utils/checks/groupsetting.js';
+import * as constants from '../../../constants.js';
 export { setupHaiku };
 
 function setupHaiku(bot) {

@@ -1,7 +1,7 @@
 import scry from 'scryfall-sdk';
-import utils from '../utils/utils.js';
-import * as GroupSetting from '../utils/checks/groupsetting.js';
-import * as constants from '../../constants.js';
+import utils from '../../utils/utils.js';
+import * as GroupSetting from '../../utils/checks/groupsetting.js';
+import * as constants from '../../../constants.js';
 
 export { setupMagic };
 

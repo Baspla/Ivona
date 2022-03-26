@@ -1,5 +1,5 @@
-import db from '../../data/db.js';
-import * as constants from '../../constants.js';
+import db from '../../../data/db.js';
+import * as constants from '../../../constants.js';
 export { setupStats };
 
 function setupStats(bot) {

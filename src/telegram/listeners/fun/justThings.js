@@ -1,7 +1,5 @@
-import * as justThings from '../utils/justThingsImageGeneator.js';
-import * as utils from '../utils/utils.js';
-import * as constants from '../../constants.js';
-import * as GroupSetting from '../utils/checks/groupsetting.js';
+import * as utils from '../../utils/utils.js';
+import * as constants from '../../../constants.js';
 export { setupJustThings };
 
 function setupJustThings(bot) {

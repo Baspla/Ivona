@@ -1,5 +1,5 @@
-import db from '../../data/db.js';
-import utils from '../utils/utils.js';
+import db from '../../../data/db.js';
+import utils from '../../utils/utils.js';
 
 export { setupClaim };
 

@@ -1,7 +1,7 @@
-import '../utils/utils.js';
+import '../../utils/utils.js';
 import * as discord from '../../discord/discordBot.js';
-import * as Permission from '../utils/checks/permission.js';
-import * as constants from '../../constants.js';
+import * as Permission from '../../utils/checks/permission.js';
+import * as constants from '../../../constants.js';
 
 export { setupQuote };
 

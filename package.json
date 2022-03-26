@@ -1,10 +1,10 @@
 {
   "name": "ivonabot",
-  "version": "1.5.5",
+  "version": "2.0.0 dev",
   "description": "Telegram Bot",
   "main": "src/server.js",
   "scripts": {
-    "start": "node src/server.js"
+    "start": "node out/server.js"
   },
   "keywords": [],
   "author": "Tim Morgner",
@@ -13,26 +13,16 @@
   ],
   "license": "MIT",
   "dependencies": {
-    "express-breadcrumbs": "^0.0.2",
-    "bootstrap": "^4.5.0",
-    "jquery": "^3.5.1",
-    "popper.js": "^1.16.1",
-    "better-sqlite3": "^7.0.1",
-    "canvas": "^2.6.1",
-    "cookie-parser": "^1.4.5",
-    "discord.js": "^12.2.0",
-    "express": "^4.17.1",
-    "express-session": "^1.17.1",
-    "http-errors": "^1.7.3",
-    "jikan-node": "^1.2.0",
+    "http-errors": "^2.0.0",
+    "jikan-node": "^1.2.1",
     "minecraft-lib": "^1.1.6",
-    "node-schedule": "latest",
+    "node-schedule": "^2.1.0",
     "promise": "^8.1.0",
-    "public-ip": "latest",
-    "pug": "^3.0.0",
-    "scryfall-sdk": "^1.6.4",
-    "shelljs": "^0.8.4",
-    "telegraf": "^3.38.0",
-    "syllable": "4.1.0"
+    "public-ip": "^5.0.0",
+    "redis": "^4.0.4",
+    "scryfall-sdk": "^3.1.0",
+    "shelljs": "^0.8.5",
+    "syllable": "^5.0.0",
+    "telegraf": "^4.7.0"
   }
 }

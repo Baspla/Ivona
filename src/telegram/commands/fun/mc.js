@@ -1,6 +1,6 @@
-import '../utils/utils.js';
+import '../../utils/utils.js';
 import MCAPI from 'minecraft-lib';
-import * as config from '../../config.js';
+import * as config from '../../../config.js';
 
 export { setupMc };
 
