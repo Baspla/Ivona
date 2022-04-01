@@ -1,5 +1,5 @@
 import '../../utils/utils.js';
-import * as constants from '../../../constants.js';
+import * as constants from '../../../constants/constants.js';
 
 //export { setupReload };
 

@@ -1,23 +1,15 @@
-import schedule from 'node-schedule';
-import { Context, Telegraf } from 'telegraf';
+import { Telegraf } from 'telegraf';
 import * as config from '../config.js';
 import { performance } from 'perf_hooks';
-import utils from './utils/utils.js';
-import { setupDebug } from './commands/utility/debug';
-import { setupStart } from './commands/start';
 import { setupVersion } from './commands/utility/version';
-import { setupHelp } from './commands/help';
-import { setupRestart } from './commands/utility/restart';
-import { setupVote } from './listeners/points/vote';
-import { addUserToGroup, createUser, groupExists, } from "../data/data";
-import { setupEhre } from './commands/points/ehre.js';
+import { hasChatAndFrom } from './asserts/hasChatAndFrom.js';
 
 const bot = new Telegraf(config.telegram.token);
+
 /**
  * Zeichnet die Performanz einer Anfrage auf
  */
 bot.use((ctx, next) => {
-	console.log(ctx);
 	let start = performance.now();
 	let r = next();
 	console.info("Die Anfrage hat ", (performance.now() - start).toFixed(3), " Millisekunden zum Bearbeiten gebraucht.");
@@ -29,7 +21,10 @@ setupVersion(bot);
 /**
  * Erstellt einen Nutzer, falls dieser noch nicht existert
  */
-bot.use((ctx, next) => {
+bot.use(hasChatAndFrom)
+
+
+/*bot.use((ctx, next) => {
 	if (ctx.from !== undefined) {
 		createUser(ctx.from.id, ctx.from.first_name, ctx.from.last_name, ctx.from.username, ctx.from.first_name,)
 			.then((v) => {
@@ -45,14 +40,17 @@ bot.use((ctx, next) => {
 	}
 });
 
+bot.use((c,next)=>{console.debug("Step 3");next();})
 //	setupClaim(bot);
-//	setupRegister(bot);
+setupRegister(bot);
 
 setupStart(bot);
+
+bot.use((c,next)=>{console.debug("Step 4");next();})
 /**
  * Fügt Nutzer zur Gruppe hinzu, falls diese noch nicht existert
  */
-bot.use((ctx, next) => {
+/*bot.use((ctx, next) => {
 	if (ctx.chat == null) {
 		return next();
 	}
@@ -74,27 +72,31 @@ bot.use((ctx, next) => {
 	return next();
 });
 
+bot.use((c,next)=>{console.debug("Step 5" );next();})
+setupPoints(bot);
+setupVote(bot);
+
+bot.use((c,next)=>{console.debug("Step 6");next();})
 //setupReload(bot);
 setupRestart(bot);
 //setupBackup(bot);
 setupDebug(bot);
 //setupMc(bot);
 
+bot.use((c,next)=>{console.debug("Step 7");next();})
 //setupAnime(bot);
-//setupMagic(bot);
+setupMagic(bot);
 //setupRandomCard(bot);
 
+bot.use((c,next)=>{console.debug("Step");next();})
 setupHelp(bot);
-//setupTop(bot);
+setupTop(bot);
 setupEhre(bot);
 //setupStats(bot);
 
 //setupHaiku(bot);
 
-//setupPoints(bot);
-setupVote(bot);
-
-//setupJustThings(bot);
+//setupJustThings(bot);*/
 //schedule.scheduleJob("*/30 * * * *", function () {
 //	if (0 === Math.floor(Math.random() * Math.floor(11)))
 //		steamTest(bot);
@@ -104,4 +106,5 @@ setupVote(bot);
 //});
 //schedule.scheduleJob("0 */1 * * *", function () {
 //});
+bot.use(()=>{console.debug("Ende erreicht")})
 bot.launch().then(() => console.info("Bot gestartet"))

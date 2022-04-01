@@ -1,5 +1,5 @@
 
-export default {isGroupChat,isUserChat,isCreator, isReply}
+export default { isGroupChat, isUserChat, isCreator, isReply }
 export function isGroupChat(type) {
     return type === "group" || type === "supergroup";
 }
@@ -19,16 +19,44 @@ export function isReply(ctx) {
     return false;
 }
 
-/*export function checkLevelUp(ctx, ug) {
-    const newug = db.getUserGroup(ug.user.id, ug.group.id);
-    if (newug != null) {
-        let levelNow = newug.level;
-        let levelPrev = ug.level;
-        let dist = levelNow - levelPrev;
-        if (dist === 1) {
-            ctx.replyWithPhoto("smug.moe/smg/" + levelNow + ".png", {caption: newug.user.name + " ist jetzt ein " + newug.titel});
-        } else if (dist > 1) {
-            ctx.replyWithPhoto("smug.moe/smg/" + levelNow + ".png", {caption: newug.user.name + " ist jetzt ein " + newug.titel + " und hat " + (dist - 1) + " Level übersprungen"});
-        }
+export function getLevelForPoints(value: number) {
+    if(value<=1000)
+        return Math.floor(value / 200);
+    else
+        return Math.floor(value / 500)+4;
+}
+export function getTitleForPoints(value: number) {
+    return getTitleForLevel(getLevelForPoints(value));
+}
+export function getTitleForLevel(value: number) {
+    let rank = (value - (value % 5)) / 5
+    let stage = (value % 5) + 1;
+    return "Rang: " + rank + " Stufe: " + roman(stage);
+}
+export function getTargetForLevel(value: number) {
+    if(value<5){
+        return Math.floor(value+1)*200
+    }else{
+        return Math.floor(value-3)*500
     }
-}*/
+}
+export function getTargetForPoints(value: number) {
+    return getTargetForLevel(getLevelForPoints(value));
+}
+function roman(stage: number) {
+    if (stage < 1 || stage > 5)
+        return stage;
+    else switch (stage) {
+        case 1:
+            return "I"
+        case 2:
+            return "II"
+        case 3:
+            return "III"
+        case 4:
+            return "IV"
+        case 5:
+            return "V"
+    }
+}
+

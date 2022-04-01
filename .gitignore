@@ -40,3 +40,9 @@ public/
 /public/css/
 /public/
 /public/js/
+/.vscode/
+.vscode/
+/out/
+out/
+out/**.js
+out/**.js.map

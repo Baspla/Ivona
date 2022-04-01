@@ -1,1 +1,0 @@
-{"version":3,"file":"debug.js","sourceRoot":"","sources":["../../../../src/telegram/commands/utility/debug.ts"],"names":[],"mappings":";;;AAIA,SAAS,UAAU,CAAC,GAAG;IACtB,GAAG,CAAC,OAAO,CAAC,OAAO,EAAE,CAAC,GAAG,EAAE,EAAE;QAC5B,GAAG,CAAC,KAAK,CAAC,oBAAoB,CAAC,CAAC;IACjC,CAAC,CAAC,CAAC;AACJ,CAAC;AANQ,gCAAU"}

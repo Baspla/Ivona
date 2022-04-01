@@ -1,0 +1,1 @@
+export const userFlags = {admin:{registerGroup:"admin.registerGroup",restart:"admin.restart",debug:"admin.debug"}}

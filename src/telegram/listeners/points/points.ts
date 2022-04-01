@@ -1,26 +1,33 @@
-
-import utils from '../../utils/utils.js';
 import * as config from '../../../config.js';
-import * as constants from '../../../constants.js';
-export { setupPoints };
+import * as constants from '../../../constants/constants.js';
+import { getAlias, groupExists, incKarma, incPoints, isOnEntehrenCooldown, setRewardCooldown } from '../../../data/data.js';
+import { groupFlags } from '../../../constants/groupFlags.js';
+import { Composer } from 'telegraf';
+import { hasGroupFlags } from '../../predicates/HasGroupFlags.js';
 
-function setupPoints(bot) {
-	/*bot.use((ctx, next) => {
-		if (ctx.chat !== undefined) {
-			if (utils.isGroupChat(ctx.chat.type)) {
-				if (!GroupSetting.isEnabled(constants.settings.features.points)) return next();
-				const ug = db.getUserGroupByTGID(ctx.from.id, ctx.chat.id);
-				if (ug != null) {
-					let now = new Date().getTime();
-					if (now - ug.lastReward > config.cooldown.reward) { //3 Minuten
-						db.setUserGroupLastReward(ug.user.id, ug.group.id, now);
-						db.setUserGroupPoints(ug.user.id, ug.group.id, ug.points + Math.floor(Math.random() * 12) + 1);
-						utils.checkLevelUp(ctx,ug);
-						db.addMoney(ug.user.id,config.chatReward,constants.transaction.reward,null);
+export const PointListener = Composer.optional(hasGroupFlags(groupFlags.feature.points), Composer.on("message", (ctx, next) => {
+	isOnEntehrenCooldown(ctx.from.id, ctx.chat.id).then((num) => {
+		if (num == 0) {
+			setRewardCooldown(ctx.from.id, ctx.chat.id, config.cooldown.reward).then(() => {
+				incPoints(ctx.from.id, ctx.chat.id, 3).then((value: number) => {
+
+					//
+					// TODO Level Up Ersetzen
+					//
+					let now = 0;
+					for (let i = 0; i < constants.levels.length; i++) {
+						if (value >= constants.levels[i]) now = i;
 					}
-				}
-			}
+					if (value - 3 < constants.levels[now]) {
+						getAlias(ctx.from.id).then((alias) =>
+							ctx.replyWithPhoto("smug.moe/smg/" + now + ".png", { caption: alias + " ist jetzt Level " + now }))
+					}
+					//
+					// TODO Level Up Ersetzen
+					//
+				})
+			})
 		}
-		next();
-	});*/
-}
+	})
+	next();
+}));

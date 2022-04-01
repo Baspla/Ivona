@@ -1,7 +1,7 @@
 import Jikan from 'jikan-node';
 const mal = new Jikan();
 import utils from '../../utils/utils.js';
-import * as constants from '../../../constants.js';
+import * as constants from '../../../constants/constants.js';
 
 export { setupAnime };
 
