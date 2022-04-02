@@ -24,22 +24,5 @@ jobs:
       run: |
           npm install
           npm run build --if-present
-    - name: Archive compiled js
-      uses: actions/upload-artifact@v3
-      with:
-        name: compiled-js
-        path: |
-          out
-    
-  image:
-
-    runs-on: ubuntu-latest
-
-    steps:
-    - name: Download compiled js
-      uses: actions/download-artifact@v3
-      with:
-        name: compiled-js
-    - uses: actions/checkout@v3
     - name: Build the Docker image
       run: docker build . --file Dockerfile --tag ivona:$(date +%s)
