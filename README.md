@@ -1,4 +1,6 @@
 # Ivona
+[![Docker Image CI](https://github.com/Baspla/Ivona/actions/workflows/docker-image.yml/badge.svg?branch=master)](https://github.com/Baspla/Ivona/actions/workflows/docker-image.yml)
+
 Ivona ist ein Telegram Bot mit Features für meine privaten Gruppenchats.
 
 Ich benutze Ivona als Projekt um immer neue Ideen, Bibliotheken und Sprachen auszuprobieren.
