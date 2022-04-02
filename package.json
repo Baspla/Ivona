@@ -4,7 +4,8 @@
   "description": "Telegram Bot",
   "main": "src/server.js",
   "scripts": {
-    "start": "node out/server.js"
+    "start": "node out/server.js",
+      "build": "tsc"
   },
   "keywords": [],
   "author": "Tim Morgner",
