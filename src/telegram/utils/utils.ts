@@ -33,9 +33,7 @@ export function getTitleForPoints(value: number) {
     return getTitleForLevel(getLevelForPoints(value));
 }
 export function getTitleForLevel(value: number) {
-    let rank = (value - (value % 5)) / 5
-    let stage = (value % 5) + 1;
-    return "Rang: " + rank + " Stufe: " + roman(stage);
+    return "Level "+value;
 }
 export function getTargetForLevel(value: number) {
     if(value<5){

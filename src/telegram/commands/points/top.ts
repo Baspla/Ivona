@@ -6,10 +6,10 @@ import { errorHandler, getLevelForPoints, getTargetForPoints, getTitleForPoints 
 
 export const topCommand = Composer.optional(hasGroupFlags(groupFlags.feature.points), Composer.command("top", (ctx) => {
 	getGroupPointsOrdered(ctx.chat.id).then((entries) => {
-		let list = "Top Ehre:\n";
+		let list = "Top Punkte:\n";
 		Promise.allSettled(entries.map((entry) => {
 			return getAlias(entry.value).then((alias) => {
-				list += "<b>"+getTitleForPoints(entry.score) + "</b> <a href=\"tg://user?id=" + entry.value + "\">" + alias + "</a> (" + entry.score + "/" + getTargetForPoints(entry.score) + ")\n"
+				list += "<b>"+getTitleForPoints(entry.score) + "</b> - <a href=\"tg://user?id=" + entry.value + "\">" + alias + "</a> (" + entry.score + "/" + getTargetForPoints(entry.score) + ")\n"
 			})
 		})).then(() => {
 			ctx.reply(list, { parse_mode: "HTML", disable_notification: true });

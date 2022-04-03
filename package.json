@@ -19,7 +19,7 @@
     "jikan-node": "^1.2.1",
     "minecraft-lib": "^1.1.6",
     "promise": "^8.1.0",
-    "redis": "^4.0.4",
+    "@node-redis": "^4.0.4",
     "scryfall-sdk": "^3.1.0",
     "syllable": "^5.0.0",
     "telegraf": "^4.7.0"

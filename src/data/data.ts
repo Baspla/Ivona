@@ -1,6 +1,5 @@
-import { RedisClientType } from '@node-redis/client';
+import { RedisClientType,createClient } from '@node-redis/client';
 import { RedisCommandRawReply } from '@node-redis/client/dist/lib/commands';
-import { createClient} from 'redis';
 import { redis } from '../config';
 let client:RedisClientType
 (async () => {
@@ -123,7 +122,7 @@ export function incKarma(user_id:number,group_id: number, inc:number){
 }
 
 export function getGroupKarmaOrdered(group_id:number){
-    return client.zRangeWithScores("group:"+group_id+":karma",-1,-10)
+    return client.zRangeWithScores("group:"+group_id+":karma",0,9,{REV:true});
 }
 
 //
@@ -139,7 +138,7 @@ export function setRewardCooldown(user_id:number,group_id: number,time:number){
 }
 
 export function getGroupPointsOrdered(group_id:number){
-    return client.zRangeWithScores("group:"+group_id+":points",-1,-10)
+    return client.zRangeWithScores("group:"+group_id+":points", 0, 9,{REV:true});
 }
 
 export function incPoints(user_id:number,group_id: number, inc:number){
