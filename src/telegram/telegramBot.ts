@@ -12,7 +12,7 @@ const bot = new Telegraf(config.telegram.token);
 bot.use((ctx, next) => {
 	let start = performance.now();
 	let r = next();
-	console.info("Die Anfrage hat ", (performance.now() - start).toFixed(3), " Millisekunden zum Bearbeiten gebraucht.");
+	console.info("Die Anfrage hat", (performance.now() - start).toFixed(3), "Millisekunden zum Bearbeiten gebraucht.");
 	return r;
 });
 
@@ -106,5 +106,5 @@ setupEhre(bot);
 //});
 //schedule.scheduleJob("0 */1 * * *", function () {
 //});
-bot.use(()=>{console.debug("Ende erreicht")})
-bot.launch().then(() => console.info("Bot gestartet"))
+bot.use(()=>{console.debug("Die Anfrage wurde bis zum Ende durchgereicht")})
+bot.launch().then(() => console.info("Der Bot wurde gestartet"))

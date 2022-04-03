@@ -22,7 +22,8 @@ export function getAlias(id:number|string){
 }
 
 export function getUserFlags(id: number){
-    return client.SMEMBERS("user:"+id+":flags");
+    let result = client.SMEMBERS("user:"+id+":flags");
+    return result;
 }
 
 export function setUserFlag(id:number,flag:string) {

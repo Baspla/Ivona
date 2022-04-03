@@ -5,7 +5,7 @@ import { getUserFlags } from "../../data/data"
 
 export function hasUserFlags(...required_flags: string[]): AsyncPredicate<Context<Update>> {
     return async (ctx) => {
-        const user_flags = await getUserFlags(ctx.chat.id)
+        const user_flags = await getUserFlags(ctx.from.id)
         return (required_flags.every((val) => user_flags.includes(val)))
     }
 }
