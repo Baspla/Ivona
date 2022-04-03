@@ -1,9 +1,10 @@
 import { RedisClientType } from '@node-redis/client';
 import { RedisCommandRawReply } from '@node-redis/client/dist/lib/commands';
 import { createClient} from 'redis';
+import { redis } from '../config';
 let client:RedisClientType
 (async () => {
-    client = createClient();
+    client = createClient({url:redis});
     client.on('error', (err) => console.log('Redis Client Error', err));
     client.on('connect', () => console.log('Verbunden'));
     await client.connect();
