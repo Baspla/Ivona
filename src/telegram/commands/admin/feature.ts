@@ -1,7 +1,6 @@
 import { Composer } from 'telegraf';
-import { userFlags } from '../../../constants/userFlags.js';
 import { getGroupFlags, removeGroupFlag, setGroupFlag, setUserFlags } from '../../../data/data.js';
-import utils from '../../utils/utils.js';
+import utils, { errorHandler } from '../../utils/utils.js';
 
 export const featureCommand = Composer.command("feature", (ctx) => {
     let args = ctx.update.message.text.split(' ');
@@ -39,13 +38,13 @@ export const featureCommand = Composer.command("feature", (ctx) => {
                 ctx.reply("Das Feature " + args[2] + " ist " +
                     (flags.find((flag) => flag == "feature." + args[2]) == undefined ? "nicht" : "")
                     + " aktiviert.")
-            })
+            }, errorHandler)
             break;
 
         case "list":
             getGroupFlags(ctx.chat.id).then((flags) => {
                 ctx.reply("Gruppen Features:\n" + flags.filter((value) => value.startsWith("feature.")).map((value) => value.substring(8)).join("\n"));
-            })
+            }, errorHandler)
             break;
 
         default:

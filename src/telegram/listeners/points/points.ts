@@ -4,6 +4,7 @@ import { getAlias, groupExists, incKarma, incPoints, isOnEntehrenCooldown, setRe
 import { groupFlags } from '../../../constants/groupFlags.js';
 import { Composer } from 'telegraf';
 import { hasGroupFlags } from '../../predicates/HasGroupFlags.js';
+import { errorHandler } from '../../utils/utils.js';
 
 export const PointListener = Composer.optional(hasGroupFlags(groupFlags.feature.points), Composer.on("message", (ctx, next) => {
 	isOnEntehrenCooldown(ctx.from.id, ctx.chat.id).then((num) => {
@@ -20,14 +21,14 @@ export const PointListener = Composer.optional(hasGroupFlags(groupFlags.feature.
 					}
 					if (value - 3 < constants.levels[now]) {
 						getAlias(ctx.from.id).then((alias) =>
-							ctx.replyWithPhoto("smug.moe/smg/" + now + ".png", { caption: alias + " ist jetzt Level " + now }))
+							ctx.replyWithPhoto("https://timmorgner.de/moe/" + now + ".png", { caption: alias + " ist jetzt Level " + now }))
 					}
 					//
 					// TODO Level Up Ersetzen
 					//
-				})
-			})
+				}, errorHandler)
+			}, errorHandler)
 		}
-	})
+	}, errorHandler)
 	next();
 }));

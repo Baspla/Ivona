@@ -19,6 +19,10 @@ export function isReply(ctx) {
     return false;
 }
 
+export function errorHandler(reason:string){
+    console.error("Promise rejected:",reason)
+}
+
 export function getLevelForPoints(value: number) {
     if(value<=1000)
         return Math.floor(value / 200);

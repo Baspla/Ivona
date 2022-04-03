@@ -2,6 +2,7 @@ import { Composer, deunionize } from "telegraf";
 import { userFlags } from "../../../constants/userFlags";
 import { createGroup, groupExists, hasUserFlag } from "../../../data/data";
 import { hasUserFlags } from "../../predicates/HasUserFlags";
+import { errorHandler } from "../../utils/utils";
 
 export const registerCommand = Composer.optional(hasUserFlags(userFlags.admin.registerGroup),Composer.command("register", (ctx) => {
         groupExists(ctx.chat.id).then((val) => {
@@ -11,7 +12,7 @@ export const registerCommand = Composer.optional(hasUserFlags(userFlags.admin.re
                         ctx.reply("Gruppe registriert");
                     else
                         ctx.reply("Gruppe konnte nicht registriert werden")
-                })
+                },errorHandler)
             } else ctx.reply("Diese Gruppe ist schon registriert.")
-        })
+        },errorHandler)
     }))

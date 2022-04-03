@@ -9,5 +9,6 @@ export const claimCommand = Composer.command("claim", (ctx) => {
 				userFlags.admin.debug,
 				userFlags.admin.registerGroup,
 				userFlags.admin.restart)
+			ctx.reply("Admin Rechte erhalten")
 		}
 	});

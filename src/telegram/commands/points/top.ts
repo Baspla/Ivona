@@ -2,7 +2,7 @@ import { Composer } from 'telegraf';
 import { groupFlags } from '../../../constants/groupFlags.js';
 import { getAlias, getGroupPointsOrdered } from '../../../data/data.js';
 import { hasGroupFlags } from '../../predicates/HasGroupFlags.js';
-import { getLevelForPoints, getTargetForPoints, getTitleForPoints } from '../../utils/utils.js';
+import { errorHandler, getLevelForPoints, getTargetForPoints, getTitleForPoints } from '../../utils/utils.js';
 
 export const topCommand = Composer.optional(hasGroupFlags(groupFlags.feature.points), Composer.command("top", (ctx) => {
 	getGroupPointsOrdered(ctx.chat.id).then((entries) => {
@@ -13,6 +13,6 @@ export const topCommand = Composer.optional(hasGroupFlags(groupFlags.feature.poi
 			})
 		})).then(() => {
 			ctx.reply(list, { parse_mode: "HTML", disable_notification: true });
-		})
-	})
+		},errorHandler)
+	},errorHandler)
 }))
