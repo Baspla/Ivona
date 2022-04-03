@@ -5,6 +5,6 @@ import { hasUserFlags } from "../../predicates/HasUserFlags";
 
 export const debugCommand = Composer.optional(hasUserFlags(userFlags.admin.debug), Composer.command("debug", (ctx) => {
 	ctx.reply("Telegram Bot läuft");
-	ctx.replyWithPhoto("timmorgner.de/moe/1.png");
+	ctx.replyWithPhoto("timmorgner.de/moe/2.png");
 	ctx.reply("Gruppe:"+ctx.chat.id+"| User:"+ctx.from.id);
 }))
