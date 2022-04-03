@@ -15,7 +15,7 @@ bot.use((ctx, next) => {
 	console.info("Die Anfrage hat", (performance.now() - start).toFixed(3), "Millisekunden zum Bearbeiten gebraucht.");
 	return r;
 });
-
+bot.on("text",(ctx,next)=>{console.debug("Nachricht:",ctx.message.text)})
 setupVersion(bot);
 bot.use(hasChatAndFrom)
 bot.use(()=>{console.debug("Die Anfrage wurde bis zum Ende durchgereicht")})
