@@ -123,7 +123,7 @@ export function incKarma(user_id:number,group_id: number, inc:number){
 }
 
 export function getGroupKarmaOrdered(group_id:number){
-    return client.zRangeWithScores("group:"+group_id+":karma",0,9)
+    return client.zRangeWithScores("group:"+group_id+":karma",-10,-1)
 }
 
 //
