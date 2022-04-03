@@ -15,14 +15,14 @@ export const PointListener = Composer.optional(hasGroupFlags(groupFlags.feature.
 					//
 					// TODO Level Up Ersetzen
 					//
-					let now = 0;
-					for (let i = 0; i < constants.levels.length; i++) {
-						if (value >= constants.levels[i]) now = i;
-					}
-					if (value - 3 < constants.levels[now]) {
-						getAlias(ctx.from.id).then((alias) =>
-							ctx.replyWithPhoto("https://timmorgner.de/moe/" + now + ".png", { caption: alias + " ist jetzt Level " + now }))
-					}
+					//let now = 0;
+					//for (let i = 0; i < constants.levels.length; i++) {
+					//	if (value >= constants.levels[i]) now = i;
+					//}
+					//if (value - 3 < constants.levels[now]) {
+					//	getAlias(ctx.from.id).then((alias) =>
+					//		ctx.replyWithPhoto("https://timmorgner.de/moe/" + now + ".png", { caption: alias + " ist jetzt Level " + now }))
+					//}
 					//
 					// TODO Level Up Ersetzen
 					//
