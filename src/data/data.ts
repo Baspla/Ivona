@@ -123,7 +123,7 @@ export function incKarma(user_id:number,group_id: number, inc:number){
 }
 
 export function getGroupKarmaOrdered(group_id:number){
-    return client.zRangeWithScores("group:"+group_id+":karma",-10,-1)
+    return client.zRangeWithScores("group:"+group_id+":karma",-1,-10)
 }
 
 //
@@ -139,7 +139,7 @@ export function setRewardCooldown(user_id:number,group_id: number,time:number){
 }
 
 export function getGroupPointsOrdered(group_id:number){
-    return client.zRangeWithScores("group:"+group_id+":points",-10,-1)
+    return client.zRangeWithScores("group:"+group_id+":points",-1,-10)
 }
 
 export function incPoints(user_id:number,group_id: number, inc:number){
