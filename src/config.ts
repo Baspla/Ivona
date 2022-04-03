@@ -1,4 +1,5 @@
 export const ssl = {passphrase:process.env.SSL_PASSPHRASE};
+export const redis:string = process.env.REDIS_URL;
 export const web = {sessionSecret:process.env.SESSION_SECRET,ports:{http:process.env.HTTP_PORT,https:process.env.HTTPS_PORT}};
 export const minecraft = {ip:"46.228.198.93",port:25565};
 export const steam = {id: process.env.STEAM_ID, key: process.env.STEAM_KEY};
