@@ -139,7 +139,7 @@ export function setRewardCooldown(user_id:number,group_id: number,time:number){
 }
 
 export function getGroupPointsOrdered(group_id:number){
-    return client.zRangeWithScores("group:"+group_id+":points",0,9)
+    return client.zRangeWithScores("group:"+group_id+":points",-10,-1)
 }
 
 export function incPoints(user_id:number,group_id: number, inc:number){

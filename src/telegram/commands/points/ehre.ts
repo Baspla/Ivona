@@ -4,7 +4,7 @@ import { getAlias, getGroupKarmaOrdered } from '../../../data/data.js';
 import { hasGroupFlags } from '../../predicates/HasGroupFlags.js';
 import { errorHandler } from '../../utils/utils.js';
 
-export const ehreCommand = Composer.optional(hasGroupFlags(groupFlags.feature.karma), Composer.command("top", (ctx) => {
+export const ehreCommand = Composer.optional(hasGroupFlags(groupFlags.feature.karma), Composer.command("ehre", (ctx) => {
 	getGroupKarmaOrdered(ctx.chat.id).then((entries) => {
 		let list = "Top Ehre:\n";
 		Promise.allSettled(entries.map((entry) => {
