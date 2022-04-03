@@ -1,11 +1,12 @@
+import { Composer } from "telegraf";
 import { userFlags } from "../../../constants/userFlags";
-import { checkUserFlags } from "../../utils/checks/userFlags";
+import { hasUserFlags } from "../../predicates/HasUserFlags";
 
 
 export { setupDebug };
 
 function setupDebug(bot) {
-	bot.command("debug",checkUserFlags(userFlags.admin.debug), (ctx) => {
+	Composer.optional(hasUserFlags(userFlags.admin.debug),bot.command("debug", (ctx) => {
 		ctx.reply("Telegram Bot läuft");
-	});
+	}));
 }

@@ -1,11 +1,8 @@
-import * as utils from '../../utils/utils';
 import * as config from '../../../config';
 import { Composer, Context, deunionize, Telegraf } from 'telegraf';
 import { isOnSuperEhrenCooldown, groupExists, setSuperEhrenCooldown, incKarma, isOnEhrenCooldown, setEhrenCooldown, isOnEntehrenCooldown, setEntehrenCooldown, getAlias } from '../../../data/data';
 import { Message } from 'telegraf/typings/core/types/typegram';
-import { checkGroupFlags } from '../../utils/checks/groupFlags';
 import { groupFlags } from '../../../constants/groupFlags';
-import { checkChatContext } from '../../utils/checks/context';
 import { hasGroupFlags } from '../../predicates/HasGroupFlags';
 import { IsReply } from '../../predicates/IsReply';
 

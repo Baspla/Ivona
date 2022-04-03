@@ -1,12 +1,13 @@
 import {Cards} from 'scryfall-sdk';
+import { Composer } from 'telegraf';
 import { groupFlags } from '../../../constants/groupFlags.js';
-import { checkChatContext } from '../../utils/checks/context.js';
-import { checkGroupFlags } from '../../utils/checks/groupFlags.js';
+import { hasGroupFlags } from '../../predicates/HasGroupFlags.js';
 
 export { setupMagic };
 
 function setupMagic(bot) {
-	bot.hears(/\(\(.+\)\)/, checkChatContext("anygroup"), checkGroupFlags(groupFlags.feature.magic), (ctx, next) => {
+	bot.optional(hasGroupFlags(groupFlags.feature.magic),Composer.optional(hasGroupFlags(groupFlags.feature.magic),
+	Composer.hears(/\(\(.+\)\)/, (ctx, next) => {
 		const names = ctx.message.text.match(/\(\((.*?)\)\)/g);
 		if (names.length >= 4) {
 			ctx.reply("Bitte suche nach weniger als 4 Karten pro Nachricht");
@@ -17,7 +18,7 @@ function setupMagic(bot) {
 			let small = true;
 			if (name.startsWith("+")) {
 				small = false;
-				name = name.substr(1);
+				name = name.substring(1);
 			}
 			Cards.search("include:extras (lang:de or lang:en) !\"" + name + "\"").on("data", card => {
 				const link = (small) ? card.scryfall_uri : card.image_uris.normal;
@@ -31,5 +32,5 @@ function setupMagic(bot) {
 			});
 		}
 		next();
-	});
+	})))
 }
