@@ -73,4 +73,4 @@ const superEhrenRegex = /^(\u2764\ufe0f|\ud83d\udc96|\ud83e\udde1|\ud83d\udc9b|\
 const ehrenRegex = /^(\u002b|\u261d|\ud83d\udc46|\ud83d\udc4f|\ud83d\ude18|\ud83d\ude0d|\ud83d\udc4c|\ud83d\udc4d|\ud83d\ude38).*|.*(\u002b|\u261d|\ud83d\udc46|\ud83d\udc4f|\ud83d\ude18|\ud83d\ude0d|\ud83d\udc4c|\ud83d\udc4d|\ud83d\ude38)$/
 const entehrenRegex = /^(\u2639\ufe0f|\ud83d\ude20|\ud83d\ude21|\ud83e\udd2c|\ud83e\udd2e|\ud83d\udca9|\ud83d\ude3e|\ud83d\udc4e|\ud83d\udc47).*|.*(\u2639\ufe0f|\ud83d\ude20|\ud83d\ude21|\ud83e\udd2c|\ud83e\udd2e|\ud83d\udca9|\ud83d\ude3e|\ud83d\udc4e|\ud83d\udc47)$/
 
-export const VoteListener = Composer.optional(IsReply, Composer.optional(hasGroupFlags(groupFlags.feature.karma), Composer.hears(superEhrenRegex, superEhrenHandler), Composer.hears(ehrenRegex, ehrenHandler), Composer.hears(entehrenRegex, entehrenHandler)))
+export const VoteListener = Composer.on("message",Composer.optional(IsReply, Composer.optional(hasGroupFlags(groupFlags.feature.karma), Composer.hears(superEhrenRegex, superEhrenHandler), Composer.hears(ehrenRegex, ehrenHandler), Composer.hears(entehrenRegex, entehrenHandler))))
