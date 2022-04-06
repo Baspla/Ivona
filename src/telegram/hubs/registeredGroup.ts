@@ -3,6 +3,7 @@ import { VoteListener } from "../listeners/points/vote";
 import { PointListener } from "../listeners/points/points";
 import { ehreCommand } from "../commands/points/ehre";
 import { topCommand } from "../commands/points/top";
+import { cardCommand } from "../commands/fun/card";
 import { groupAdmin } from "./groupAdmin";
 
 export const registeredGroup = Composer.compose([
@@ -10,7 +11,7 @@ export const registeredGroup = Composer.compose([
     //statsCommand,
     topCommand,
     ehreCommand,
-    //cardCommand,
+    cardCommand,
     //HaikuListener,
     //MagicListener,
     //AnimeListener,
