@@ -17,7 +17,7 @@
     "@types/node": "^17.0.23",
     "http-errors": "^2.0.0",
     "jikan-node": "^1.2.1",
-    "minecraft-lib": "^1.1.6",
+    "minecraft-status": "^1.1.0",
     "promise": "^8.1.0",
     "redis": "^4.0.4",
     "scryfall-sdk": "^3.1.0",

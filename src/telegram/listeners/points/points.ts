@@ -20,8 +20,8 @@ export const PointListener = Composer.optional(hasGroupFlags(groupFlags.feature.
 						if (value >= constants.levels[i]) now = i;
 					}
 					if (value - 3 < constants.levels[now]) {
-						getAlias(ctx.from.id).then((alias) =>
-						ctx.replyWithPhoto("timmorgner.de/moe/" + now + ".png", { caption: alias + " ist jetzt Level " + now }))
+						//getAlias(ctx.from.id).then((alias) =>
+						//ctx.replyWithPhoto("timmorgner.de/moe/" + now + ".png", { caption: alias + " ist jetzt Level " + now }))l
 					}
 					
 					// TODO Level Up Ersetzen
