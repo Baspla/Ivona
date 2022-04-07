@@ -39,7 +39,7 @@ export const varCommand = Composer.command("var", (ctx) => {
                 return;
             }
             getVariable(variable).then((value) => {
-                ctx.reply("Die Variable " + args[2] + " ist auf " +value+" gesetzt";
+                ctx.reply("Die Variable " + args[2] + " ist auf " +value+" gesetzt");
             }, errorHandler)
             break;
 
