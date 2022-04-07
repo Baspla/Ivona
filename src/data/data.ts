@@ -10,6 +10,21 @@ let client:RedisClientType
    })();
 
 //
+// Variable
+//
+
+export function getVariable(varname:string){
+    return client.GET("vars:"+varname)
+}
+
+export function setVariable(varname:string,value){
+    return client.SET("vars:"+varname,value);
+}
+export function delVariable(varname:string){
+    return client.DEL("vars:"+varname);
+}
+
+//
 // User
 //
 export function createUser(id: number, first_name: string, last_name: string="", username: string, alias:string):Promise<number>{
