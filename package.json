@@ -20,7 +20,7 @@
     "minecraft-status": "^1.1.0",
     "promise": "^8.1.0",
     "redis": "^4.0.4",
-    "scryfall-sdk": "^3.1.0",
+    "scryfall-sdk": "^3.3.0",
     "syllable": "^5.0.0",
     "telegraf": "^4.7.0"
   }
